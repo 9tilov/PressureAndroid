@@ -1,0 +1,64 @@
+10
+
+dir
+14
+https://subversion.assembla.com/svn/pressure/trunk/pressure/res
+https://subversion.assembla.com/svn/pressure
+
+
+
+2014-02-16T18:42:01.810027Z
+12
+moggot
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+9f2ac435-a7c3-4a7c-9139-165690651227
+
+drawable-mdpi
+dir
+
+drawable-xhdpi
+dir
+
+layout
+dir
+
+values
+dir
+
+values-sw720dp-land
+dir
+
+values-sw600dp
+dir
+
+drawable-hdpi
+dir
+
+drawable-xxhdpi
+dir
+
+menu
+dir
+
+values-v11
+dir
+
+drawable-ldpi
+dir
+
+values-v14
+dir
+

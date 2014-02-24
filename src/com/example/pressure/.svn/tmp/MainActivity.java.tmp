@@ -1,0 +1,246 @@
+package com.example.pressure;
+
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.database.Cursor;
+import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
+import android.support.v4.widget.SimpleCursorAdapter;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+public class MainActivity extends FragmentActivity implements
+		LoaderCallbacks<Cursor>, OnClickListener {
+
+	private static final int CM_DELETE_ID = 1;
+	private static final int CM_EDIT_ID = 0;
+
+	ListView lvData;
+	MyDB db;
+	SimpleCursorAdapter scAdapter;
+
+	Button btnAdd;
+	EditText addName;
+	String name;
+	EditText editName;
+
+	Dialog dialog;
+	final String LOG_TAG = "myLogs";
+	final int DIALOG = 1;
+	int btn;
+	TextView tvCount;
+
+	LinearLayout view;
+	String name;
+
+	/** Called when the activity is first created. */
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);
+
+		btnAdd = (Button) findViewById(R.id.btnAdd);
+		btnAdd.setOnClickListener(this);
+<<<<<<< .mine
+=======
+		
+		
+>>>>>>> .r33
+
+		/* editName = (EditText) findViewById(R.id.editName); */
+
+		addName = (EditText) findViewById(R.id.addName);
+
+		// открываем подключение к БД
+		db = new MyDB(this);
+		db.open();
+
+		// формируем столбцы сопоставления
+		String[] from = new String[] { MyDB.COLUMN_TXT };
+		int[] to = new int[] { R.id.tvText };
+
+		// создааем адаптер и настраиваем список
+		scAdapter = new SimpleCursorAdapter(this, R.layout.item, null, from,
+				to, 0);
+		lvData = (ListView) findViewById(R.id.lvData);
+		lvData.setAdapter(scAdapter);
+
+		// добавляем контекстное меню к списку
+		registerForContextMenu(lvData);
+
+		// создаем лоадер для чтения данных
+		getSupportLoaderManager().initLoader(0, null, this);
+
+	}
+
+	DialogInterface.OnClickListener myClickListener = new DialogInterface.OnClickListener() {
+		public void onClick(DialogInterface dialog, int which) {
+			switch (which) {
+			// положительная кнопка
+			case Dialog.BUTTON_POSITIVE:
+				saveData();
+				finish();
+				break;
+			// негаитвная кнопка
+			case Dialog.BUTTON_NEGATIVE:
+				finish();
+				break;
+			// нейтральная кнопка
+			case Dialog.BUTTON_NEUTRAL:
+				break;
+			}
+		}
+
+	};
+
+	void saveData() {
+		Toast.makeText(this, R.string.saved, Toast.LENGTH_SHORT).show();
+	}
+
+	@Override
+<<<<<<< .mine
+	protected void onPrepareDialog(int id, Dialog dialog) {
+		super.onPrepareDialog(id, dialog);
+		if (id == DIALOG) {
+			editName = (EditText) dialog.getWindow().findViewById(R.id.editName);
+			editName.setText(name);
+		}
+	}
+
+	@Override
+=======
+    protected void onPrepareDialog(int id, Dialog dialog) {
+	    super.onPrepareDialog(id, dialog);
+	    if (id == DIALOG) {
+	    	editName = (EditText) dialog.getWindow().findViewById(R.id.editName);
+			editName.setText(name);
+	    }
+	}
+	@Override
+>>>>>>> .r33
+	protected Dialog onCreateDialog(int id) {
+		if (id == DIALOG) {
+
+<<<<<<< .mine
+=======
+			
+>>>>>>> .r33
+			AlertDialog.Builder adb = new AlertDialog.Builder(this);
+			view = (LinearLayout) getLayoutInflater().inflate(R.layout.dialog,
+					null);
+<<<<<<< .mine
+=======
+			
+>>>>>>> .r33
+			// устанавливаем ее, как содержимое тела диалога
+			adb.setView(view);
+
+			// кнопка положительного ответа
+			adb.setPositiveButton(R.string.yes, myClickListener);
+			// кнопка нейтрального ответа
+			adb.setNeutralButton(R.string.cancel, myClickListener);
+<<<<<<< .mine
+
+=======
+			
+>>>>>>> .r33
+			dialog = adb.create();
+			return dialog;
+		}
+		return super.onCreateDialog(id);
+	}
+
+	@Override
+	public void onClick(View v) {
+
+		String name = addName.getText().toString();
+		switch (v.getId()) {
+		case R.id.btnAdd:
+			db.addRec(name);
+			getSupportLoaderManager().getLoader(0).forceLoad();
+			addName.setText("");
+			break;
+		}
+	}
+
+	public void onCreateContextMenu(ContextMenu menu, View v,
+			ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
+		menu.add(0, CM_DELETE_ID, 0, R.string.delete_record);
+		menu.add(0, CM_EDIT_ID, 0, R.string.edit_record);
+	}
+
+	public boolean onContextItemSelected(MenuItem item) {
+		AdapterContextMenuInfo acmi = (AdapterContextMenuInfo) item
+				.getMenuInfo();
+
+		if (item.getItemId() == CM_DELETE_ID) {
+			// получаем из пункта контекстного меню данные по пункту списка
+
+			// извлекаем id записи и удаляем соответствующую запись в БД
+			db.delRec(acmi.id);
+			// получаем новый курсор с данными
+			getSupportLoaderManager().getLoader(0).forceLoad();
+			return true;
+		} else if (item.getItemId() == CM_EDIT_ID) {
+<<<<<<< .mine
+			name = db.getCurrentName(acmi.id);
+=======
+			name = db.getCurrentName(acmi.id);
+			
+>>>>>>> .r33
+			showDialog(DIALOG);
+		}
+		return super.onContextItemSelected(item);
+	}
+
+	protected void onDestroy() {
+		super.onDestroy();
+		// закрываем подключение при выходе
+		db.close();
+	}
+
+	@Override
+	public Loader<Cursor> onCreateLoader(int id, Bundle bndl) {
+		return new MyCursorLoader(this, db);
+	}
+
+	@Override
+	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+		scAdapter.swapCursor(cursor);
+	}
+
+	@Override
+	public void onLoaderReset(Loader<Cursor> loader) {
+	}
+
+	static class MyCursorLoader extends CursorLoader {
+
+		MyDB db;
+
+		public MyCursorLoader(Context context, MyDB db) {
+			super(context);
+			this.db = db;
+		}
+
+		@Override
+		public Cursor loadInBackground() {
+			Cursor cursor = db.getAllData();
+			return cursor;
+		}
+	}
+}

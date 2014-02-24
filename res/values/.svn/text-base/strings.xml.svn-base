@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">pressure</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="add_record">Add record</string>
+	<string name="delete_record">Delete record</string>
+	<string name="edit_record">Edit record</string>
+	<string name="btnSave">Save</string>
+	<string name="exit">Выход</string>
+	<string name="save_data">Save data?</string>
+	<string name="yes">Save</string>
+	<string name="no">No</string>
+	<string name="cancel">Cancel</string>
+	<string name="saved">Saved</string>
+	<string name="name">Enter your name</string>
+	<string name="deleted">Deleted</string>
+	<string name="new_name">New name</string>
+	<string name="add_name">Add name</string>
+	<string name="add">Added</string>
+	<string name="profile_list">Profile list</string>
+</resources>
