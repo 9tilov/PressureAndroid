@@ -22,7 +22,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
@@ -31,7 +30,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 
 public class MainActivity extends FragmentActivity implements
-		LoaderCallbacks<Cursor>, OnClickListener {
+		LoaderCallbacks<Cursor> {
 	
 	private static final int CM_EDIT_ID = 0;
 	private static final int CM_DELETE_ID = 1;
@@ -230,12 +229,6 @@ public class MainActivity extends FragmentActivity implements
 			Cursor cursor = db.getAllData();
 			return cursor;
 		}
-	}
-
-	@Override
-	public void onClick(View arg0) {
-		// TODO Auto-generated method stub
-		
 	}
 		
 }

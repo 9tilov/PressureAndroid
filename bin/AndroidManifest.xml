@@ -23,7 +23,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".MyStatistic"
-    		android:label="@string/profile_list">
+    		android:label="@string/statistics">
 		</activity>
     </application>
 

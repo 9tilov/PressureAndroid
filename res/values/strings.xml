@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">pressure</string>
+    <string name="app_name">Pressure</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
     <string name="add_record">Add record</string>
@@ -22,4 +22,5 @@
 	<string name="high_pressure">Sys pressure</string>
 	<string name="low_pressure">Dias pressure</string>
 	<string name="pulse">Pulse</string>
+	<string name="statistics">Statistics</string>
 </resources>
