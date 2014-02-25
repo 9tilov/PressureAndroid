@@ -12,6 +12,7 @@ import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.MenuItem;
@@ -64,7 +65,7 @@ public class MainActivity extends FragmentActivity implements
 		// создааем адаптер и настраиваем список
 		scAdapter = new SimpleCursorAdapter(this, R.layout.item, null, from,
 				to, 0);
-		ListView lvData = (ListView) findViewById(R.id.lvData);
+		final ListView lvData = (ListView) findViewById(R.id.lvData);
 		
 		// добавляем контекстное меню к списку
 		registerForContextMenu(lvData);
@@ -83,6 +84,9 @@ public class MainActivity extends FragmentActivity implements
 		      public void onItemClick(AdapterView<?> parent, View view,
 		          int position, long id) {
 		    	  Intent intent = new Intent(MainActivity.this, MyStatistic.class);
+		    	  Object obj = lvData.getAdapter().getItem(position);
+		          String value = obj.toString();
+		    	  intent.putExtra("lvData", db.getCurrentName(id));
 		    	  startActivity(intent);
 		      }
 		    });
@@ -171,6 +175,7 @@ public class MainActivity extends FragmentActivity implements
 			return true;
 		}else if (item.getItemId() == CM_ADD_ID) {
 			idCurrentName = 0;
+			idCurrentName = acmi.id;
 			currentName = "";
 			showDialog(DIALOG);
 			return true;

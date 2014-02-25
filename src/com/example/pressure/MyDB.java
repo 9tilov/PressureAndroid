@@ -14,11 +14,19 @@ import android.util.Log;
 public class MyDB {
 	private static final String DB_NAME = "mydb";
 	private static final int DB_VERSION = 1;
+	
 	private static final String DB_TABLE = "mytab";
+	private static final String DB_TABLE_STAT = "mytabstat";
 
 	public static final String COLUMN_ID = "_id";
 	public static final String COLUMN_TXT = "txt";
-
+	
+	public static final String COLUMN_PULSE = "pulse";
+	public static final String COLUMN_DATE = "date";
+	public static final String COLUMN_SYS_PRESSURE = "sys_pressure";
+	public static final String COLUMN_DIAS_PRESSURE = "dias_pressure";
+	public static final String COLUMN_UID = "uid";
+ 
 	private static final String DB_CREATE = "create table " + DB_TABLE + "("
 			+ COLUMN_ID + " integer primary key autoincrement, " + COLUMN_TXT
 			+ " text" + ");";
@@ -81,7 +89,6 @@ public class MyDB {
 
 	// удалить запись из DB_TABLE
 	public void delRec(long id) {
-		//mDB.delete(DB_TABLE, null, null);
 		int delCount = mDB.delete(DB_TABLE, COLUMN_ID + " = " + id, null);
 		Log.d(LOG_TAG, "deleted rows count = " + delCount);
 	}
