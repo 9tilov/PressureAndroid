@@ -175,7 +175,6 @@ public class MainActivity extends FragmentActivity implements
 			return true;
 		}else if (item.getItemId() == CM_ADD_ID) {
 			idCurrentName = 0;
-			idCurrentName = acmi.id;
 			currentName = "";
 			showDialog(DIALOG);
 			return true;
