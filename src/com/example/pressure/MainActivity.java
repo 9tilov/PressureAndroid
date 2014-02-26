@@ -84,9 +84,10 @@ public class MainActivity extends FragmentActivity implements
 		      public void onItemClick(AdapterView<?> parent, View view,
 		          int position, long id) {
 		    	  Intent intent = new Intent(MainActivity.this, MyStatistic.class);
-		    	  Object obj = lvData.getAdapter().getItem(position);
-		          String value = obj.toString();
-		    	  intent.putExtra("lvData", db.getCurrentName(id));
+		    	  Cursor cur = (Cursor) lvData.getAdapter().getItem(position);
+		          long id_name = cur.getLong(cur.getColumnIndex("_id"));
+		    	  //intent.putExtra("lvData", db.getCurrentName(id));
+		    	  intent.putExtra("lvData", String.valueOf(id_name));
 		    	  startActivity(intent);
 		      }
 		    });

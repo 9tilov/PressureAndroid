@@ -92,6 +92,17 @@ public class MyDB {
 		int delCount = mDB.delete(DB_TABLE, COLUMN_ID + " = " + id, null);
 		Log.d(LOG_TAG, "deleted rows count = " + delCount);
 	}
+	
+//	public Cursor returnID(String name) {
+//		int id = 0;
+//		String[] columns = new String[] { COLUMN_TXT };
+//		Cursor cursor = mDB.query(DB_TABLE, columns, name, null, null, null, null);
+//		//id = cursor.getColumnIndex("COLUMN_ID");
+////		Log.d(LOG_TAG, "ID = " + id);
+//		if (cursor != null) 
+//			cursor.moveToFirst();
+//		return cursor;
+//	}
 
 	// редактировать запись в DB_TABLE
 	public void editRec(String txt, String id) {
