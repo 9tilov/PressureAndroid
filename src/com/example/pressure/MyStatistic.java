@@ -21,7 +21,6 @@ public class MyStatistic extends Activity {
         String profile_name = db.getCurrentName(Long.parseLong(profile_id));
         name.setText(profile_name);
     }
-    
     protected void onDestroy() {
 		super.onDestroy();
 		// закрываем подключение при выходе
