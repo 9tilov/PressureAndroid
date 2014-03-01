@@ -1,7 +1,7 @@
 package com.example.pressure;
 
 import java.io.File;
-
+import java.sql.Struct;
 import android.R.bool;
 import android.content.ContentValues;
 import android.content.Context;
@@ -21,15 +21,21 @@ public class MyDB {
 	public static final String COLUMN_ID = "_id";
 	public static final String COLUMN_TXT = "txt";
 	
-	public static final String COLUMN_PULSE = "pulse";
-	public static final String COLUMN_DATE = "date";
-	public static final String COLUMN_SYS_PRESSURE = "sys_pressure";
-	public static final String COLUMN_DIAS_PRESSURE = "dias_pressure";
-	public static final String COLUMN_UID = "uid";
+	static final class statData {
+		public static final String COLUMN_PULSE = "pulse";
+		public static final String COLUMN_DATE = "date";
+		public static final String COLUMN_SYS_PRESSURE = "sys_pressure";
+		public static final String COLUMN_DIAS_PRESSURE = "dias_pressure";
+		public static final String COLUMN_UID = "uid";
+	}
  
 	private static final String DB_CREATE = "create table " + DB_TABLE + "("
 			+ COLUMN_ID + " integer primary key autoincrement, " + COLUMN_TXT
 			+ " text" + ");";
+	private static final String DB_STAT_CREATE = "create table " + DB_TABLE_STAT + "(" + COLUMN_ID
+													+ " integer primary key autoincrement, " + statData.COLUMN_PULSE + " pulse"
+													+ statData.COLUMN_SYS_PRESSURE + "sys_pressure" + statData.COLUMN_DIAS_PRESSURE 
+													+ " dias_pressure" + statData.COLUMN_UID + " uid" + ");";
 
 	private final Context mCtx;
 
@@ -86,23 +92,35 @@ public class MyDB {
 		long rowID = mDB.insert(DB_TABLE, null, cv);
 		Log.d(LOG_TAG, "row inserted, ID = " + rowID);
 	}
+	
+	public void addStat(String pulse, String sys_pressure, String dias_pressure) {
+		ContentValues cv = new ContentValues();
+		cv.put(statData.COLUMN_PULSE, pulse);
+		cv.put(statData.COLUMN_SYS_PRESSURE, sys_pressure);
+		cv.put(statData.COLUMN_DIAS_PRESSURE, dias_pressure);
+		long rowID = mDB.insert(DB_TABLE_STAT, null, cv);
+		Log.d(LOG_TAG, "row inserted, pulse = " + rowID);
+	}
+	
+//	public void addSysPressure(String txt) {
+//		ContentValues cv = new ContentValues();
+//		cv.put(COLUMN_SYS_PRESSURE, txt);
+//		long rowID = mDB.insert(DB_TABLE_STAT, null, cv);
+//		Log.d(LOG_TAG, "row inserted, sys = " + rowID);
+//	}
+//	
+//	public void addDiasPressure(String txt) {
+//		ContentValues cv = new ContentValues();
+//		cv.put(COLUMN_DIAS_PRESSURE, txt);
+//		long rowID = mDB.insert(DB_TABLE_STAT, null, cv);
+//		Log.d(LOG_TAG, "row inserted, dias = " + rowID);
+//	}
 
 	// удалить запись из DB_TABLE
 	public void delRec(long id) {
 		int delCount = mDB.delete(DB_TABLE, COLUMN_ID + " = " + id, null);
 		Log.d(LOG_TAG, "deleted rows count = " + delCount);
 	}
-	
-//	public Cursor returnID(String name) {
-//		int id = 0;
-//		String[] columns = new String[] { COLUMN_TXT };
-//		Cursor cursor = mDB.query(DB_TABLE, columns, name, null, null, null, null);
-//		//id = cursor.getColumnIndex("COLUMN_ID");
-////		Log.d(LOG_TAG, "ID = " + id);
-//		if (cursor != null) 
-//			cursor.moveToFirst();
-//		return cursor;
-//	}
 
 	// редактировать запись в DB_TABLE
 	public void editRec(String txt, String id) {
@@ -123,7 +141,10 @@ public class MyDB {
 		@Override
 		public void onCreate(SQLiteDatabase db) {
 			db.execSQL(DB_CREATE);
+			db.execSQL(DB_STAT_CREATE);
 		}
+		
+		
 
 		@Override
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {

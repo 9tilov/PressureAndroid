@@ -91,7 +91,6 @@ public class MainActivity extends FragmentActivity implements
 		    	  startActivity(intent);
 		      }
 		    });
-
 	}
 
 	DialogInterface.OnClickListener myClickListener = new DialogInterface.OnClickListener() {

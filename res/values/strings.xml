@@ -23,4 +23,5 @@
 	<string name="low_pressure">Dias pressure</string>
 	<string name="pulse">Pulse</string>
 	<string name="statistics">Statistics</string>
+	<string name="addStat">Add statistics</string>
 </resources>
