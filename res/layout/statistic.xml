@@ -18,10 +18,8 @@
         android:layout_height="wrap_content"
         android:text="@string/addStat" />
  
-    
-
 <ListView
-    android:id="@+id/listView1"
+    android:id="@+id/lvStat"
     android:layout_width="match_parent"
     android:layout_height="wrap_content" >
 </ListView>

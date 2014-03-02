@@ -98,6 +98,7 @@ public class MainActivity extends FragmentActivity implements
 			switch (which) {
 			// положительная кнопка
 			case Dialog.BUTTON_POSITIVE:
+			
 				if (editName.getText().toString().length() == 0) {
 					showDialog(DIALOG);
 					break;
