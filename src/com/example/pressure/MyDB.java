@@ -134,6 +134,10 @@ public void addDiasPressure(String dias_pressure) {
 		int delCount = mDB.delete(DB_TABLE, COLUMN_ID + " = " + id, null);
 		Log.d(LOG_TAG, "deleted rows count = " + delCount);
 	}
+	
+	public void delRecStat(long id) {
+		mDB.delete(DB_TABLE_STAT, COLUMN_ID + " = " + id, null);
+	}
 
 	// редактировать запись в DB_TABLE
 	public void editRec(String txt, String id) {

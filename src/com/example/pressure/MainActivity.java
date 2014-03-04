@@ -183,10 +183,6 @@ public class MainActivity extends FragmentActivity implements
 		return super.onContextItemSelected(item);
 	}
 	
-	
-	
-
-	
 	void saveData() {
 		Toast.makeText(this, R.string.saved, Toast.LENGTH_SHORT).show();
 	}
@@ -198,7 +194,6 @@ public class MainActivity extends FragmentActivity implements
 	void addData() {
 		Toast.makeText(this, R.string.add, Toast.LENGTH_SHORT).show();
 	}
-	
 	
 	protected void onDestroy() {
 		super.onDestroy();
