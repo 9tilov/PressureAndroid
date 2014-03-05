@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+ xmlns:android="http://schemas.android.com/apk/res/android"
+ android:layout_width="match_parent"
+ android:layout_height="match_parent"
+ android:orientation="vertical">
+
+<TextView
+ android:layout_width="wrap_content"
+ android:layout_height="wrap_content"
+ android:text="Pulse"
+ android:layout_marginLeft="5dp"
+ android:layout_marginRight="5dp">
+</TextView>
+
+<EditText
+    android:id="@+id/etPulse"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:ems="10" >
+</EditText>
+
+
+<TextView
+ android:layout_width="wrap_content"
+ android:layout_height="wrap_content"
+ android:text="Sys. pressure"
+ android:layout_marginLeft="5dp"
+ android:layout_marginRight="5dp">
+</TextView>
+
+<EditText
+    android:id="@+id/etSysPressure"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:ems="10" >
+</EditText>
+
+<TextView
+ android:layout_width="wrap_content"
+ android:layout_height="wrap_content"
+ android:text="Dias. pressure"
+ android:layout_marginLeft="5dp"
+ android:layout_marginRight="5dp">
+</TextView>
+
+<EditText
+    android:id="@+id/etDiasPressure"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:ems="10" >
+</EditText>
+
+</LinearLayout>

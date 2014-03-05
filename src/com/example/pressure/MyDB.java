@@ -21,31 +21,19 @@ public class MyDB {
 	public static final String COLUMN_ID = "_id";
 	public static final String COLUMN_TXT = "txt";
 
-	// static final class statData {
 	public static final String COLUMN_PULSE = "pulse";
-	public static final String COLUMN_DATE = "date";
-	public static final String COLUMN_SYS_PRESSURE = "sys_pressure";
-	public static final String COLUMN_DIAS_PRESSURE = "dias_pressure";
-	public static final String COLUMN_UID = "uid";
-	// }
-	//
+	public static final String COLUMN_SYS_PRESSURE = "sys";
+	public static final String COLUMN_DIAS_PRESSURE = "dias";
+	
 	private static final String DB_CREATE = "create table " + DB_TABLE + "("
 			+ COLUMN_ID + " integer primary key autoincrement, " + COLUMN_TXT
 			+ " text" + ");";
-	// private static final String DB_STAT_CREATE = "create table " +
-	// DB_TABLE_STAT + "("
-	// + COLUMN_ID
-	// + " integer primary key autoincrement, " + statData.COLUMN_PULSE +
-	// " pulse"
-	// + statData.COLUMN_SYS_PRESSURE + " sys_pressure" +
-	// statData.COLUMN_DIAS_PRESSURE
-	// + " dias_pressure" + statData.COLUMN_UID + " uid" + ");";
 
 	private static final String DB_STAT_CREATE = "create table "
 			+ DB_TABLE_STAT + "(" + COLUMN_ID
-			+ " integer primary key autoincrement, " + COLUMN_PULSE + " pulse"
-			+ COLUMN_SYS_PRESSURE + " sys_pressure" + COLUMN_DIAS_PRESSURE
-			+ " dias_pressure" + COLUMN_UID + " uid" + ");";
+			+ " integer primary key autoincrement, " + COLUMN_PULSE + " pulse, "
+			+ COLUMN_SYS_PRESSURE + " sys, " + COLUMN_DIAS_PRESSURE
+			+ " dias" + ");";
 
 	private final Context mCtx;
 
@@ -83,7 +71,7 @@ public class MyDB {
 	public Cursor getAllData() {
 		return mDB.query(DB_TABLE, null, null, null, null, null, null);
 	}
-	
+
 	public Cursor getAllDataStat() {
 		return mDB.query(DB_TABLE_STAT, null, null, null, null, null, null);
 	}
@@ -108,25 +96,13 @@ public class MyDB {
 		Log.d(LOG_TAG, "row inserted, ID = " + rowID);
 	}
 
-	public void addPulse(String pulse) {
+	public void addStat(String pulse, String sys, String dias) {
 		ContentValues cv = new ContentValues();
 		cv.put(COLUMN_PULSE, pulse);
+		cv.put(COLUMN_SYS_PRESSURE, sys);
+		cv.put(COLUMN_DIAS_PRESSURE, dias);
 		long rowID = mDB.insert(DB_TABLE_STAT, null, cv);
 		Log.d(LOG_TAG, "row inserted, pulse = " + rowID);
-	}
-
-	public void addSysPressure(String sys_pressure) {
-		ContentValues cv = new ContentValues();
-		cv.put(COLUMN_SYS_PRESSURE, sys_pressure);
-		long rowID = mDB.insert(DB_TABLE_STAT, null, cv);
-		Log.d(LOG_TAG, "row inserted, sys = " + rowID);
-	}
-	
-public void addDiasPressure(String dias_pressure) {
-		ContentValues cv = new ContentValues();
-		cv.put(COLUMN_DIAS_PRESSURE, dias_pressure);
-		long rowID = mDB.insert(DB_TABLE_STAT, null, cv);
-		Log.d(LOG_TAG, "row inserted, dias = " + rowID);
 	}
 
 	// удалить запись из DB_TABLE
@@ -134,7 +110,7 @@ public void addDiasPressure(String dias_pressure) {
 		int delCount = mDB.delete(DB_TABLE, COLUMN_ID + " = " + id, null);
 		Log.d(LOG_TAG, "deleted rows count = " + delCount);
 	}
-	
+
 	public void delRecStat(long id) {
 		mDB.delete(DB_TABLE_STAT, COLUMN_ID + " = " + id, null);
 	}
