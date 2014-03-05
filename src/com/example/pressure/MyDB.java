@@ -73,12 +73,8 @@ public class MyDB {
 		return mDB.query(DB_TABLE, null, null, null, null, null, null);
 	}
 
-	public Cursor getAllDataStat() {
-//		String[] columns = new String[] { COLUMN_PULSE, COLUMN_SYS_PRESSURE,
-//				COLUMN_DIAS_PRESSURE };
-//		return mDB.query(DB_TABLE_STAT, columns, COLUMN_UID + "='" + id + "'",
-//				null, null, null, null);
-		return mDB.query(DB_TABLE_STAT, null, null,
+	public Cursor getAllDataStat(String id) {
+		return mDB.query(DB_TABLE_STAT, null, COLUMN_UID + "='" + id + "'",
 				null, null, null, null);
 	}
 
@@ -93,7 +89,7 @@ public class MyDB {
 		}
 		return result;
 	}
-
+	
 	// добавить запись в DB_TABLE
 	public void addRec(String txt) {
 		ContentValues cv = new ContentValues();

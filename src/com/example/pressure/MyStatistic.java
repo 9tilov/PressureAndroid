@@ -112,6 +112,9 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 							.getText().toString(), etDiasPressure.getText()
 							.toString(), profile_id);
 					getSupportLoaderManager().getLoader(0).forceLoad();
+					etPulse.setText("");
+					etSysPressure.setText("");
+					etDiasPressure.setText("");
 					addData();
 				}
 				break;
@@ -202,7 +205,7 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 
 		@Override
 		public Cursor loadInBackground() {
-			Cursor cursor = db.getAllDataStat();
+			Cursor cursor = db.getAllDataStat(profile_id);
 			return cursor;
 		}
 	}
