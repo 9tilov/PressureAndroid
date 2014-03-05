@@ -24,16 +24,17 @@ public class MyDB {
 	public static final String COLUMN_PULSE = "pulse";
 	public static final String COLUMN_SYS_PRESSURE = "sys";
 	public static final String COLUMN_DIAS_PRESSURE = "dias";
-	
+	public static final String COLUMN_UID = "uid";
+
 	private static final String DB_CREATE = "create table " + DB_TABLE + "("
 			+ COLUMN_ID + " integer primary key autoincrement, " + COLUMN_TXT
 			+ " text" + ");";
 
 	private static final String DB_STAT_CREATE = "create table "
 			+ DB_TABLE_STAT + "(" + COLUMN_ID
-			+ " integer primary key autoincrement, " + COLUMN_PULSE + " pulse, "
-			+ COLUMN_SYS_PRESSURE + " sys, " + COLUMN_DIAS_PRESSURE
-			+ " dias" + ");";
+			+ " integer primary key autoincrement, " + COLUMN_PULSE + " text, "
+			+ COLUMN_SYS_PRESSURE + " text, " + COLUMN_DIAS_PRESSURE
+			+ " text ," + COLUMN_UID + " text" + ");";
 
 	private final Context mCtx;
 
@@ -73,7 +74,12 @@ public class MyDB {
 	}
 
 	public Cursor getAllDataStat() {
-		return mDB.query(DB_TABLE_STAT, null, null, null, null, null, null);
+//		String[] columns = new String[] { COLUMN_PULSE, COLUMN_SYS_PRESSURE,
+//				COLUMN_DIAS_PRESSURE };
+//		return mDB.query(DB_TABLE_STAT, columns, COLUMN_UID + "='" + id + "'",
+//				null, null, null, null);
+		return mDB.query(DB_TABLE_STAT, null, null,
+				null, null, null, null);
 	}
 
 	public String getCurrentName(long id) {
@@ -96,11 +102,12 @@ public class MyDB {
 		Log.d(LOG_TAG, "row inserted, ID = " + rowID);
 	}
 
-	public void addStat(String pulse, String sys, String dias) {
+	public void addStat(String pulse, String sys, String dias, String uid) {
 		ContentValues cv = new ContentValues();
 		cv.put(COLUMN_PULSE, pulse);
 		cv.put(COLUMN_SYS_PRESSURE, sys);
 		cv.put(COLUMN_DIAS_PRESSURE, dias);
+		cv.put(COLUMN_UID, uid);
 		long rowID = mDB.insert(DB_TABLE_STAT, null, cv);
 		Log.d(LOG_TAG, "row inserted, pulse = " + rowID);
 	}

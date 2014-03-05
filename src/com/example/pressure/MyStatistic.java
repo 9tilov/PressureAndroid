@@ -36,22 +36,21 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 	MyDB db;
 	Button btnAdd;
 	EditText etPulse, etSysPressure, etDiasPressure;
-
+	static String profile_id;
 	SimpleCursorAdapter scAdapter;
 
 	Cursor cursor;
 
 	final int DIALOG_STAT = 1;
 	final String LOG_TAG = "myLogs";
-	
 
-//	 @Override
-//	 protected void onStart() {
-//	 super.onStart();
-//	
-//	 /** Initializes the Loader */
-//	 getSupportLoaderManager().initLoader(0, null, this);
-//	 }
+	// @Override
+	// protected void onStart() {
+	// super.onStart();
+	//
+	// /** Initializes the Loader */
+	// getSupportLoaderManager().initLoader(0, null, this);
+	// }
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -64,29 +63,28 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		db = new MyDB(this);
 		db.open();
 
-		cursor = db.getAllDataStat();
-		startManagingCursor(cursor);
-
 		// формируем столбцы сопоставления
-		String[] from = new String[] { MyDB.COLUMN_PULSE, MyDB.COLUMN_SYS_PRESSURE, MyDB.COLUMN_DIAS_PRESSURE };
-		int[] to = new int[] { R.id.tvTextPulse, R.id.tvTextSys, R.id.tvTextDias };
+		String[] from = new String[] { MyDB.COLUMN_PULSE,
+				MyDB.COLUMN_SYS_PRESSURE, MyDB.COLUMN_DIAS_PRESSURE };
+		int[] to = new int[] { R.id.tvTextPulse, R.id.tvTextSys,
+				R.id.tvTextDias };
 
 		name = (TextView) findViewById(R.id.profile_name);
-		String profile_id = getIntent().getStringExtra("lvData");
+		profile_id = getIntent().getStringExtra("lvData");
 
 		String profile_name = db.getCurrentName(Long.parseLong(profile_id));
 		name.setText(profile_name);
 
 		// создааем адаптер и настраиваем список
-		scAdapter = new SimpleCursorAdapter(this, R.layout.list, null,
-				from, to, 0);
+		scAdapter = new SimpleCursorAdapter(this, R.layout.list, null, from,
+				to, 0);
 		ListView listStat = (ListView) findViewById(R.id.listStat);
 		registerForContextMenu(listStat);
 
 		listStat.setAdapter(scAdapter);
-		
+
 		// создаем лоадер для чтения данных
-//		getSupportLoaderManager().initLoader(0, null, this);
+		getSupportLoaderManager().initLoader(0, null, this);
 	}
 
 	protected void onPrepareDialog(int id, Dialog dialog) {
@@ -112,8 +110,8 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 				} else {
 					db.addStat(etPulse.getText().toString(), etSysPressure
 							.getText().toString(), etDiasPressure.getText()
-							.toString());
-//					getSupportLoaderManager().getLoader(0).forceLoad();
+							.toString(), profile_id);
+					getSupportLoaderManager().getLoader(0).forceLoad();
 					addData();
 				}
 				break;
@@ -174,9 +172,9 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 	}
 
 	protected void onDestroy() {
+		db.close();
 		super.onDestroy();
 		// закрываем подключение при выходе
-		db.close();
 	}
 
 	@Override
@@ -191,7 +189,6 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 
 	@Override
 	public void onLoaderReset(Loader<Cursor> loader) {
-//		scAdapter.swapCursor(null);
 	}
 
 	static class MyCursorLoader extends CursorLoader {
