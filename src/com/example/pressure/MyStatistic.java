@@ -1,12 +1,18 @@
 package com.example.pressure;
 
+import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ContextMenu;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -25,13 +31,15 @@ import android.support.v4.content.Loader;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.text.format.DateFormat;
+import android.text.format.Time;
 
 public class MyStatistic extends FragmentActivity implements OnClickListener,
 		LoaderCallbacks<Cursor> {
 
 	private static final int CM_DELETE_ID = 0;
 	long idCurrentName;
-	String currentName;
+	String currentName, formattedDate;
 	private TextView name;
 	MyDB db;
 	Button btnAdd;
@@ -65,9 +73,9 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 
 		// формируем столбцы сопоставления
 		String[] from = new String[] { MyDB.COLUMN_PULSE,
-				MyDB.COLUMN_SYS_PRESSURE, MyDB.COLUMN_DIAS_PRESSURE };
+				MyDB.COLUMN_SYS_PRESSURE, MyDB.COLUMN_DIAS_PRESSURE, MyDB.COLUMN_DATE };
 		int[] to = new int[] { R.id.tvTextPulse, R.id.tvTextSys,
-				R.id.tvTextDias };
+				R.id.tvTextDias, R.id.tvTextDate };
 
 		name = (TextView) findViewById(R.id.profile_name);
 		profile_id = getIntent().getStringExtra("lvData");
@@ -85,6 +93,11 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 
 		// создаем лоадер для чтения данных
 		getSupportLoaderManager().initLoader(0, null, this);
+		
+		Calendar c = Calendar.getInstance();
+        SimpleDateFormat df = new SimpleDateFormat("dd.MM.yy\nHH:mm");
+        formattedDate = df.format(c.getTime());
+		
 	}
 
 	protected void onPrepareDialog(int id, Dialog dialog) {
@@ -110,7 +123,7 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 				} else {
 					db.addStat(etPulse.getText().toString(), etSysPressure
 							.getText().toString(), etDiasPressure.getText()
-							.toString(), profile_id);
+							.toString(), profile_id, formattedDate);
 					getSupportLoaderManager().getLoader(0).forceLoad();
 					etPulse.setText("");
 					etSysPressure.setText("");

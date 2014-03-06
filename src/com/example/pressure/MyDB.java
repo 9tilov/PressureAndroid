@@ -25,6 +25,7 @@ public class MyDB {
 	public static final String COLUMN_SYS_PRESSURE = "sys";
 	public static final String COLUMN_DIAS_PRESSURE = "dias";
 	public static final String COLUMN_UID = "uid";
+	public static final String COLUMN_DATE = "date";
 
 	private static final String DB_CREATE = "create table " + DB_TABLE + "("
 			+ COLUMN_ID + " integer primary key autoincrement, " + COLUMN_TXT
@@ -34,7 +35,7 @@ public class MyDB {
 			+ DB_TABLE_STAT + "(" + COLUMN_ID
 			+ " integer primary key autoincrement, " + COLUMN_PULSE + " text, "
 			+ COLUMN_SYS_PRESSURE + " text, " + COLUMN_DIAS_PRESSURE
-			+ " text ," + COLUMN_UID + " text" + ");";
+			+ " text, " + COLUMN_UID + " text, " + COLUMN_DATE + " text" + ");";
 
 	private final Context mCtx;
 
@@ -98,12 +99,13 @@ public class MyDB {
 		Log.d(LOG_TAG, "row inserted, ID = " + rowID);
 	}
 
-	public void addStat(String pulse, String sys, String dias, String uid) {
+	public void addStat(String pulse, String sys, String dias, String uid, String date) {
 		ContentValues cv = new ContentValues();
 		cv.put(COLUMN_PULSE, pulse);
 		cv.put(COLUMN_SYS_PRESSURE, sys);
 		cv.put(COLUMN_DIAS_PRESSURE, dias);
 		cv.put(COLUMN_UID, uid);
+		cv.put(COLUMN_DATE, date);
 		long rowID = mDB.insert(DB_TABLE_STAT, null, cv);
 		Log.d(LOG_TAG, "row inserted, pulse = " + rowID);
 	}
