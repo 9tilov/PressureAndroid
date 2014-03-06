@@ -37,9 +37,9 @@ import android.text.format.Time;
 public class MyStatistic extends FragmentActivity implements OnClickListener,
 		LoaderCallbacks<Cursor> {
 
-	private static final int CM_DELETE_ID = 0;
+	private static final int CM_DELETE_ID = 0, CM_EDIT_ID = 1;
 	long idCurrentName;
-	String currentName, formattedDate;
+	String formattedDate, currentPulse, currentSys, currentDias;
 	private TextView name;
 	MyDB db;
 	Button btnAdd;
@@ -48,7 +48,7 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 	SimpleCursorAdapter scAdapter;
 
 	Cursor cursor;
-
+	String[] currentName = new String[] {"", "" , ""};
 	final int DIALOG_STAT = 1;
 	final String LOG_TAG = "myLogs";
 
@@ -73,7 +73,8 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 
 		// формируем столбцы сопоставления
 		String[] from = new String[] { MyDB.COLUMN_PULSE,
-				MyDB.COLUMN_SYS_PRESSURE, MyDB.COLUMN_DIAS_PRESSURE, MyDB.COLUMN_DATE };
+				MyDB.COLUMN_SYS_PRESSURE, MyDB.COLUMN_DIAS_PRESSURE,
+				MyDB.COLUMN_DATE };
 		int[] to = new int[] { R.id.tvTextPulse, R.id.tvTextSys,
 				R.id.tvTextDias, R.id.tvTextDate };
 
@@ -93,11 +94,11 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 
 		// создаем лоадер для чтения данных
 		getSupportLoaderManager().initLoader(0, null, this);
-		
+		//Получаем текущее время
 		Calendar c = Calendar.getInstance();
-        SimpleDateFormat df = new SimpleDateFormat("dd.MM.yy\nHH:mm");
-        formattedDate = df.format(c.getTime());
-		
+		SimpleDateFormat df = new SimpleDateFormat("dd.MM.yy\nHH:mm");
+		formattedDate = df.format(c.getTime());
+
 	}
 
 	protected void onPrepareDialog(int id, Dialog dialog) {
@@ -108,6 +109,9 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 					R.id.etSysPressure);
 			etDiasPressure = (EditText) dialog.getWindow().findViewById(
 					R.id.etDiasPressure);
+			etPulse.setText(currentName[0]);
+			etSysPressure.setText(currentName[1]);
+			etDiasPressure.setText(currentName[2]);
 		}
 	}
 
@@ -142,17 +146,30 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 			ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
 		menu.add(0, CM_DELETE_ID, 0, R.string.delete_record);
+		menu.add(0, CM_EDIT_ID, 0, R.string.edit_record);
 	}
 
 	public boolean onContextItemSelected(MenuItem item) {
 		AdapterContextMenuInfo acmi = (AdapterContextMenuInfo) item
 				.getMenuInfo();
-		db.delRecStat(acmi.id);
-		// получаем новый курсор с данными
-		getSupportLoaderManager().getLoader(0).forceLoad();
-		deleteData();
+		if (item.getItemId() == CM_DELETE_ID) {
+			db.delRecStat(acmi.id);
+			// получаем новый курсор с данными
+			getSupportLoaderManager().getLoader(0).forceLoad();
+			deleteData();
+			return true;
+		} else if (item.getItemId() == CM_EDIT_ID) {
+			currentName = db.getCurrentStat(acmi.id);
+			Log.d(LOG_TAG, "row inserted, pulse = " + currentName[0]);
+			Log.d(LOG_TAG, "row inserted, sys= " + currentName[1]);
+			Log.d(LOG_TAG, "row inserted, dias= " + currentName[2]);
+			showDialog(DIALOG_STAT);
+			return true;
+		}
 		return super.onContextItemSelected(item);
 	}
+	
+	
 
 	// protected void onPrepareDialog(int id, Dialog dialog) {
 	// super.onPrepareDialog(id, dialog);
