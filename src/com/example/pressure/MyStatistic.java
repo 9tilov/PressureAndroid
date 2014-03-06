@@ -38,7 +38,7 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		LoaderCallbacks<Cursor> {
 
 	private static final int CM_DELETE_ID = 0, CM_EDIT_ID = 1;
-	long idCurrentName;
+	long idCurrentName = 0;
 	String formattedDate, currentPulse, currentSys, currentDias;
 	private TextView name;
 	MyDB db;
@@ -98,7 +98,6 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		Calendar c = Calendar.getInstance();
 		SimpleDateFormat df = new SimpleDateFormat("dd.MM.yy\nHH:mm");
 		formattedDate = df.format(c.getTime());
-
 	}
 
 	protected void onPrepareDialog(int id, Dialog dialog) {
@@ -123,13 +122,22 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 				if ((etPulse.getText().toString().length() == 0)
 						|| (etSysPressure.getText().toString().length() == 0)
 						|| (etDiasPressure.getText().toString().length() == 0)) {
-				} else {
+					showDialog(DIALOG_STAT);
+				} else if (idCurrentName != 0){
+					Log.d(LOG_TAG, "row inserted, id= " + idCurrentName);
+					db.editStat(currentName, String.valueOf(idCurrentName));
+					getSupportLoaderManager().getLoader(0).forceLoad();
+					idCurrentName = 0;
+					saveData();
+				} else if (idCurrentName == 0) {
+					Log.d(LOG_TAG, "row inserted, id= " + idCurrentName);
 					db.addStat(etPulse.getText().toString(), etSysPressure
 							.getText().toString(), etDiasPressure.getText()
 							.toString(), profile_id, formattedDate);
 					etPulse.setText("");
 					etSysPressure.setText("");
 					etDiasPressure.setText("");
+					idCurrentName = 0;
 					getSupportLoaderManager().getLoader(0).forceLoad();
 					addData();
 				}
@@ -159,6 +167,8 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 			return true;
 		} else if (item.getItemId() == CM_EDIT_ID) {
 			currentName = db.getCurrentStat(acmi.id);
+			idCurrentName = acmi.id;
+			Log.d(LOG_TAG, "row inserted, id= " + idCurrentName);
 			Log.d(LOG_TAG, "row inserted, pulse = " + currentName[0]);
 			Log.d(LOG_TAG, "row inserted, sys= " + currentName[1]);
 			Log.d(LOG_TAG, "row inserted, dias= " + currentName[2]);
@@ -200,6 +210,7 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 
 	@Override
 	public void onClick(View v) {
+		Log.d(LOG_TAG, "row inserted, id= " + idCurrentName);
 		showDialog(DIALOG_STAT);
 	}
 
