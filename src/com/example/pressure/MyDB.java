@@ -93,12 +93,12 @@ public class MyDB {
 	
 	public String[] getCurrentStat (long id) {
 		String[] columns = new String[] { COLUMN_PULSE, COLUMN_SYS_PRESSURE, COLUMN_DIAS_PRESSURE };
-		Cursor cursor = mDB.query(DB_TABLE_STAT, null, COLUMN_UID + "='" + id
+		Cursor cursor = mDB.query(DB_TABLE_STAT, null, COLUMN_ID + "='" + id
 				+ "'", null, null, null, null);
 		String[] statistics = new String[] {"", "", ""};
 		if (cursor != null) {
 			cursor.moveToFirst();
-			for (int i = 0; i < columns.length; ++i) {
+			for (int i = 0; i < 3; ++i) {
 				statistics[i] = statistics[i] + cursor.getString(i + 1);
 			}
 		}

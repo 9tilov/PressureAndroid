@@ -48,7 +48,7 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 	SimpleCursorAdapter scAdapter;
 
 	Cursor cursor;
-	String[] currentName = new String[] {"", "" , ""};
+	String[] currentName = new String[] {"", "", ""};
 	final int DIALOG_STAT = 1;
 	final String LOG_TAG = "myLogs";
 
@@ -123,15 +123,14 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 				if ((etPulse.getText().toString().length() == 0)
 						|| (etSysPressure.getText().toString().length() == 0)
 						|| (etDiasPressure.getText().toString().length() == 0)) {
-					break;
 				} else {
 					db.addStat(etPulse.getText().toString(), etSysPressure
 							.getText().toString(), etDiasPressure.getText()
 							.toString(), profile_id, formattedDate);
-					getSupportLoaderManager().getLoader(0).forceLoad();
 					etPulse.setText("");
 					etSysPressure.setText("");
 					etDiasPressure.setText("");
+					getSupportLoaderManager().getLoader(0).forceLoad();
 					addData();
 				}
 				break;
