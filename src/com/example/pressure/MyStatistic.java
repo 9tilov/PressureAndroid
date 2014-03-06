@@ -126,6 +126,9 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 				} else if (idCurrentName != 0){
 					Log.d(LOG_TAG, "row inserted, id= " + idCurrentName);
 					db.editStat(currentName, String.valueOf(idCurrentName));
+//					db.editStatPulse(etPulse.getText().toString(), String.valueOf(idCurrentName));
+//					db.editStatSys(etSysPressure.getText().toString(), String.valueOf(idCurrentName));
+//					db.editStatDias(etDiasPressure.getText().toString(), String.valueOf(idCurrentName));
 					getSupportLoaderManager().getLoader(0).forceLoad();
 					idCurrentName = 0;
 					saveData();

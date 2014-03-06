@@ -146,6 +146,24 @@ public class MyDB {
 		cv.put(COLUMN_PULSE, statistics[0]);
 		cv.put(COLUMN_SYS_PRESSURE, statistics[1]);
 		cv.put(COLUMN_DIAS_PRESSURE, statistics[2]);
+		mDB.update(DB_TABLE_STAT, cv, "_id = ?", new String[] { id});
+	}
+	
+	public void editStatPulse(String statistics, String id) {
+		ContentValues cv = new ContentValues();
+		cv.put(COLUMN_PULSE, statistics);
+		mDB.update(DB_TABLE_STAT, cv, "_id = ?", new String[] { id });
+	}
+	
+	public void editStatSys(String statistics, String id) {
+		ContentValues cv = new ContentValues();
+		cv.put(COLUMN_SYS_PRESSURE, statistics);
+		mDB.update(DB_TABLE_STAT, cv, "_id = ?", new String[] { id });
+	}
+	
+	public void editStatDias(String statistics, String id) {
+		ContentValues cv = new ContentValues();
+		cv.put(COLUMN_DIAS_PRESSURE, statistics);
 		mDB.update(DB_TABLE_STAT, cv, "_id = ?", new String[] { id });
 	}
 	
