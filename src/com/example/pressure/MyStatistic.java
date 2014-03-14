@@ -83,8 +83,8 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		name = (TextView) findViewById(R.id.profile_name);
 		profile_id = getIntent().getStringExtra("lvData");
 
-//		String profile_name = db.getCurrentName(Long.parseLong(profile_id));
-//		name.setText(profile_name);
+		String profile_name = db.getCurrentName(Long.parseLong(profile_id));
+		name.setText(profile_name);
 
 		// создааем адаптер и настраиваем список
 		scAdapter = new SimpleCursorAdapter(this, R.layout.list, null, from,

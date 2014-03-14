@@ -38,12 +38,7 @@ public class MainActivity extends FragmentActivity implements
 	private static final int CM_DELETE_ID = 1;
 	private static final int CM_ADD_ID = 2;
 
-	long value;
-
-	SharedPreferences sPref;
-
-	static final String STATE_SCORE = "playerScore";
-	static final String STATE_LEVEL = "playerLevel";
+	static SharedPreferences sPref;
 
 	MyDB db;
 	SimpleCursorAdapter scAdapter;
@@ -55,13 +50,14 @@ public class MainActivity extends FragmentActivity implements
 	long idCurrentName;
 	EditText editName;
 
-	int cnt = 0;
-
-	int mCurrentScore, mCurrentLevel;
-
 	long id_name;
 
-	long mas[] = {0, 0};
+	enum window
+	{
+	    profile,
+	    data
+	}
+
 	final String LOG_TAG = "Pressure";
 	final int DIALOG = 1;
 
@@ -70,7 +66,8 @@ public class MainActivity extends FragmentActivity implements
 	/** Called when the activity is first created. */
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mas = loadText();
+		long[] mas = new long[2];
+		mas = loadState();
 		if (mas[0] == 0)
 			setContentView(R.layout.activity_main);
 		else {
@@ -79,7 +76,7 @@ public class MainActivity extends FragmentActivity implements
 			intent.putExtra("lvData", String.valueOf(mas[1]));
 			startActivityForResult(intent, 1);
 		}
-		
+
 		// открываем подключение к БД
 		db = new MyDB(this);
 		db.open();
@@ -114,71 +111,36 @@ public class MainActivity extends FragmentActivity implements
 				id_name = cur.getLong(cur.getColumnIndex("_id"));
 				intent.putExtra("lvData", String.valueOf(id_name));
 				startActivityForResult(intent, 1);
-			    saveText(1, id_name);
-//				startActivity(intent);
+				saveState(window.data, id_name);
 			}
 		});
 	}
-//
-//	@Override
-//	protected void onSaveInstanceState(Bundle savedInstanceState) {
-//		super.onSaveInstanceState(savedInstanceState);
-//		sPref = getPreferences(MODE_PRIVATE);
-//	    Editor ed = sPref.edit();
-//	    ed.putLong(SAVED_TEXT, id_name);
-//	    ed.commit();
-//	}
-	
-	void saveText(long cnt, long id_name) {
-	    sPref = getPreferences(MODE_PRIVATE);
-	    Editor ed = sPref.edit();
-	    ed.putLong(SAVED_TEXT, cnt);
-	    ed.putLong(SAVED_NAME, id_name);
-	    ed.commit();
-	    Log.d(LOG_TAG, "cnt = " + cnt);
-	  }
-	
-	long[] loadText() {
-	    sPref = getPreferences(MODE_PRIVATE);
-	    long a = sPref.getLong(SAVED_TEXT, 0);
-	    long name = sPref.getLong(SAVED_NAME, 0);
-	    long massive[] = {0, 0};
-	    massive[0] = a;
-	    massive[1] = name;
-	    Log.d(LOG_TAG, "string = " + massive[0]);
-	    Log.d(LOG_TAG, "string_name = " + massive[1]);
-	    return massive;
-	  }
-	
+
+	void saveState(window cnt, long id_name) {
+		sPref = getPreferences(MODE_PRIVATE);
+		Editor ed = sPref.edit();
+		ed.putLong(SAVED_TEXT, cnt.ordinal());
+		ed.putLong(SAVED_NAME, id_name);
+		ed.commit();
+		Log.d(LOG_TAG, "cnt = " + cnt);
+	}
+
+	long[] loadState() {
+		sPref = getPreferences(MODE_PRIVATE);
+		long state = sPref.getLong(SAVED_TEXT, 0);
+		long name = sPref.getLong(SAVED_NAME, 0);
+		long[] massive = new long[2];
+		massive[0] = state;
+		massive[1] = name;
+		Log.d(LOG_TAG, "string = " + massive[0]);
+		Log.d(LOG_TAG, "string_name = " + massive[1]);
+		return massive;
+	}
+
 	@Override
-	  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-	    saveText(0, id_name);
-	  }
-
-//	@Override
-//	protected void onRestoreInstanceState(Bundle savedInstanceState) {
-//		super.onRestoreInstanceState(savedInstanceState);
-//		cnt = savedInstanceState.getInt("param");
-//		Log.d(LOG_TAG, "onRestoreInstanceState = " + cnt);
-//	}
-
-	//
-	// protected void onSaveInstanceState(Bundle outState) {
-	// super.onSaveInstanceState(outState);
-	// outState.putInt("count", cnt);
-	// Log.d(LOG_TAG, "onSaveInstanceState = " + cnt);
-	// }
-
-	/*
-	 * void saveText() { sPref = getPreferences(MODE_PRIVATE); Editor ed =
-	 * sPref.edit(); ed.putString(SAVED_TEXT, String.valueOf(id_name));
-	 * ed.commit(); Toast.makeText(this, "Text saved",
-	 * Toast.LENGTH_SHORT).show(); }
-	 * 
-	 * void loadText() { sPref = getPreferences(MODE_PRIVATE); String savedText
-	 * = sPref.getString(SAVED_TEXT, ""); // etText.setText(savedText);
-	 * Toast.makeText(this, "Text loaded", Toast.LENGTH_SHORT).show(); }
-	 */
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		saveState(window.profile, id_name);
+	}
 
 	DialogInterface.OnClickListener myClickListener = new DialogInterface.OnClickListener() {
 		public void onClick(DialogInterface dialog, int which) {
