@@ -54,14 +54,6 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 	final int DIALOG_STAT = 1;
 	final String LOG_TAG = "myLogs";
 
-	// @Override
-	// protected void onStart() {
-	// super.onStart();
-	//
-	// /** Initializes the Loader */
-	// getSupportLoaderManager().initLoader(0, null, this);
-	// }
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -141,9 +133,9 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 					db.addStat(etPulse.getText().toString(), etSysPressure
 							.getText().toString(), etDiasPressure.getText()
 							.toString(), profile_id, formattedDate);
-					etPulse.setText("");
 					etSysPressure.setText("");
 					etDiasPressure.setText("");
+					etPulse.setText("");
 					idCurrentName = 0;
 					getSupportLoaderManager().getLoader(0).forceLoad();
 					addData();
@@ -190,17 +182,8 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 	    	Intent intent = new Intent();
 	    	setResult(RESULT_OK, intent);
 	    	finish();
-//	    	super.onBackPressed();
 		}
 	
-
-	// protected void onPrepareDialog(int id, Dialog dialog) {
-	// super.onPrepareDialog(id, dialog);
-	// if (id == DIALOG_STAT) {
-	// //showDialog(DIALOG_STAT);
-	// }
-	// }
-
 	@Override
 	protected Dialog onCreateDialog(int id) {
 		AlertDialog.Builder adb = new AlertDialog.Builder(this);
@@ -225,7 +208,11 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 	@Override
 	public void onClick(View v) {
 		Log.d(LOG_TAG, "row inserted, id= " + idCurrentName);
+		
 		showDialog(DIALOG_STAT);
+		etSysPressure.setText("");
+		etDiasPressure.setText("");
+		etPulse.setText("");
 	}
 
 	protected void onDestroy() {
