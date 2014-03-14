@@ -129,10 +129,10 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 					showDialog(DIALOG_STAT);
 				} else if (idCurrentName != 0){
 					Log.d(LOG_TAG, "row inserted, id= " + idCurrentName);
+					currentName[0] = etPulse.getText().toString();
+					currentName[1] = etSysPressure.getText().toString();
+					currentName[2] = etDiasPressure.getText().toString();
 					db.editStat(currentName, String.valueOf(idCurrentName));
-//					db.editStatPulse(etPulse.getText().toString(), String.valueOf(idCurrentName));
-//					db.editStatSys(etSysPressure.getText().toString(), String.valueOf(idCurrentName));
-//					db.editStatDias(etDiasPressure.getText().toString(), String.valueOf(idCurrentName));
 					getSupportLoaderManager().getLoader(0).forceLoad();
 					idCurrentName = 0;
 					saveData();
