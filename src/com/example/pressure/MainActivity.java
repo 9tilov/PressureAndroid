@@ -5,6 +5,8 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -12,6 +14,7 @@ import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.MenuItem;
@@ -30,28 +33,53 @@ import android.widget.AdapterView.OnItemSelectedListener;
 
 public class MainActivity extends FragmentActivity implements
 		LoaderCallbacks<Cursor> {
-	
+
 	private static final int CM_EDIT_ID = 0;
 	private static final int CM_DELETE_ID = 1;
 	private static final int CM_ADD_ID = 2;
 
+	long value;
+
+	SharedPreferences sPref;
+
+	static final String STATE_SCORE = "playerScore";
+	static final String STATE_LEVEL = "playerLevel";
+
 	MyDB db;
 	SimpleCursorAdapter scAdapter;
+
+	final String SAVED_TEXT = "saved_text";
+	final String SAVED_NAME = "saved_name";
 
 	String currentName;
 	long idCurrentName;
 	EditText editName;
 
+	int cnt = 0;
+
+	int mCurrentScore, mCurrentLevel;
+
+	long id_name;
+
+	long mas[] = {0, 0};
 	final String LOG_TAG = "Pressure";
 	final int DIALOG = 1;
 
 	final String LOG_TAG_NAME = "myLogsName";
-	
+
 	/** Called when the activity is first created. */
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
-
+		mas = loadText();
+		if (mas[0] == 0)
+			setContentView(R.layout.activity_main);
+		else {
+			setContentView(R.layout.activity_main);
+			Intent intent = new Intent(MainActivity.this, MyStatistic.class);
+			intent.putExtra("lvData", String.valueOf(mas[1]));
+			startActivityForResult(intent, 1);
+		}
+		
 		// открываем подключение к БД
 		db = new MyDB(this);
 		db.open();
@@ -64,44 +92,107 @@ public class MainActivity extends FragmentActivity implements
 		scAdapter = new SimpleCursorAdapter(this, R.layout.item, null, from,
 				to, 0);
 		final ListView lvData = (ListView) findViewById(R.id.lvData);
-		
+
 		// добавляем контекстное меню к списку
 		registerForContextMenu(lvData);
 
 		// создаем лоадер для чтения данных
 		getSupportLoaderManager().initLoader(0, null, this);
-		
+
 		if (db.emptyDataBase() == false) {
 			db.addRec("Profile1");
 			lvData.setAdapter(scAdapter);
 			getSupportLoaderManager().getLoader(0).forceLoad();
 		} else
 			lvData.setAdapter(scAdapter);
-		
+
 		lvData.setOnItemClickListener(new OnItemClickListener() {
-		      public void onItemClick(AdapterView<?> parent, View view,
-		          int position, long id) {
-		    	  Intent intent = new Intent(MainActivity.this, MyStatistic.class);
-		    	  Cursor cur = (Cursor) lvData.getAdapter().getItem(position);
-		          long id_name = cur.getLong(cur.getColumnIndex("_id"));
-		    	  intent.putExtra("lvData", String.valueOf(id_name));
-		    	  startActivity(intent);
-		      }
-		    });
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				Intent intent = new Intent(MainActivity.this, MyStatistic.class);
+				Cursor cur = (Cursor) lvData.getAdapter().getItem(position);
+				id_name = cur.getLong(cur.getColumnIndex("_id"));
+				intent.putExtra("lvData", String.valueOf(id_name));
+				startActivityForResult(intent, 1);
+			    saveText(1, id_name);
+//				startActivity(intent);
+			}
+		});
 	}
+//
+//	@Override
+//	protected void onSaveInstanceState(Bundle savedInstanceState) {
+//		super.onSaveInstanceState(savedInstanceState);
+//		sPref = getPreferences(MODE_PRIVATE);
+//	    Editor ed = sPref.edit();
+//	    ed.putLong(SAVED_TEXT, id_name);
+//	    ed.commit();
+//	}
+	
+	void saveText(long cnt, long id_name) {
+	    sPref = getPreferences(MODE_PRIVATE);
+	    Editor ed = sPref.edit();
+	    ed.putLong(SAVED_TEXT, cnt);
+	    ed.putLong(SAVED_NAME, id_name);
+	    ed.commit();
+	    Log.d(LOG_TAG, "cnt = " + cnt);
+	  }
+	
+	long[] loadText() {
+	    sPref = getPreferences(MODE_PRIVATE);
+	    long a = sPref.getLong(SAVED_TEXT, 0);
+	    long name = sPref.getLong(SAVED_NAME, 0);
+	    long massive[] = {0, 0};
+	    massive[0] = a;
+	    massive[1] = name;
+	    Log.d(LOG_TAG, "string = " + massive[0]);
+	    Log.d(LOG_TAG, "string_name = " + massive[1]);
+	    return massive;
+	  }
+	
+	@Override
+	  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	    saveText(0, id_name);
+	  }
+
+//	@Override
+//	protected void onRestoreInstanceState(Bundle savedInstanceState) {
+//		super.onRestoreInstanceState(savedInstanceState);
+//		cnt = savedInstanceState.getInt("param");
+//		Log.d(LOG_TAG, "onRestoreInstanceState = " + cnt);
+//	}
+
+	//
+	// protected void onSaveInstanceState(Bundle outState) {
+	// super.onSaveInstanceState(outState);
+	// outState.putInt("count", cnt);
+	// Log.d(LOG_TAG, "onSaveInstanceState = " + cnt);
+	// }
+
+	/*
+	 * void saveText() { sPref = getPreferences(MODE_PRIVATE); Editor ed =
+	 * sPref.edit(); ed.putString(SAVED_TEXT, String.valueOf(id_name));
+	 * ed.commit(); Toast.makeText(this, "Text saved",
+	 * Toast.LENGTH_SHORT).show(); }
+	 * 
+	 * void loadText() { sPref = getPreferences(MODE_PRIVATE); String savedText
+	 * = sPref.getString(SAVED_TEXT, ""); // etText.setText(savedText);
+	 * Toast.makeText(this, "Text loaded", Toast.LENGTH_SHORT).show(); }
+	 */
 
 	DialogInterface.OnClickListener myClickListener = new DialogInterface.OnClickListener() {
 		public void onClick(DialogInterface dialog, int which) {
 			switch (which) {
 			// положительная кнопка
 			case Dialog.BUTTON_POSITIVE:
-			
+
 				if (editName.getText().toString().length() == 0) {
 					showDialog(DIALOG);
 					break;
 				}
 				if (idCurrentName != 0) {
-					db.editRec(editName.getText().toString(), String.valueOf(idCurrentName));
+					db.editRec(editName.getText().toString(),
+							String.valueOf(idCurrentName));
 					getSupportLoaderManager().getLoader(0).forceLoad();
 					saveData();
 				} else {
@@ -109,9 +200,9 @@ public class MainActivity extends FragmentActivity implements
 					getSupportLoaderManager().getLoader(0).forceLoad();
 					addData();
 				}
-				
+
 				break;
-				// нейтральная кнопка
+			// нейтральная кнопка
 			case Dialog.BUTTON_NEUTRAL:
 				break;
 			}
@@ -124,16 +215,16 @@ public class MainActivity extends FragmentActivity implements
 			editName = (EditText) dialog.getWindow()
 					.findViewById(R.id.editName);
 			editName.setText(currentName);
-		} 
+		}
 	}
 
 	@Override
 	protected Dialog onCreateDialog(int id) {
 		AlertDialog.Builder adb = new AlertDialog.Builder(this);
 		if (id == DIALOG) {
-			
-			LinearLayout view = (LinearLayout) getLayoutInflater().inflate(R.layout.dialog,
-					null);
+
+			LinearLayout view = (LinearLayout) getLayoutInflater().inflate(
+					R.layout.dialog, null);
 			// устанавливаем ее, как содержимое тела диалога
 			adb.setView(view);
 
@@ -141,10 +232,10 @@ public class MainActivity extends FragmentActivity implements
 			adb.setPositiveButton(R.string.yes, myClickListener);
 			// кнопка нейтрального ответа
 			adb.setNeutralButton(R.string.cancel, myClickListener);
-			
+
 			Dialog dialog = adb.create();
 			return dialog;
-		} 
+		}
 		return super.onCreateDialog(id);
 	}
 
@@ -171,7 +262,7 @@ public class MainActivity extends FragmentActivity implements
 			idCurrentName = acmi.id;
 			showDialog(DIALOG);
 			return true;
-		}else if (item.getItemId() == CM_ADD_ID) {
+		} else if (item.getItemId() == CM_ADD_ID) {
 			idCurrentName = 0;
 			currentName = "";
 			showDialog(DIALOG);
@@ -179,7 +270,7 @@ public class MainActivity extends FragmentActivity implements
 		}
 		return super.onContextItemSelected(item);
 	}
-	
+
 	void saveData() {
 		Toast.makeText(this, R.string.saved, Toast.LENGTH_SHORT).show();
 	}
@@ -187,11 +278,11 @@ public class MainActivity extends FragmentActivity implements
 	void deleteData() {
 		Toast.makeText(this, R.string.deleted, Toast.LENGTH_SHORT).show();
 	}
-	
+
 	void addData() {
 		Toast.makeText(this, R.string.add, Toast.LENGTH_SHORT).show();
 	}
-	
+
 	protected void onDestroy() {
 		super.onDestroy();
 		// закрываем подключение при выходе
@@ -227,5 +318,5 @@ public class MainActivity extends FragmentActivity implements
 			return cursor;
 		}
 	}
-		
+
 }

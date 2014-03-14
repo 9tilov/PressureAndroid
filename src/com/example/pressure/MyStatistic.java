@@ -8,6 +8,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
@@ -46,7 +47,8 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 	EditText etPulse, etSysPressure, etDiasPressure;
 	static String profile_id;
 	SimpleCursorAdapter scAdapter;
-
+	long value;
+	
 	Cursor cursor;
 	String[] currentName = new String[] {"", "", ""};
 	final int DIALOG_STAT = 1;
@@ -64,7 +66,7 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.statistic);
-
+		
 		btnAdd = (Button) findViewById(R.id.btnAddStat);
 		btnAdd.setOnClickListener(this);
 
@@ -81,8 +83,8 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		name = (TextView) findViewById(R.id.profile_name);
 		profile_id = getIntent().getStringExtra("lvData");
 
-		String profile_name = db.getCurrentName(Long.parseLong(profile_id));
-		name.setText(profile_name);
+//		String profile_name = db.getCurrentName(Long.parseLong(profile_id));
+//		name.setText(profile_name);
 
 		// создааем адаптер и настраиваем список
 		scAdapter = new SimpleCursorAdapter(this, R.layout.list, null, from,
@@ -92,14 +94,16 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 
 		listStat.setAdapter(scAdapter);
 
-		// создаем лоадер для чтения данных
+//		// создаем лоадер для чтения данных
 		getSupportLoaderManager().initLoader(0, null, this);
-		//Получаем текущее время
+//		//Получаем текущее время
 		Calendar c = Calendar.getInstance();
 		SimpleDateFormat df = new SimpleDateFormat("dd.MM.yy\nHH:mm");
 		formattedDate = df.format(c.getTime());
 	}
 
+	
+	
 	protected void onPrepareDialog(int id, Dialog dialog) {
 		super.onPrepareDialog(id, dialog);
 		if (id == DIALOG_STAT) {
@@ -181,6 +185,13 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		return super.onContextItemSelected(item);
 	}
 	
+	 public void onClickBack(View v)
+		{
+	    	Intent intent = new Intent();
+	    	setResult(RESULT_OK, intent);
+	    	finish();
+//	    	super.onBackPressed();
+		}
 	
 
 	// protected void onPrepareDialog(int id, Dialog dialog) {
