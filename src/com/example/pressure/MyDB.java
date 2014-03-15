@@ -19,7 +19,8 @@ public class MyDB {
 	private static final String DB_TABLE_STAT = "mytabstat";
 
 	public static final String COLUMN_ID = "_id";
-	public static final String COLUMN_TXT = "txt";
+	public static final String COLUMN_NAME = "name";
+	public static final String COLUMN_EMAIL = "e_mail";
 
 	public static final String COLUMN_PULSE = "pulse";
 	public static final String COLUMN_SYS_PRESSURE = "sys";
@@ -28,8 +29,8 @@ public class MyDB {
 	public static final String COLUMN_DATE = "date";
 
 	private static final String DB_CREATE = "create table " + DB_TABLE + "("
-			+ COLUMN_ID + " integer primary key autoincrement, " + COLUMN_TXT
-			+ " text" + ");";
+			+ COLUMN_ID + " integer primary key autoincrement, " + COLUMN_NAME
+			+ " text, " + COLUMN_EMAIL + " text" + ");";
 
 	private static final String DB_STAT_CREATE = "create table "
 			+ DB_TABLE_STAT + "(" + COLUMN_ID
@@ -60,7 +61,7 @@ public class MyDB {
 	}
 
 	public boolean emptyDataBase() {
-		String[] columns = new String[] { COLUMN_TXT };
+		String[] columns = new String[] { COLUMN_NAME };
 		Cursor cursor = mDB.query(DB_TABLE, columns, null, null, null, null,
 				null);
 		if (cursor.getCount() == 0)
@@ -79,26 +80,27 @@ public class MyDB {
 				null, null, null, null);
 	}
 
-	public String getCurrentName(long id) {
-		String[] columns = new String[] { COLUMN_TXT };
-		Cursor cursor = mDB.query(DB_TABLE, columns, COLUMN_ID + "='" + id
+	public String[] getCurrentName(long id) {
+//		String[] columns = new String[] { COLUMN_NAME };
+		Cursor cursor = mDB.query(DB_TABLE, null, COLUMN_ID + "='" + id
 				+ "'", null, null, null, null);
-		String result = "";
+		String[] profile= new String[] {"", ""};
 		if (cursor != null) {
 			cursor.moveToFirst();
-			result = result + cursor.getString(0);
+			for (int i = 0; i < profile.length; ++i) {
+				profile[i] = profile[i] + cursor.getString(i + 1);
+			}
 		}
-		return result;
+		return profile;
 	}
 	
 	public String[] getCurrentStat (long id) {
-		String[] columns = new String[] { COLUMN_PULSE, COLUMN_SYS_PRESSURE, COLUMN_DIAS_PRESSURE };
 		Cursor cursor = mDB.query(DB_TABLE_STAT, null, COLUMN_ID + "='" + id
 				+ "'", null, null, null, null);
 		String[] statistics = new String[] {"", "", ""};
 		if (cursor != null) {
 			cursor.moveToFirst();
-			for (int i = 0; i < 3; ++i) {
+			for (int i = 0; i < statistics.length; ++i) {
 				statistics[i] = statistics[i] + cursor.getString(i + 1);
 			}
 		}
@@ -106,9 +108,10 @@ public class MyDB {
 	}
 	
 	// добавить запись в DB_TABLE
-	public void addRec(String txt) {
+	public void addRec(String name, String e_mail) {
 		ContentValues cv = new ContentValues();
-		cv.put(COLUMN_TXT, txt);
+		cv.put(COLUMN_NAME, name);
+		cv.put(COLUMN_EMAIL, e_mail);
 		long rowID = mDB.insert(DB_TABLE, null, cv);
 		Log.d(LOG_TAG, "row inserted, ID = " + rowID);
 	}
@@ -135,35 +138,18 @@ public class MyDB {
 	}
 
 	// редактировать запись в DB_TABLE
-	public void editRec(String txt, String id) {
+	public void editRec(String name, String e_mail, String id) {
 		ContentValues cv = new ContentValues();
-		cv.put(COLUMN_TXT, txt);
+		cv.put(COLUMN_NAME, name);
+		cv.put(COLUMN_EMAIL, e_mail);
 		mDB.update(DB_TABLE, cv, "_id = ?", new String[] { id });
 	}
 
 	public void editStat(String[] statistics, String id) {
 		ContentValues cv = new ContentValues();
-		cv.put(COLUMN_PULSE, statistics[0]);
-		cv.put(COLUMN_SYS_PRESSURE, statistics[1]);
-		cv.put(COLUMN_DIAS_PRESSURE, statistics[2]);
-		mDB.update(DB_TABLE_STAT, cv, "_id = ?", new String[] { id});
-	}
-	
-	public void editStatPulse(String statistics, String id) {
-		ContentValues cv = new ContentValues();
-		cv.put(COLUMN_PULSE, statistics);
-		mDB.update(DB_TABLE_STAT, cv, "_id = ?", new String[] { id });
-	}
-	
-	public void editStatSys(String statistics, String id) {
-		ContentValues cv = new ContentValues();
-		cv.put(COLUMN_SYS_PRESSURE, statistics);
-		mDB.update(DB_TABLE_STAT, cv, "_id = ?", new String[] { id });
-	}
-	
-	public void editStatDias(String statistics, String id) {
-		ContentValues cv = new ContentValues();
-		cv.put(COLUMN_DIAS_PRESSURE, statistics);
+		cv.put(COLUMN_PULSE, statistics[0].toString());
+		cv.put(COLUMN_SYS_PRESSURE, statistics[1].toString());
+		cv.put(COLUMN_DIAS_PRESSURE, statistics[2].toString());
 		mDB.update(DB_TABLE_STAT, cv, "_id = ?", new String[] { id });
 	}
 	

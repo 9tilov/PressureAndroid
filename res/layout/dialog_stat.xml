@@ -17,7 +17,8 @@
     android:id="@+id/etPulse"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:ems="10" >
+    android:ems="10" 
+    android:text="">
 </EditText>
 
 
@@ -33,7 +34,8 @@
     android:id="@+id/etSysPressure"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:ems="10" >
+    android:ems="10"
+    android:text="" >
 </EditText>
 
 <TextView
@@ -48,7 +50,8 @@
     android:id="@+id/etDiasPressure"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:ems="10" >
+    android:ems="10" 
+    android:text="">
 </EditText>
 
 </LinearLayout>

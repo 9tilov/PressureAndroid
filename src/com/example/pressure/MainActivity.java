@@ -14,6 +14,7 @@ import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -46,16 +47,15 @@ public class MainActivity extends FragmentActivity implements
 	final String SAVED_TEXT = "saved_text";
 	final String SAVED_NAME = "saved_name";
 
-	String currentName;
 	long idCurrentName;
-	EditText editName;
+	EditText editName, editEmail;
+
+	String[] currentProfile = new String[] { "", "" };
 
 	long id_name;
 
-	enum window
-	{
-	    profile,
-	    data
+	enum window {
+		profile, data
 	}
 
 	final String LOG_TAG = "Pressure";
@@ -73,7 +73,7 @@ public class MainActivity extends FragmentActivity implements
 		else {
 			setContentView(R.layout.activity_main);
 			Intent intent = new Intent(MainActivity.this, MyStatistic.class);
-			intent.putExtra("lvData", String.valueOf(mas[1]));
+			intent.putExtra("id_profile_key", String.valueOf(mas[1]));
 			startActivityForResult(intent, 1);
 		}
 
@@ -82,8 +82,8 @@ public class MainActivity extends FragmentActivity implements
 		db.open();
 
 		// формируем столбцы сопоставления
-		String[] from = new String[] { MyDB.COLUMN_TXT };
-		int[] to = new int[] { R.id.tvText };
+		String[] from = new String[] { MyDB.COLUMN_NAME };
+		int[] to = new int[] { R.id.tvName };
 
 		// создааем адаптер и настраиваем список
 		scAdapter = new SimpleCursorAdapter(this, R.layout.item, null, from,
@@ -97,7 +97,7 @@ public class MainActivity extends FragmentActivity implements
 		getSupportLoaderManager().initLoader(0, null, this);
 
 		if (db.emptyDataBase() == false) {
-			db.addRec("Profile1");
+			db.addRec("Profile1", "mail@mail.com");
 			lvData.setAdapter(scAdapter);
 			getSupportLoaderManager().getLoader(0).forceLoad();
 		} else
@@ -109,7 +109,7 @@ public class MainActivity extends FragmentActivity implements
 				Intent intent = new Intent(MainActivity.this, MyStatistic.class);
 				Cursor cur = (Cursor) lvData.getAdapter().getItem(position);
 				id_name = cur.getLong(cur.getColumnIndex("_id"));
-				intent.putExtra("lvData", String.valueOf(id_name));
+				intent.putExtra("id_profile_key", String.valueOf(id_name));
 				startActivityForResult(intent, 1);
 				saveState(window.data, id_name);
 			}
@@ -144,6 +144,7 @@ public class MainActivity extends FragmentActivity implements
 
 	DialogInterface.OnClickListener myClickListener = new DialogInterface.OnClickListener() {
 		public void onClick(DialogInterface dialog, int which) {
+			// EditTextValidator firstnameValidator = new EditTextValidator();
 			switch (which) {
 			// положительная кнопка
 			case Dialog.BUTTON_POSITIVE:
@@ -153,18 +154,25 @@ public class MainActivity extends FragmentActivity implements
 					break;
 				}
 				if (idCurrentName != 0) {
-					db.editRec(editName.getText().toString(),
-							String.valueOf(idCurrentName));
+					db.editRec(editName.getText().toString(), editEmail
+							.getText().toString(), String
+							.valueOf(idCurrentName));
 					getSupportLoaderManager().getLoader(0).forceLoad();
 					saveData();
 				} else {
-					db.addRec(editName.getText().toString());
-					getSupportLoaderManager().getLoader(0).forceLoad();
-					addData();
+					if (!(TextUtils.isEmpty(editName.getText().toString()))
+							|| (!(TextUtils.isEmpty(editEmail.getText()
+									.toString())))) {
+						db.addRec(editName.getText().toString(), editEmail
+								.getText().toString());
+						getSupportLoaderManager().getLoader(0).forceLoad();
+						addData();
+					} else
+						correctData();
+					break;
 				}
 
-				break;
-			// нейтральная кнопка
+				// нейтральная кнопка
 			case Dialog.BUTTON_NEUTRAL:
 				break;
 			}
@@ -176,7 +184,10 @@ public class MainActivity extends FragmentActivity implements
 		if (id == DIALOG) {
 			editName = (EditText) dialog.getWindow()
 					.findViewById(R.id.editName);
-			editName.setText(currentName);
+			editEmail = (EditText) dialog.getWindow().findViewById(
+					R.id.editEmail);
+			editName.setText(currentProfile[0]);
+			editEmail.setText(currentProfile[1]);
 		}
 	}
 
@@ -220,13 +231,14 @@ public class MainActivity extends FragmentActivity implements
 			deleteData();
 			return true;
 		} else if (item.getItemId() == CM_EDIT_ID) {
-			currentName = db.getCurrentName(acmi.id);
+			currentProfile = db.getCurrentName(acmi.id);
 			idCurrentName = acmi.id;
 			showDialog(DIALOG);
 			return true;
 		} else if (item.getItemId() == CM_ADD_ID) {
 			idCurrentName = 0;
-			currentName = "";
+			currentProfile[0] = "";
+			currentProfile[1] = "";
 			showDialog(DIALOG);
 			return true;
 		}
@@ -243,6 +255,10 @@ public class MainActivity extends FragmentActivity implements
 
 	void addData() {
 		Toast.makeText(this, R.string.add, Toast.LENGTH_SHORT).show();
+	}
+
+	void correctData() {
+		Toast.makeText(this, R.string.correct, Toast.LENGTH_SHORT).show();
 	}
 
 	protected void onDestroy() {

@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnClickListener;
+import android.view.textservice.TextInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -32,6 +33,7 @@ import android.support.v4.content.Loader;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.text.format.Time;
 
@@ -41,16 +43,16 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 	private static final int CM_DELETE_ID = 0, CM_EDIT_ID = 1;
 	long idCurrentName = 0;
 	String formattedDate, currentPulse, currentSys, currentDias;
-	private TextView name;
+	private TextView name, e_mail;
 	MyDB db;
 	Button btnAdd;
 	EditText etPulse, etSysPressure, etDiasPressure;
 	static String profile_id;
 	SimpleCursorAdapter scAdapter;
 	long value;
-	
+
 	Cursor cursor;
-	String[] currentName = new String[] {"", "", ""};
+	String[] currentStat = new String[] { "", "", "" };
 	final int DIALOG_STAT = 1;
 	final String LOG_TAG = "myLogs";
 
@@ -58,7 +60,7 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.statistic);
-		
+
 		btnAdd = (Button) findViewById(R.id.btnAddStat);
 		btnAdd.setOnClickListener(this);
 
@@ -73,10 +75,12 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 				R.id.tvTextDias, R.id.tvTextDate };
 
 		name = (TextView) findViewById(R.id.profile_name);
-		profile_id = getIntent().getStringExtra("lvData");
+		e_mail = (TextView) findViewById(R.id.profile_e_mail);
+		profile_id = getIntent().getStringExtra("id_profile_key");
 
-		String profile_name = db.getCurrentName(Long.parseLong(profile_id));
-		name.setText(profile_name);
+		String[] profile_name = db.getCurrentName(Long.parseLong(profile_id));
+		name.setText(profile_name[0]);
+		e_mail.setText(profile_name[1]);
 
 		// создааем адаптер и настраиваем список
 		scAdapter = new SimpleCursorAdapter(this, R.layout.list, null, from,
@@ -86,16 +90,14 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 
 		listStat.setAdapter(scAdapter);
 
-//		// создаем лоадер для чтения данных
+		// // создаем лоадер для чтения данных
 		getSupportLoaderManager().initLoader(0, null, this);
-//		//Получаем текущее время
+		// //Получаем текущее время
 		Calendar c = Calendar.getInstance();
 		SimpleDateFormat df = new SimpleDateFormat("dd.MM.yy\nHH:mm");
 		formattedDate = df.format(c.getTime());
 	}
 
-	
-	
 	protected void onPrepareDialog(int id, Dialog dialog) {
 		super.onPrepareDialog(id, dialog);
 		if (id == DIALOG_STAT) {
@@ -104,9 +106,9 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 					R.id.etSysPressure);
 			etDiasPressure = (EditText) dialog.getWindow().findViewById(
 					R.id.etDiasPressure);
-			etPulse.setText(currentName[0]);
-			etSysPressure.setText(currentName[1]);
-			etDiasPressure.setText(currentName[2]);
+			etPulse.setText(currentStat[0]);
+			etSysPressure.setText(currentStat[1]);
+			etDiasPressure.setText(currentStat[2]);
 		}
 	}
 
@@ -119,26 +121,37 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 						|| (etSysPressure.getText().toString().length() == 0)
 						|| (etDiasPressure.getText().toString().length() == 0)) {
 					showDialog(DIALOG_STAT);
-				} else if (idCurrentName != 0){
+				} else if (idCurrentName != 0) {
 					Log.d(LOG_TAG, "row inserted, id= " + idCurrentName);
-					currentName[0] = etPulse.getText().toString();
-					currentName[1] = etSysPressure.getText().toString();
-					currentName[2] = etDiasPressure.getText().toString();
-					db.editStat(currentName, String.valueOf(idCurrentName));
+					currentStat[0] = etPulse.getText().toString();
+					currentStat[1] = etSysPressure.getText().toString();
+					currentStat[2] = etDiasPressure.getText().toString();
+					db.editStat(currentStat, String.valueOf(idCurrentName));
 					getSupportLoaderManager().getLoader(0).forceLoad();
 					idCurrentName = 0;
 					saveData();
 				} else if (idCurrentName == 0) {
 					Log.d(LOG_TAG, "row inserted, id= " + idCurrentName);
-					db.addStat(etPulse.getText().toString(), etSysPressure
-							.getText().toString(), etDiasPressure.getText()
-							.toString(), profile_id, formattedDate);
-					etSysPressure.setText("");
-					etDiasPressure.setText("");
-					etPulse.setText("");
-					idCurrentName = 0;
-					getSupportLoaderManager().getLoader(0).forceLoad();
-					addData();
+					if (!(TextUtils.isDigitsOnly(etPulse.getText().toString()))
+							|| !(TextUtils.isDigitsOnly(etSysPressure.getText()
+									.toString()))
+							|| !(TextUtils.isDigitsOnly(etDiasPressure
+									.getText().toString()))
+							|| (TextUtils.isEmpty(etPulse.getText().toString()))
+							|| (TextUtils.isEmpty(etSysPressure.getText().toString()))
+							|| (TextUtils.isEmpty(etDiasPressure.getText().toString()))) {
+						correctData();
+					} else {
+						db.addStat(etPulse.getText().toString(), etSysPressure
+								.getText().toString(), etDiasPressure.getText()
+								.toString(), profile_id, formattedDate);
+//						etSysPressure.setText("");
+//						etDiasPressure.setText("");
+//						etPulse.setText("");
+						idCurrentName = 0;
+						getSupportLoaderManager().getLoader(0).forceLoad();
+						addData();
+					}
 				}
 				break;
 			// нейтральная кнопка
@@ -165,25 +178,24 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 			deleteData();
 			return true;
 		} else if (item.getItemId() == CM_EDIT_ID) {
-			currentName = db.getCurrentStat(acmi.id);
+			currentStat = db.getCurrentStat(acmi.id);
 			idCurrentName = acmi.id;
 			Log.d(LOG_TAG, "row inserted, id= " + idCurrentName);
-			Log.d(LOG_TAG, "row inserted, pulse = " + currentName[0]);
-			Log.d(LOG_TAG, "row inserted, sys= " + currentName[1]);
-			Log.d(LOG_TAG, "row inserted, dias= " + currentName[2]);
+			Log.d(LOG_TAG, "row inserted, pulse = " + currentStat[0]);
+			Log.d(LOG_TAG, "row inserted, sys= " + currentStat[1]);
+			Log.d(LOG_TAG, "row inserted, dias= " + currentStat[2]);
 			showDialog(DIALOG_STAT);
 			return true;
 		}
 		return super.onContextItemSelected(item);
 	}
-	
-	 public void onClickBack(View v)
-		{
-	    	Intent intent = new Intent();
-	    	setResult(RESULT_OK, intent);
-	    	finish();
-		}
-	
+
+	public void onClickBack(View v) {
+		Intent intent = new Intent();
+		setResult(RESULT_OK, intent);
+		finish();
+	}
+
 	@Override
 	protected Dialog onCreateDialog(int id) {
 		AlertDialog.Builder adb = new AlertDialog.Builder(this);
@@ -208,11 +220,11 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 	@Override
 	public void onClick(View v) {
 		Log.d(LOG_TAG, "row inserted, id= " + idCurrentName);
-		
+
 		showDialog(DIALOG_STAT);
-		etSysPressure.setText("");
-		etDiasPressure.setText("");
-		etPulse.setText("");
+//		etSysPressure.setText("");
+//		etDiasPressure.setText("");
+//		etPulse.setText("");
 	}
 
 	protected void onDestroy() {
@@ -261,5 +273,9 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 
 	void deleteData() {
 		Toast.makeText(this, R.string.deleted, Toast.LENGTH_SHORT).show();
+	}
+
+	void correctData() {
+		Toast.makeText(this, R.string.correct, Toast.LENGTH_SHORT).show();
 	}
 }

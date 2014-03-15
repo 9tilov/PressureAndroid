@@ -24,4 +24,5 @@
 	<string name="pulse">Pulse</string>
 	<string name="statistics">Statistics</string>
 	<string name="addStat">Add statistics</string>
+	<string name="correct">Enter correrct data</string>
 </resources>
