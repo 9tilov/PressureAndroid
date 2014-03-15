@@ -48,7 +48,7 @@ public class MainActivity extends FragmentActivity implements
 	final String SAVED_NAME = "saved_name";
 
 	long idCurrentName;
-	EditText editName, editEmail;
+	EditText editName, editMail;
 
 	String[] currentProfile = new String[] { "", "" };
 
@@ -148,30 +148,27 @@ public class MainActivity extends FragmentActivity implements
 			switch (which) {
 			// положительная кнопка
 			case Dialog.BUTTON_POSITIVE:
-
-				if (editName.getText().toString().length() == 0) {
-					showDialog(DIALOG);
-					break;
-				}
 				if (idCurrentName != 0) {
-					db.editRec(editName.getText().toString(), editEmail
+					db.editRec(editName.getText().toString(), editMail
 							.getText().toString(), String
 							.valueOf(idCurrentName));
 					getSupportLoaderManager().getLoader(0).forceLoad();
 					saveData();
+					break;
 				} else {
-					if (!(TextUtils.isEmpty(editName.getText().toString()))
-							|| (!(TextUtils.isEmpty(editEmail.getText()
-									.toString())))) {
-						db.addRec(editName.getText().toString(), editEmail
+					if ((0 == editName.getText().toString().length())
+							|| (0 == editMail.getText().toString().length())
+							|| (!(isValidEmail(editMail.getText().toString()))))
+						inCorrectData();
+					else {
+						db.addRec(editName.getText().toString(), editMail
 								.getText().toString());
+						// Log.d(LOG_TAG, "string_mail = " + name_length);
 						getSupportLoaderManager().getLoader(0).forceLoad();
 						addData();
-					} else
-						correctData();
+					}
 					break;
 				}
-
 				// нейтральная кнопка
 			case Dialog.BUTTON_NEUTRAL:
 				break;
@@ -184,10 +181,10 @@ public class MainActivity extends FragmentActivity implements
 		if (id == DIALOG) {
 			editName = (EditText) dialog.getWindow()
 					.findViewById(R.id.editName);
-			editEmail = (EditText) dialog.getWindow().findViewById(
-					R.id.editEmail);
+			editMail = (EditText) dialog.getWindow()
+					.findViewById(R.id.editMail);
 			editName.setText(currentProfile[0]);
-			editEmail.setText(currentProfile[1]);
+			editMail.setText(currentProfile[1]);
 		}
 	}
 
@@ -245,6 +242,15 @@ public class MainActivity extends FragmentActivity implements
 		return super.onContextItemSelected(item);
 	}
 
+	boolean isValidEmail(String target) {
+		if (target == null) {
+			return false;
+		} else {
+			return android.util.Patterns.EMAIL_ADDRESS.matcher(target)
+					.matches();
+		}
+	}
+
 	void saveData() {
 		Toast.makeText(this, R.string.saved, Toast.LENGTH_SHORT).show();
 	}
@@ -257,7 +263,7 @@ public class MainActivity extends FragmentActivity implements
 		Toast.makeText(this, R.string.add, Toast.LENGTH_SHORT).show();
 	}
 
-	void correctData() {
+	void inCorrectData() {
 		Toast.makeText(this, R.string.correct, Toast.LENGTH_SHORT).show();
 	}
 

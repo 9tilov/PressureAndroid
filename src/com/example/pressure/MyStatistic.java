@@ -117,11 +117,7 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 			switch (which) {
 			// положительная кнопка
 			case Dialog.BUTTON_POSITIVE:
-				if ((etPulse.getText().toString().length() == 0)
-						|| (etSysPressure.getText().toString().length() == 0)
-						|| (etDiasPressure.getText().toString().length() == 0)) {
-					showDialog(DIALOG_STAT);
-				} else if (idCurrentName != 0) {
+				if (idCurrentName != 0) {
 					Log.d(LOG_TAG, "row inserted, id= " + idCurrentName);
 					currentStat[0] = etPulse.getText().toString();
 					currentStat[1] = etSysPressure.getText().toString();
@@ -145,9 +141,6 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 						db.addStat(etPulse.getText().toString(), etSysPressure
 								.getText().toString(), etDiasPressure.getText()
 								.toString(), profile_id, formattedDate);
-//						etSysPressure.setText("");
-//						etDiasPressure.setText("");
-//						etPulse.setText("");
 						idCurrentName = 0;
 						getSupportLoaderManager().getLoader(0).forceLoad();
 						addData();
@@ -164,8 +157,8 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 	public void onCreateContextMenu(ContextMenu menu, View v,
 			ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
-		menu.add(0, CM_DELETE_ID, 0, R.string.delete_record);
 		menu.add(0, CM_EDIT_ID, 0, R.string.edit_record);
+		menu.add(0, CM_DELETE_ID, 0, R.string.delete_record);
 	}
 
 	public boolean onContextItemSelected(MenuItem item) {
@@ -222,9 +215,9 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		Log.d(LOG_TAG, "row inserted, id= " + idCurrentName);
 
 		showDialog(DIALOG_STAT);
-//		etSysPressure.setText("");
-//		etDiasPressure.setText("");
-//		etPulse.setText("");
+		etSysPressure.setText("");
+		etDiasPressure.setText("");
+		etPulse.setText("");
 	}
 
 	protected void onDestroy() {
