@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -118,14 +119,27 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 			// положительная кнопка
 			case Dialog.BUTTON_POSITIVE:
 				if (idCurrentName != 0) {
-					Log.d(LOG_TAG, "row inserted, id= " + idCurrentName);
-					currentStat[0] = etPulse.getText().toString();
-					currentStat[1] = etSysPressure.getText().toString();
-					currentStat[2] = etDiasPressure.getText().toString();
-					db.editStat(currentStat, String.valueOf(idCurrentName));
-					getSupportLoaderManager().getLoader(0).forceLoad();
-					idCurrentName = 0;
-					saveData();
+					if (!(TextUtils.isDigitsOnly(etPulse.getText().toString()))
+							|| !(TextUtils.isDigitsOnly(etSysPressure.getText()
+									.toString()))
+							|| !(TextUtils.isDigitsOnly(etDiasPressure
+									.getText().toString()))
+							|| (TextUtils.isEmpty(etPulse.getText().toString()))
+							|| (TextUtils.isEmpty(etSysPressure.getText()
+									.toString()))
+							|| (TextUtils.isEmpty(etDiasPressure.getText()
+									.toString()))) {
+						correctData();
+					} else {
+						Log.d(LOG_TAG, "row inserted, id= " + idCurrentName);
+						currentStat[0] = etPulse.getText().toString();
+						currentStat[1] = etSysPressure.getText().toString();
+						currentStat[2] = etDiasPressure.getText().toString();
+						db.editStat(currentStat, String.valueOf(idCurrentName));
+						getSupportLoaderManager().getLoader(0).forceLoad();
+						idCurrentName = 0;
+						saveData();
+					}
 				} else if (idCurrentName == 0) {
 					Log.d(LOG_TAG, "row inserted, id= " + idCurrentName);
 					if (!(TextUtils.isDigitsOnly(etPulse.getText().toString()))
@@ -134,8 +148,10 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 							|| !(TextUtils.isDigitsOnly(etDiasPressure
 									.getText().toString()))
 							|| (TextUtils.isEmpty(etPulse.getText().toString()))
-							|| (TextUtils.isEmpty(etSysPressure.getText().toString()))
-							|| (TextUtils.isEmpty(etDiasPressure.getText().toString()))) {
+							|| (TextUtils.isEmpty(etSysPressure.getText()
+									.toString()))
+							|| (TextUtils.isEmpty(etDiasPressure.getText()
+									.toString()))) {
 						correctData();
 					} else {
 						db.addStat(etPulse.getText().toString(), etSysPressure

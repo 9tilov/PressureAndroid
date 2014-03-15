@@ -149,12 +149,17 @@ public class MainActivity extends FragmentActivity implements
 			// положительная кнопка
 			case Dialog.BUTTON_POSITIVE:
 				if (idCurrentName != 0) {
-					db.editRec(editName.getText().toString(), editMail
-							.getText().toString(), String
-							.valueOf(idCurrentName));
-					getSupportLoaderManager().getLoader(0).forceLoad();
-					saveData();
-					break;
+					if ((0 == editName.getText().toString().length())
+							|| (0 == editMail.getText().toString().length())
+							|| (!(isValidEmail(editMail.getText().toString()))))
+						inCorrectData();
+					else {
+						db.editRec(editName.getText().toString(), editMail
+								.getText().toString(), String
+								.valueOf(idCurrentName));
+						getSupportLoaderManager().getLoader(0).forceLoad();
+						saveData();
+					}
 				} else {
 					if ((0 == editName.getText().toString().length())
 							|| (0 == editMail.getText().toString().length())
@@ -167,9 +172,9 @@ public class MainActivity extends FragmentActivity implements
 						getSupportLoaderManager().getLoader(0).forceLoad();
 						addData();
 					}
-					break;
 				}
-				// нейтральная кнопка
+				break;
+			// нейтральная кнопка
 			case Dialog.BUTTON_NEUTRAL:
 				break;
 			}
