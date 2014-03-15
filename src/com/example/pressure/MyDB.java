@@ -1,8 +1,5 @@
 package com.example.pressure;
 
-import java.io.File;
-import java.sql.Struct;
-import android.R.bool;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
