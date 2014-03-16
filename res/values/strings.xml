@@ -25,4 +25,5 @@
 	<string name="statistics">Statistics</string>
 	<string name="addStat">Add statistics</string>
 	<string name="correct">Enter correrct data</string>
+	<string name="save">Save</string>
 </resources>
