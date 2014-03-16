@@ -13,6 +13,8 @@ import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import com.example.pressure.R.string;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -60,7 +62,6 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 
 	ListView listStat;
 
-	SimpleEMail mail;
 
 	TextView load;
 	final String DIR_SD = "Pressure";
@@ -80,11 +81,8 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 
 		btnAdd = (Button) findViewById(R.id.btnAddStat);
 		btnSave = (Button) findViewById(R.id.btnSave);
-		btnLoad = (Button) findViewById(R.id.butLoad);
-
+		
 		btnAdd.setOnClickListener(this);
-		// btnSave.setOnClickListener(this);
-		btnLoad.setOnClickListener(this);
 
 		db = new MyDB(this);
 		db.open();
@@ -110,8 +108,6 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		listStat = (ListView) findViewById(R.id.listStat);
 		registerForContextMenu(listStat);
 
-		load = (TextView) findViewById(R.id.load);
-
 		listStat.setAdapter(scAdapter);
 
 		// // создаем лоадер для чтения данных
@@ -125,7 +121,7 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 			@Override
 			public void onClick(View v) {
 				writeFileSD();
-				
+
 				final Intent emailIntent = new Intent(
 						android.content.Intent.ACTION_SEND);
 
@@ -140,10 +136,14 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 				emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, "hi");
 				emailIntent.putExtra(
 						android.content.Intent.EXTRA_STREAM,
-						Uri.parse("file://" + Environment.getExternalStorageDirectory() + "/DIR_SD/" + FILENAME_SD));
-				Log.d(LOG_TAG, "genm: " + Environment.getExternalStorageDirectory() + "/DIR_SD/" + FILENAME_SD);
-				
-//				emailIntent.setType("text/video");
+						Uri.parse("file://"
+								+ Environment.getExternalStorageDirectory()
+								+ "/" + DIR_SD + "/" + FILENAME_SD));
+				Log.d(LOG_TAG,
+						"genm: " + Environment.getExternalStorageDirectory()
+								+ "/" + DIR_SD + "/" + FILENAME_SD);
+
+				// emailIntent.setType("text/video");
 				// Поехали!
 				MyStatistic.this.startActivity(Intent.createChooser(
 						emailIntent, "Отправка письма..."));
@@ -288,62 +288,8 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 			etDiasPressure.setText("");
 			etPulse.setText("");
 			break;
-		// case R.id.btnSave:
-		// mail.sendEmail(profile_name[1], profile_name[0], "HI");
-		// break;
 		}
 	}
-
-	// btnS.setOnClickListener(new OnClickListener() {
-	//
-	// @Override
-	// public void onClick(View v) {
-	//
-	// final Intent emailIntent = new
-	// Intent(android.content.Intent.ACTION_SEND);
-	//
-	// emailIntent.setType("plain/text");
-	// // Кому
-	// emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL,
-	// new String[] { address.getText().toString() });
-	// // Зачем
-	// emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,
-	// subject.getText().toString());
-	// // О чём
-	// emailIntent.putExtra(android.content.Intent.EXTRA_TEXT,
-	// emailtext.getText().toString());
-	// // С чем
-	// emailIntent.putExtra(
-	// android.content.Intent.EXTRA_STREAM,
-	// Uri.parse("file://"
-	// + Environment.getExternalStorageDirectory()
-	// + "/Клипы/SOTY_ATHD.mp4"));
-	//
-	// emailIntent.setType("text/video");
-	// // Поехали!
-	// SimpleEMail.this.startActivity(Intent.createChooser(emailIntent,
-	// "Отправка письма..."));
-	// }
-	// });
-
-//	void writeFile() {
-//	    try {
-//	      // отрываем поток для записи
-//	      BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(
-//	          openFileOutput("file://"
-//		                + Environment.getExternalStorageDirectory()
-//		                + FILENAME), MODE_PRIVATE)));
-//	      // пишем данные
-//	      bw.write("Содержимое файла");
-//	      // закрываем поток
-//	      bw.close();
-//	      Log.d(LOG_TAG, "Файл записан");
-//	    } catch (FileNotFoundException e) {
-//	      e.printStackTrace();
-//	    } catch (IOException e) {
-//	      e.printStackTrace();
-//	    }
-//	  }
 
 	void writeFileSD() {
 		// проверяем доступность SD
@@ -362,14 +308,28 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		sdPath.mkdirs();
 		// формируем объект File, который содержит путь к файлу
 		File sdFile = new File(sdPath, FILENAME_SD);
+
+		ObjectOutputStream out;
+		Object[] objs = new Object[listStat.getCount()];
+		String[] name = new String[] { "", "", "", "", "" };
+
 		try {
-			// открываем поток для записи
 			BufferedWriter bw = new BufferedWriter(new FileWriter(sdFile));
-			// пишем данные
-			bw.write("hello");
-			// закрываем поток
+			for (int i = 0; i < listStat.getCount(); i++) {
+				Cursor cur = (Cursor) listStat.getAdapter().getItem(i);
+				long temp = cur.getLong(cur.getColumnIndex("_id"));
+				name = db.getCurrentStat(temp);
+				bw.write("Date: ");
+				bw.write(name[4] + "\n");
+				bw.write("Pulse: ");
+				bw.write(name[0] + "\n");
+				bw.write("Sys. Pressure: ");
+				bw.write(name[1] + "\n");
+				bw.write("Dias. Pressure: ");
+				bw.write(name[2] + "\n");
+				bw.write("-------------\n");
+			}
 			bw.close();
-			Log.d(LOG_TAG, "Файл записан на SD: " + sdFile.getAbsolutePath());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

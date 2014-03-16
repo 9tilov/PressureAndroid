@@ -70,19 +70,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="right"
             android:text="@string/save" />
-
-        <Button
-            android:id="@+id/butLoad"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Load" />
-        <TextView
-            android:id="@+id/load"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp">
-        </TextView>
     </LinearLayout>
 
     <ListView

@@ -78,7 +78,6 @@ public class MyDB {
 	}
 
 	public String[] getCurrentName(long id) {
-//		String[] columns = new String[] { COLUMN_NAME };
 		Cursor cursor = mDB.query(DB_TABLE, null, COLUMN_ID + "='" + id
 				+ "'", null, null, null, null);
 		String[] profile= new String[] {"", ""};
@@ -94,7 +93,7 @@ public class MyDB {
 	public String[] getCurrentStat (long id) {
 		Cursor cursor = mDB.query(DB_TABLE_STAT, null, COLUMN_ID + "='" + id
 				+ "'", null, null, null, null);
-		String[] statistics = new String[] {"", "", ""};
+		String[] statistics = new String[] {"", "", "", "", ""};
 		if (cursor != null) {
 			cursor.moveToFirst();
 			for (int i = 0; i < statistics.length; ++i) {
