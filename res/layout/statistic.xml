@@ -70,6 +70,13 @@
             android:layout_height="wrap_content"
             android:layout_gravity="right"
             android:text="@string/save" />
+        
+        <Button
+            android:id="@+id/btnEmail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:text="@string/save_on_email" />
     </LinearLayout>
 
     <ListView

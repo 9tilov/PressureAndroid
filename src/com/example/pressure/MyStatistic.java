@@ -51,23 +51,20 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 	private static final int CM_DELETE_ID = 0, CM_EDIT_ID = 1;
 	long idCurrentName = 0;
 	String formattedDate, currentPulse, currentSys, currentDias;
-	private TextView name, e_mail;
+	
 	MyDB db;
-	Button btnAdd, btnSave, btnLoad;
+	Button btnAdd, btnSave, btnLoad, btnEmail;
 	EditText etPulse, etSysPressure, etDiasPressure;
 	static String profile_id;
 	SimpleCursorAdapter scAdapter;
-	long value;
 	String[] profile_name;
 
 	ListView listStat;
 
-
-	TextView load;
 	final String DIR_SD = "Pressure";
-	final String FILENAME_SD = "pressure_stat.txt";
+	final String FILENAME_SD = "pressure_stat";
 
-	final String FILENAME = "Pressure_stat.txt";
+	final String FILENAME = "Pressure_stat";
 
 	Cursor cursor;
 	String[] currentStat = new String[] { "", "", "" };
@@ -81,8 +78,10 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 
 		btnAdd = (Button) findViewById(R.id.btnAddStat);
 		btnSave = (Button) findViewById(R.id.btnSave);
-		
+		btnEmail = (Button) findViewById(R.id.btnEmail);
+		TextView name, e_mail;
 		btnAdd.setOnClickListener(this);
+		btnSave.setOnClickListener(this);
 
 		db = new MyDB(this);
 		db.open();
@@ -117,10 +116,9 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		SimpleDateFormat df = new SimpleDateFormat("dd.MM.yy\nHH:mm");
 		formattedDate = df.format(c.getTime());
 
-		btnSave.setOnClickListener(new OnClickListener() {
+		btnEmail.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				writeFileSD();
 
 				final Intent emailIntent = new Intent(
 						android.content.Intent.ACTION_SEND);
@@ -131,9 +129,9 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 						new String[] { profile_name[1].toString() });
 				// Зачем
 				emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,
-						profile_name[0]);
+						"Pressure diary");
 				// О чём
-				emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, "hi");
+				emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Hello, " + profile_name[0] + ", this is your statistic:");
 				emailIntent.putExtra(
 						android.content.Intent.EXTRA_STREAM,
 						Uri.parse("file://"
@@ -257,6 +255,7 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		finish();
 	}
 
+
 	@Override
 	protected Dialog onCreateDialog(int id) {
 		AlertDialog.Builder adb = new AlertDialog.Builder(this);
@@ -288,15 +287,18 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 			etDiasPressure.setText("");
 			etPulse.setText("");
 			break;
+		case R.id.btnSave:
+			writeFileSD(profile_name[0]);
+			break;
 		}
 	}
 
-	void writeFileSD() {
+	void writeFileSD(String path) {
 		// проверяем доступность SD
 		if (!Environment.getExternalStorageState().equals(
 				Environment.MEDIA_MOUNTED)) {
 			Log.d(LOG_TAG,
-					"SD-карта не доступна: "
+					"SD-card is no available: "
 							+ Environment.getExternalStorageState());
 			return;
 		}
@@ -307,7 +309,7 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		// создаем каталог
 		sdPath.mkdirs();
 		// формируем объект File, который содержит путь к файлу
-		File sdFile = new File(sdPath, FILENAME_SD);
+		File sdFile = new File(sdPath, FILENAME_SD + "_for_" + path + ".txt");
 
 		ObjectOutputStream out;
 		Object[] objs = new Object[listStat.getCount()];
@@ -330,6 +332,7 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 				bw.write("-------------\n");
 			}
 			bw.close();
+			saveOnSD();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -402,5 +405,9 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 
 	void correctData() {
 		Toast.makeText(this, R.string.correct, Toast.LENGTH_SHORT).show();
+	}
+	
+	void saveOnSD() {
+		Toast.makeText(this, R.string.save_on_SD, Toast.LENGTH_SHORT).show();
 	}
 }
