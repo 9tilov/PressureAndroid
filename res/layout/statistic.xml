@@ -15,7 +15,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
-            android:text="Name:  "
+            android:textSize="15sp"
+            android:text="Name: "
             android:textStyle="bold" >
         </TextView>
 
@@ -39,6 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
+            android:textSize="15sp"
             android:text="e-mail: "
             android:textStyle="bold" >
         </TextView>
@@ -54,14 +56,18 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="318dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:layout_gravity="center"
+        android:orientation="horizontal" 
+        android:layout_marginTop="10dp">
 
         <Button
             android:id="@+id/btnAddStat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/button"
+            android:layout_marginLeft="5dp"
             android:text="@string/addStat" />
 
         <Button
@@ -69,19 +75,27 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
+            android:background="@drawable/button"
+            android:layout_marginLeft="5dp"
             android:text="@string/save" />
         
         <Button
             android:id="@+id/btnEmail"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/button"
             android:text="@string/save_on_email" />
+
     </LinearLayout>
 
     <ListView
         android:id="@+id/listStat"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" />
+        android:layout_height="fill_parent"
+        android:divider="#8B0000"
+        android:layout_marginTop="10dp"
+    	android:dividerHeight="@dimen/twodp" />
 
 </LinearLayout>

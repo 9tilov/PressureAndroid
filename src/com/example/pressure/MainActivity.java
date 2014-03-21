@@ -19,6 +19,8 @@ import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
@@ -44,11 +46,15 @@ public class MainActivity extends FragmentActivity implements
 
 	long idCurrentName;
 	EditText editName, editMail;
+	
+	
 
 	String[] currentProfile = new String[] { "", "" };
 
 	long id_name;
-
+	
+	Animation anim = null;
+	
 	enum window {
 		profile, data
 	}
@@ -152,6 +158,7 @@ public class MainActivity extends FragmentActivity implements
 						db.editRec(editName.getText().toString(), editMail
 								.getText().toString(), String
 								.valueOf(idCurrentName));
+						
 						getSupportLoaderManager().getLoader(0).forceLoad();
 						saveData();
 					}
@@ -163,7 +170,7 @@ public class MainActivity extends FragmentActivity implements
 					else {
 						db.addRec(editName.getText().toString(), editMail
 								.getText().toString());
-						// Log.d(LOG_TAG, "string_mail = " + name_length);
+						
 						getSupportLoaderManager().getLoader(0).forceLoad();
 						addData();
 					}

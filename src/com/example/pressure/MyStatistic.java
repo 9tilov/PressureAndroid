@@ -50,7 +50,7 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 
 	private static final int CM_DELETE_ID = 0, CM_EDIT_ID = 1;
 	long idCurrentName = 0;
-	String formattedDate, currentPulse, currentSys, currentDias;
+	String formattedDate, formattedTime, currentPulse, currentSys, currentDias;
 	
 	MyDB db;
 	Button btnAdd, btnSave, btnLoad, btnEmail;
@@ -89,9 +89,9 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		// формируем столбцы сопоставления
 		String[] from = new String[] { MyDB.COLUMN_PULSE,
 				MyDB.COLUMN_SYS_PRESSURE, MyDB.COLUMN_DIAS_PRESSURE,
-				MyDB.COLUMN_DATE };
+				MyDB.COLUMN_DATE, MyDB.COLUMN_TIME };
 		int[] to = new int[] { R.id.tvTextPulse, R.id.tvTextSys,
-				R.id.tvTextDias, R.id.tvTextDate };
+				R.id.tvTextDias, R.id.tvTextDate, R.id.tvTextTime };
 
 		name = (TextView) findViewById(R.id.profile_name);
 		e_mail = (TextView) findViewById(R.id.profile_e_mail);
@@ -113,13 +113,16 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		getSupportLoaderManager().initLoader(0, null, this);
 		// //Получаем текущее время
 		Calendar c = Calendar.getInstance();
-		SimpleDateFormat df = new SimpleDateFormat("dd.MM.yy\nHH:mm");
-		formattedDate = df.format(c.getTime());
+//		SimpleDateFormat df = new SimpleDateFormat("ddMM");
+		SimpleDateFormat date = new SimpleDateFormat("dd/MM");
+		SimpleDateFormat time = new SimpleDateFormat("hh:mm");
+		formattedDate = date.format(c.getTime());
+		formattedTime = time.format(c.getTime());
 
 		btnEmail.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-
+				writeFileSD(profile_name[0]);
 				final Intent emailIntent = new Intent(
 						android.content.Intent.ACTION_SEND);
 
@@ -136,13 +139,11 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 						android.content.Intent.EXTRA_STREAM,
 						Uri.parse("file://"
 								+ Environment.getExternalStorageDirectory()
-								+ "/" + DIR_SD + "/" + FILENAME_SD));
+								+ "/" + DIR_SD + "/" + FILENAME_SD + "_for_" + profile_name[0]+ ".txt"));
 				Log.d(LOG_TAG,
 						"genm: " + Environment.getExternalStorageDirectory()
-								+ "/" + DIR_SD + "/" + FILENAME_SD);
+								+ "/" + DIR_SD + "/" + FILENAME_SD + "_for_" + profile_name[0] + ".txt");
 
-				// emailIntent.setType("text/video");
-				// Поехали!
 				MyStatistic.this.startActivity(Intent.createChooser(
 						emailIntent, "Отправка письма..."));
 			}
@@ -206,7 +207,7 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 					} else {
 						db.addStat(etPulse.getText().toString(), etSysPressure
 								.getText().toString(), etDiasPressure.getText()
-								.toString(), profile_id, formattedDate);
+								.toString(), profile_id, formattedDate, formattedTime);
 						idCurrentName = 0;
 						getSupportLoaderManager().getLoader(0).forceLoad();
 						addData();
@@ -248,14 +249,7 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		}
 		return super.onContextItemSelected(item);
 	}
-
-	public void onClickBack(View v) {
-		Intent intent = new Intent();
-		setResult(RESULT_OK, intent);
-		finish();
-	}
-
-
+	
 	@Override
 	protected Dialog onCreateDialog(int id) {
 		AlertDialog.Builder adb = new AlertDialog.Builder(this);
@@ -311,9 +305,8 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		// формируем объект File, который содержит путь к файлу
 		File sdFile = new File(sdPath, FILENAME_SD + "_for_" + path + ".txt");
 
-		ObjectOutputStream out;
-		Object[] objs = new Object[listStat.getCount()];
-		String[] name = new String[] { "", "", "", "", "" };
+		
+		String[] name = new String[] { "", "", "", "", "", "" };
 
 		try {
 			BufferedWriter bw = new BufferedWriter(new FileWriter(sdFile));
@@ -321,35 +314,10 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 				Cursor cur = (Cursor) listStat.getAdapter().getItem(i);
 				long temp = cur.getLong(cur.getColumnIndex("_id"));
 				name = db.getCurrentStat(temp);
-				bw.write("Date: ");
-				bw.write(name[4] + "\n");
-				bw.write("Pulse: ");
-				bw.write(name[0] + "\n");
-				bw.write("Sys. Pressure: ");
-				bw.write(name[1] + "\n");
-				bw.write("Dias. Pressure: ");
-				bw.write(name[2] + "\n");
-				bw.write("-------------\n");
+				bw.write(name[4] + "   " + name[1] + "/" + name[2] + "    " +  name[0] + "   " + name[5] + "\n");
 			}
 			bw.close();
 			saveOnSD();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	void readFile() {
-		try {
-			// открываем поток для чтения
-			BufferedReader br = new BufferedReader(new InputStreamReader(
-					openFileInput(FILENAME)));
-			String str = "";
-			// читаем содержимое
-			while ((str = br.readLine()) != null) {
-				Log.d(LOG_TAG, str);
-			}
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
