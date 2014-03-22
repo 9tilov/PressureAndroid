@@ -5,53 +5,45 @@
  android:layout_height="match_parent"
  android:orientation="vertical">
 
-<TextView
- android:layout_width="wrap_content"
- android:layout_height="wrap_content"
- android:text="Pulse"
- android:layout_marginLeft="5dp"
- android:layout_marginRight="5dp">
-</TextView>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
 
-<EditText
-    android:id="@+id/etPulse"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:ems="10" 
-    android:text="">
-</EditText>
+        <NumberPicker
+            android:id="@+id/npPulse"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:width="100dip" />
 
+        <NumberPicker
+            android:id="@+id/npSysPressure"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:width="100dip" />
+            <!-- android:layout_alignBottom="@+id/npPulse"
+            android:layout_toRightOf="@+id/npPulse" -->
 
-<TextView
- android:layout_width="wrap_content"
- android:layout_height="wrap_content"
- android:text="Sys. pressure"
- android:layout_marginLeft="5dp"
- android:layout_marginRight="5dp">
-</TextView>
+        <NumberPicker
+            android:id="@+id/npDiasPressure"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:width="100dip" />
 
-<EditText
-    android:id="@+id/etSysPressure"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:ems="10"
-    android:text="" >
-</EditText>
-
-<TextView
- android:layout_width="wrap_content"
- android:layout_height="wrap_content"
- android:text="Dias. pressure"
- android:layout_marginLeft="5dp"
- android:layout_marginRight="5dp">
-</TextView>
-
-<EditText
-    android:id="@+id/etDiasPressure"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:ems="10" 
-    android:text="">
-</EditText>
-
+            <!-- android:layout_alignBottom="@+id/npSysPressure"
+            android:layout_toRightOf="@+id/npSysPressure" -->
+            
+    </LinearLayout>
+    
+    <Button
+            android:id="@+id/btnSaveState"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/button"
+            android:layout_marginTop="20dp"
+            android:text="@string/save" />
+    
+    
 </LinearLayout>

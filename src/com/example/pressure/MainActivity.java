@@ -67,6 +67,7 @@ public class MainActivity extends FragmentActivity implements
 	/** Called when the activity is first created. */
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);
 		long[] mas = new long[2];
 		mas = loadState();
 		if (mas[0] == 0)

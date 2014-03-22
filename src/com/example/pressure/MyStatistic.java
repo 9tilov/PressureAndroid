@@ -1,20 +1,11 @@
 package com.example.pressure;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.ObjectOutputStream;
-import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-
-import com.example.pressure.R.string;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -34,6 +25,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.AdapterContextMenuInfo;
@@ -43,23 +35,25 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.text.TextUtils;
-import android.view.View.OnClickListener;
 
 public class MyStatistic extends FragmentActivity implements OnClickListener,
-		LoaderCallbacks<Cursor> {
+		LoaderCallbacks<Cursor>, NumberPicker.OnValueChangeListener {
 
 	private static final int CM_DELETE_ID = 0, CM_EDIT_ID = 1;
 	long idCurrentName = 0;
 	String formattedDate, formattedTime, currentPulse, currentSys, currentDias;
-	
+
 	MyDB db;
 	Button btnAdd, btnSave, btnLoad, btnEmail;
 	EditText etPulse, etSysPressure, etDiasPressure;
 	static String profile_id;
 	SimpleCursorAdapter scAdapter;
+
 	String[] profile_name;
 
-	ListView listStat;
+	NumberPicker npPulse, npSysPressure, npDiasPressure;
+
+	ListView listStat, pulse, sysPressure, diasPressure;
 
 	final String DIR_SD = "Pressure";
 	final String FILENAME_SD = "pressure_stat";
@@ -101,6 +95,10 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		name.setText(profile_name[0]);
 		e_mail.setText(profile_name[1]);
 
+		npPulse = (NumberPicker) findViewById(R.id.npPulse);
+		npSysPressure = (NumberPicker) findViewById(R.id.npSysPressure);
+		npDiasPressure = (NumberPicker) findViewById(R.id.npDiasPressure);
+
 		// создааем адаптер и настраиваем список
 		scAdapter = new SimpleCursorAdapter(this, R.layout.list, null, from,
 				to, 0);
@@ -113,7 +111,7 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		getSupportLoaderManager().initLoader(0, null, this);
 		// //Получаем текущее время
 		Calendar c = Calendar.getInstance();
-//		SimpleDateFormat df = new SimpleDateFormat("ddMM");
+		// SimpleDateFormat df = new SimpleDateFormat("ddMM");
 		SimpleDateFormat date = new SimpleDateFormat("dd/MM");
 		SimpleDateFormat time = new SimpleDateFormat("hh:mm");
 		formattedDate = date.format(c.getTime());
@@ -122,7 +120,7 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		btnEmail.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				writeFileSD(profile_name[0]);
+				// writeFileSD(profile_name[0]);
 				final Intent emailIntent = new Intent(
 						android.content.Intent.ACTION_SEND);
 
@@ -134,15 +132,19 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 				emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,
 						"Pressure diary");
 				// О чём
-				emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Hello, " + profile_name[0] + ", this is your statistic:");
+				emailIntent.putExtra(android.content.Intent.EXTRA_TEXT,
+						"Hello, " + profile_name[0]
+								+ ", this is your statistic:");
 				emailIntent.putExtra(
 						android.content.Intent.EXTRA_STREAM,
 						Uri.parse("file://"
 								+ Environment.getExternalStorageDirectory()
-								+ "/" + DIR_SD + "/" + FILENAME_SD + "_for_" + profile_name[0]+ ".txt"));
+								+ "/" + DIR_SD + "/" + FILENAME_SD + "_for_"
+								+ profile_name[0] + ".txt"));
 				Log.d(LOG_TAG,
 						"genm: " + Environment.getExternalStorageDirectory()
-								+ "/" + DIR_SD + "/" + FILENAME_SD + "_for_" + profile_name[0] + ".txt");
+								+ "/" + DIR_SD + "/" + FILENAME_SD + "_for_"
+								+ profile_name[0] + ".txt");
 
 				MyStatistic.this.startActivity(Intent.createChooser(
 						emailIntent, "Отправка письма..."));
@@ -150,76 +152,69 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		});
 	}
 
-	protected void onPrepareDialog(int id, Dialog dialog) {
-		super.onPrepareDialog(id, dialog);
-		if (id == DIALOG_STAT) {
-			etPulse = (EditText) dialog.getWindow().findViewById(R.id.etPulse);
-			etSysPressure = (EditText) dialog.getWindow().findViewById(
-					R.id.etSysPressure);
-			etDiasPressure = (EditText) dialog.getWindow().findViewById(
-					R.id.etDiasPressure);
-			etPulse.setText(currentStat[0]);
-			etSysPressure.setText(currentStat[1]);
-			etDiasPressure.setText(currentStat[2]);
-		}
-	}
+	public void show() {
 
-	DialogInterface.OnClickListener myClickListenerStat = new DialogInterface.OnClickListener() {
-		public void onClick(DialogInterface dialog, int which) {
-			switch (which) {
-			// положительная кнопка
-			case Dialog.BUTTON_POSITIVE:
-				if (idCurrentName != 0) {
-					if (!(TextUtils.isDigitsOnly(etPulse.getText().toString()))
-							|| !(TextUtils.isDigitsOnly(etSysPressure.getText()
-									.toString()))
-							|| !(TextUtils.isDigitsOnly(etDiasPressure
-									.getText().toString()))
-							|| (TextUtils.isEmpty(etPulse.getText().toString()))
-							|| (TextUtils.isEmpty(etSysPressure.getText()
-									.toString()))
-							|| (TextUtils.isEmpty(etDiasPressure.getText()
-									.toString()))) {
-						correctData();
-					} else {
-						Log.d(LOG_TAG, "row inserted, id= " + idCurrentName);
-						currentStat[0] = etPulse.getText().toString();
-						currentStat[1] = etSysPressure.getText().toString();
-						currentStat[2] = etDiasPressure.getText().toString();
-						db.editStat(currentStat, String.valueOf(idCurrentName));
-						getSupportLoaderManager().getLoader(0).forceLoad();
-						idCurrentName = 0;
-						saveData();
-					}
-				} else if (idCurrentName == 0) {
-					Log.d(LOG_TAG, "row inserted, id= " + idCurrentName);
-					if (!(TextUtils.isDigitsOnly(etPulse.getText().toString()))
-							|| !(TextUtils.isDigitsOnly(etSysPressure.getText()
-									.toString()))
-							|| !(TextUtils.isDigitsOnly(etDiasPressure
-									.getText().toString()))
-							|| (TextUtils.isEmpty(etPulse.getText().toString()))
-							|| (TextUtils.isEmpty(etSysPressure.getText()
-									.toString()))
-							|| (TextUtils.isEmpty(etDiasPressure.getText()
-									.toString()))) {
-						correctData();
-					} else {
-						db.addStat(etPulse.getText().toString(), etSysPressure
-								.getText().toString(), etDiasPressure.getText()
-								.toString(), profile_id, formattedDate, formattedTime);
-						idCurrentName = 0;
-						getSupportLoaderManager().getLoader(0).forceLoad();
-						addData();
-					}
-				}
-				break;
-			// нейтральная кнопка
-			case Dialog.BUTTON_NEUTRAL:
-				break;
-			}
+		final Dialog dialog = new Dialog(MyStatistic.this);
+		dialog.setContentView(R.layout.dialog_stat);
+		dialog.setTitle("Statictics");
+		final NumberPicker npPulse = (NumberPicker) dialog
+				.findViewById(R.id.npPulse);
+		npPulse.setMaxValue(200);
+		npPulse.setMinValue(20);
+		npPulse.setWrapSelectorWheel(false);
+		npPulse.setOnValueChangedListener(this);
+
+		final NumberPicker npSysPressure = (NumberPicker) dialog
+				.findViewById(R.id.npSysPressure);
+		npSysPressure.setMaxValue(300);
+		npSysPressure.setMinValue(60);
+		npSysPressure.setWrapSelectorWheel(false);
+		npSysPressure.setOnValueChangedListener(this);
+
+		final NumberPicker npDiasPressure = (NumberPicker) dialog
+				.findViewById(R.id.npDiasPressure);
+		npDiasPressure.setMaxValue(250);
+		npDiasPressure.setMinValue(40);
+		npDiasPressure.setWrapSelectorWheel(false);
+		npDiasPressure.setOnValueChangedListener(this);
+		
+		if (idCurrentName != 0) {
+			npPulse.setValue(Integer.valueOf(currentStat[0]));
+			npSysPressure.setValue(Integer.valueOf(currentStat[1]));
+			npDiasPressure.setValue(Integer.valueOf(currentStat[2]));
+		} else {
+			npPulse.setValue(65);
+			npSysPressure.setValue(120);
+			npDiasPressure.setValue(80);
 		}
-	};
+
+		final Button btnSaveStat = (Button) dialog
+				.findViewById(R.id.btnSaveState);
+
+		btnSaveStat.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (idCurrentName == 0) {
+					db.addStat(String.valueOf(npPulse.getValue()),
+						String.valueOf(npSysPressure.getValue()),
+						String.valueOf(npDiasPressure.getValue()), profile_id,
+						formattedDate, formattedTime);
+					getSupportLoaderManager().getLoader(0).forceLoad();
+					addData();
+					dialog.dismiss();
+				} else {
+					currentStat[0] = String.valueOf(npPulse.getValue());
+					currentStat[1] = String.valueOf(npSysPressure.getValue());
+					currentStat[2] = String.valueOf(npDiasPressure.getValue());
+					db.editStat(currentStat, String.valueOf(idCurrentName));
+					getSupportLoaderManager().getLoader(0).forceLoad();
+					saveData();
+					dialog.dismiss();
+				}
+			}
+		});
+		dialog.show();
+	}
 
 	public void onCreateContextMenu(ContextMenu menu, View v,
 			ContextMenuInfo menuInfo) {
@@ -228,6 +223,7 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		menu.add(0, CM_DELETE_ID, 0, R.string.delete_record);
 	}
 
+	//
 	public boolean onContextItemSelected(MenuItem item) {
 		AdapterContextMenuInfo acmi = (AdapterContextMenuInfo) item
 				.getMenuInfo();
@@ -244,42 +240,20 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 			Log.d(LOG_TAG, "row inserted, pulse = " + currentStat[0]);
 			Log.d(LOG_TAG, "row inserted, sys= " + currentStat[1]);
 			Log.d(LOG_TAG, "row inserted, dias= " + currentStat[2]);
-			showDialog(DIALOG_STAT);
+			show();
+
 			return true;
 		}
 		return super.onContextItemSelected(item);
 	}
 	
 	@Override
-	protected Dialog onCreateDialog(int id) {
-		AlertDialog.Builder adb = new AlertDialog.Builder(this);
-		if (id == DIALOG_STAT) {
-
-			LinearLayout view = (LinearLayout) getLayoutInflater().inflate(
-					R.layout.dialog_stat, null);
-			// устанавливаем ее, как содержимое тела диалога
-			adb.setView(view);
-
-			// кнопка положительного ответа
-			adb.setPositiveButton(R.string.yes, myClickListenerStat);
-			// кнопка нейтрального ответа
-			adb.setNeutralButton(R.string.cancel, myClickListenerStat);
-
-			Dialog dialog = adb.create();
-			return dialog;
-		}
-		return super.onCreateDialog(id);
-	}
-
-	@Override
 	public void onClick(View v) {
 		Log.d(LOG_TAG, "row inserted, id= " + idCurrentName);
 		switch (v.getId()) {
 		case R.id.btnAddStat:
-			showDialog(DIALOG_STAT);
-			etSysPressure.setText("");
-			etDiasPressure.setText("");
-			etPulse.setText("");
+			show();
+			// showDialog(DIALOG_STAT);
 			break;
 		case R.id.btnSave:
 			writeFileSD(profile_name[0]);
@@ -287,6 +261,7 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		}
 	}
 
+	//
 	void writeFileSD(String path) {
 		// проверяем доступность SD
 		if (!Environment.getExternalStorageState().equals(
@@ -305,7 +280,6 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		// формируем объект File, который содержит путь к файлу
 		File sdFile = new File(sdPath, FILENAME_SD + "_for_" + path + ".txt");
 
-		
 		String[] name = new String[] { "", "", "", "", "", "" };
 
 		try {
@@ -314,7 +288,8 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 				Cursor cur = (Cursor) listStat.getAdapter().getItem(i);
 				long temp = cur.getLong(cur.getColumnIndex("_id"));
 				name = db.getCurrentStat(temp);
-				bw.write(name[4] + "   " + name[1] + "/" + name[2] + "    " +  name[0] + "   " + name[5] + "\n");
+				bw.write(name[4] + "   " + name[1] + "/" + name[2] + "    "
+						+ name[0] + "   " + name[5] + "\n");
 			}
 			bw.close();
 			saveOnSD();
@@ -374,8 +349,14 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 	void correctData() {
 		Toast.makeText(this, R.string.correct, Toast.LENGTH_SHORT).show();
 	}
-	
+
 	void saveOnSD() {
 		Toast.makeText(this, R.string.save_on_SD, Toast.LENGTH_SHORT).show();
+	}
+
+	@Override
+	public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+		// TODO Auto-generated method stub
+
 	}
 }
