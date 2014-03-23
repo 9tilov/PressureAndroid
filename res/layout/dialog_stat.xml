@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:textColor="#8B0000"
+        android:textColor="#00BFFF"
         android:text="Sys"
         android:textSize="18sp" />
 
@@ -20,7 +20,7 @@
         android:layout_alignParentTop="true"
         android:layout_alignRight="@+id/npDiasPressure"
         android:layout_marginRight="20dp"
-        android:textColor="#8B0000"
+        android:textColor="#00BFFF"
         android:text="Dias"
         android:textSize="18sp" />
 
@@ -32,7 +32,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginLeft="15dp"
         android:text="Pulse"
-        android:textColor="#8B0000"
+        android:textColor="#00BFFF"
         android:textSize="18sp" />
 
     <Button
