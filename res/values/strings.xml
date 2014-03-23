@@ -28,4 +28,5 @@
 	<string name="save">Save</string>
 	<string name="save_on_email">Pass by mail</string>
 	<string name="save_on_SD">Statistic was saved in folder \"Pressure\"</string>
+	<string name="add_profile">Add profile</string>
 </resources>

@@ -19,11 +19,13 @@ import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -34,7 +36,6 @@ public class MainActivity extends FragmentActivity implements
 
 	private static final int CM_EDIT_ID = 0;
 	private static final int CM_DELETE_ID = 1;
-	private static final int CM_ADD_ID = 2;
 
 	static SharedPreferences sPref;
 
@@ -47,7 +48,7 @@ public class MainActivity extends FragmentActivity implements
 	long idCurrentName;
 	EditText editName, editMail;
 	
-	
+	Button addProfile;
 
 	String[] currentProfile = new String[] { "", "" };
 
@@ -79,6 +80,8 @@ public class MainActivity extends FragmentActivity implements
 			startActivityForResult(intent, 1);
 		}
 
+		
+		
 		// открываем подключение к БД
 		db = new MyDB(this);
 		db.open();
@@ -87,6 +90,19 @@ public class MainActivity extends FragmentActivity implements
 		String[] from = new String[] { MyDB.COLUMN_NAME };
 		int[] to = new int[] { R.id.tvName };
 
+		addProfile = (Button)findViewById(R.id.addProfile);
+		
+		addProfile.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				idCurrentName = 0;
+				currentProfile[0] = "";
+				currentProfile[1] = "";
+				showDialog(DIALOG);
+			}
+		});
+
+		
 		// создааем адаптер и настраиваем список
 		scAdapter = new SimpleCursorAdapter(this, R.layout.item, null, from,
 				to, 0);
@@ -220,7 +236,6 @@ public class MainActivity extends FragmentActivity implements
 	public void onCreateContextMenu(ContextMenu menu, View v,
 			ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
-		menu.add(0, CM_ADD_ID, 0, R.string.add_record);
 		menu.add(0, CM_EDIT_ID, 0, R.string.edit_record);
 		menu.add(0, CM_DELETE_ID, 0, R.string.delete_record);
 	}
@@ -238,12 +253,6 @@ public class MainActivity extends FragmentActivity implements
 		} else if (item.getItemId() == CM_EDIT_ID) {
 			currentProfile = db.getCurrentName(acmi.id);
 			idCurrentName = acmi.id;
-			showDialog(DIALOG);
-			return true;
-		} else if (item.getItemId() == CM_ADD_ID) {
-			idCurrentName = 0;
-			currentProfile[0] = "";
-			currentProfile[1] = "";
 			showDialog(DIALOG);
 			return true;
 		}

@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.view.ContextMenu;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -71,11 +72,8 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		setContentView(R.layout.statistic);
 
 		btnAdd = (Button) findViewById(R.id.btnAddStat);
-		btnSave = (Button) findViewById(R.id.btnSave);
-		btnEmail = (Button) findViewById(R.id.btnEmail);
 		TextView name, e_mail;
 		btnAdd.setOnClickListener(this);
-		btnSave.setOnClickListener(this);
 
 		db = new MyDB(this);
 		db.open();
@@ -116,40 +114,6 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		SimpleDateFormat time = new SimpleDateFormat("hh:mm");
 		formattedDate = date.format(c.getTime());
 		formattedTime = time.format(c.getTime());
-
-		btnEmail.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				// writeFileSD(profile_name[0]);
-				final Intent emailIntent = new Intent(
-						android.content.Intent.ACTION_SEND);
-
-				emailIntent.setType("plain/text");
-				// Кому
-				emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL,
-						new String[] { profile_name[1].toString() });
-				// Зачем
-				emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,
-						"Pressure diary");
-				// О чём
-				emailIntent.putExtra(android.content.Intent.EXTRA_TEXT,
-						"Hello, " + profile_name[0]
-								+ ", this is your statistic:");
-				emailIntent.putExtra(
-						android.content.Intent.EXTRA_STREAM,
-						Uri.parse("file://"
-								+ Environment.getExternalStorageDirectory()
-								+ "/" + DIR_SD + "/" + FILENAME_SD + "_for_"
-								+ profile_name[0] + ".txt"));
-				Log.d(LOG_TAG,
-						"genm: " + Environment.getExternalStorageDirectory()
-								+ "/" + DIR_SD + "/" + FILENAME_SD + "_for_"
-								+ profile_name[0] + ".txt");
-
-				MyStatistic.this.startActivity(Intent.createChooser(
-						emailIntent, "Отправка письма..."));
-			}
-		});
 	}
 
 	public void show() {
@@ -253,12 +217,76 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		switch (v.getId()) {
 		case R.id.btnAddStat:
 			show();
-			// showDialog(DIALOG_STAT);
-			break;
-		case R.id.btnSave:
-			writeFileSD(profile_name[0]);
 			break;
 		}
+	}
+	
+	public void showSave() {
+		final Dialog dialog = new Dialog(MyStatistic.this);
+		dialog.setContentView(R.layout.dialog_save);
+		dialog.setTitle("Save your data");
+		
+		final Button btnSave = (Button) dialog
+				.findViewById(R.id.btnSave);
+		
+		final Button btnEmail = (Button) dialog
+				.findViewById(R.id.btnEmail);
+
+		btnSave.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				writeFileSD(profile_name[0]);
+				dialog.dismiss();
+			}
+		});
+		
+		btnEmail.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// writeFileSD(profile_name[0]);
+				final Intent emailIntent = new Intent(
+						android.content.Intent.ACTION_SEND);
+
+				emailIntent.setType("plain/text");
+				// Кому
+				emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL,
+						new String[] { profile_name[1].toString() });
+				// Зачем
+				emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,
+						"Pressure diary");
+				// О чём
+				emailIntent.putExtra(android.content.Intent.EXTRA_TEXT,
+						"Hello, " + profile_name[0]
+								+ ", this is your statistic:");
+				emailIntent.putExtra(
+						android.content.Intent.EXTRA_STREAM,
+						Uri.parse("file://"
+								+ Environment.getExternalStorageDirectory()
+								+ "/" + DIR_SD + "/" + FILENAME_SD + "_for_"
+								+ profile_name[0] + ".txt"));
+				Log.d(LOG_TAG,
+						"genm: " + Environment.getExternalStorageDirectory()
+								+ "/" + DIR_SD + "/" + FILENAME_SD + "_for_"
+								+ profile_name[0] + ".txt");
+
+				MyStatistic.this.startActivity(Intent.createChooser(
+						emailIntent, "Отправка письма..."));
+				dialog.dismiss();
+			}
+		});
+		
+		dialog.show();
+	}
+	
+	@Override
+	public boolean onKeyDown(int keycode, KeyEvent e) {
+	    switch(keycode) {
+	        case KeyEvent.KEYCODE_MENU:
+	            showSave();
+	            return true;
+	    }
+
+	    return super.onKeyDown(keycode, e);
 	}
 
 	//

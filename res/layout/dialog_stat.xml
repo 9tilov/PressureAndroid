@@ -1,49 +1,81 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
- xmlns:android="http://schemas.android.com/apk/res/android"
- android:layout_width="match_parent"
- android:layout_height="match_parent"
- android:orientation="vertical">
 
-    <LinearLayout
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:textColor="#8B0000"
+        android:text="Sys"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignRight="@+id/npDiasPressure"
+        android:layout_marginRight="20dp"
+        android:textColor="#8B0000"
+        android:text="Dias"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/npPulse"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="15dp"
+        android:text="Pulse"
+        android:textColor="#8B0000"
+        android:textSize="18sp" />
+
+    <Button
+        android:id="@+id/btnSaveState"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_below="@+id/npDiasPressure"
+        android:background="@drawable/button"
+        android:text="@string/save" />
 
-        <NumberPicker
-            android:id="@+id/npPulse"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:width="100dip" />
+    <NumberPicker
+        android:id="@+id/npPulse"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btnSaveState"
+        android:layout_marginRight="14dp"
+        android:layout_toLeftOf="@+id/npSysPressure"
+        android:width="100dip" />
 
-        <NumberPicker
-            android:id="@+id/npSysPressure"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:width="100dip" />
-            <!-- android:layout_alignBottom="@+id/npPulse"
-            android:layout_toRightOf="@+id/npPulse" -->
+    <NumberPicker
+        android:id="@+id/npSysPressure"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/npDiasPressure"
+        android:layout_centerHorizontal="true"
+        android:width="100dip" />
 
-        <NumberPicker
-            android:id="@+id/npDiasPressure"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:width="100dip" />
+    <NumberPicker
+        android:id="@+id/npDiasPressure"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView1"
+        android:layout_marginLeft="14dp"
+        android:layout_toRightOf="@+id/npSysPressure"
+        android:width="100dip" />
 
-            <!-- android:layout_alignBottom="@+id/npSysPressure"
-            android:layout_toRightOf="@+id/npSysPressure" -->
-            
-    </LinearLayout>
     
-    <Button
-            android:id="@+id/btnSaveState"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:layout_marginLeft="5dp"
-            android:background="@drawable/button"
-            android:layout_marginTop="20dp"
-            android:text="@string/save" />
     
-    
-</LinearLayout>
+</RelativeLayout>
+
