@@ -141,7 +141,7 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		npDiasPressure.setMinValue(40);
 		npDiasPressure.setWrapSelectorWheel(false);
 		npDiasPressure.setOnValueChangedListener(this);
-		
+
 		if (idCurrentName != 0) {
 			npPulse.setValue(Integer.valueOf(currentStat[0]));
 			npSysPressure.setValue(Integer.valueOf(currentStat[1]));
@@ -210,7 +210,7 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		}
 		return super.onContextItemSelected(item);
 	}
-	
+
 	@Override
 	public void onClick(View v) {
 		Log.d(LOG_TAG, "row inserted, id= " + idCurrentName);
@@ -220,15 +220,15 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 			break;
 		}
 	}
-	
+
 	public void showSave() {
 		final Dialog dialog = new Dialog(MyStatistic.this);
 		dialog.setContentView(R.layout.dialog_save);
 		dialog.setTitle("Save your data");
-		
+
 		final Button btnSave = (Button) dialog
 				.findViewById(R.id.btnSave);
-		
+
 		final Button btnEmail = (Button) dialog
 				.findViewById(R.id.btnEmail);
 
@@ -239,7 +239,7 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 				dialog.dismiss();
 			}
 		});
-		
+
 		btnEmail.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -274,10 +274,10 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 				dialog.dismiss();
 			}
 		});
-		
+
 		dialog.show();
 	}
-	
+
 	@Override
 	public boolean onKeyDown(int keycode, KeyEvent e) {
 	    switch(keycode) {

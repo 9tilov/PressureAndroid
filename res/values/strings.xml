@@ -24,7 +24,7 @@
 	<string name="pulse">Pulse</string>
 	<string name="statistics">Statistics</string>
 	<string name="addStat">Add statistics</string>
-	<string name="correct">Enter correrct data</string>
+	<string name="correct">Enter correrct e-mail</string>
 	<string name="save">Save</string>
 	<string name="save_on_email">Pass by mail</string>
 	<string name="save_on_SD">Statistic was saved in folder \"Pressure\"</string>
