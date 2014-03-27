@@ -1,39 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
- xmlns:android="http://schemas.android.com/apk/res/android"
- android:layout_width="match_parent"
- android:layout_height="match_parent"
- android:orientation="vertical">
-
-<TextView
- android:layout_width="wrap_content"
- android:layout_height="wrap_content"
- android:text="New name"
- android:layout_marginLeft="5dp"
- android:layout_marginRight="5dp">
-</TextView>
-
-<EditText
-    android:id="@+id/editName"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:ems="10" >
-</EditText>
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
 
-<TextView
-    
- android:layout_width="wrap_content"
- android:layout_height="wrap_content"
- android:text="e-mail"
- android:layout_marginLeft="5dp"
- android:layout_marginRight="5dp">
-</TextView>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:text="New name" >
+    </TextView>
 
-<EditText
-    android:id="@+id/editMail"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:ems="10" >
-</EditText>
+    <EditText
+        android:id="@+id/editName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10" >
+    </EditText>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:text="e-mail" >
+    </TextView>
+
+    <EditText
+        android:id="@+id/editMail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10" >
+    </EditText>
 
 </LinearLayout>

@@ -111,11 +111,13 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		Calendar c = Calendar.getInstance();
 		// SimpleDateFormat df = new SimpleDateFormat("ddMM");
 		SimpleDateFormat date = new SimpleDateFormat("dd/MM");
-		SimpleDateFormat time = new SimpleDateFormat("hh:mm");
+		SimpleDateFormat time = new SimpleDateFormat("HH:mm");
 		formattedDate = date.format(c.getTime());
 		formattedTime = time.format(c.getTime());
 	}
 
+	
+	
 	public void show() {
 
 		final Dialog dialog = new Dialog(MyStatistic.this);

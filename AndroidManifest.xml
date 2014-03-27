@@ -25,6 +25,7 @@
             android:name=".MyStatistic"
             android:label="@string/statistics" >
         </activity>
+        <service android:name="MyService" android:process=":myservice"></service>
     </application>
 
     <uses-permission
