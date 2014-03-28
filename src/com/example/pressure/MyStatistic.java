@@ -231,8 +231,6 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 			break;
 		case R.id.btnGraph:
 			Intent intent = new Intent(MyStatistic.this, Graph.class);
-			
-//			id_stat = db.getCurrentStat(Long.valueOf(profile_id));
 			intent.putExtra("id_stat_key", profile_id);
 			intent.putExtra("id_stat_count", String.valueOf(listStat.getCount()));
 		    startActivity(intent);

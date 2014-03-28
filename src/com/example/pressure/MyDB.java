@@ -1,5 +1,7 @@
 package com.example.pressure;
 
+import java.util.Vector;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -34,7 +36,8 @@ public class MyDB {
 			+ DB_TABLE_STAT + "(" + COLUMN_ID
 			+ " integer primary key autoincrement, " + COLUMN_PULSE + " text, "
 			+ COLUMN_SYS_PRESSURE + " text, " + COLUMN_DIAS_PRESSURE
-			+ " text, " + COLUMN_UID + " text, " + COLUMN_DATE + " text, " + COLUMN_TIME + " text" + ");";
+			+ " text, " + COLUMN_UID + " text, " + COLUMN_DATE + " text, "
+			+ COLUMN_TIME + " text" + ");";
 
 	private final Context mCtx;
 
@@ -79,9 +82,9 @@ public class MyDB {
 	}
 
 	public String[] getCurrentName(long id) {
-		Cursor cursor = mDB.query(DB_TABLE, null, COLUMN_ID + "='" + id
-				+ "'", null, null, null, null);
-		String[] profile= new String[] {"", ""};
+		Cursor cursor = mDB.query(DB_TABLE, null, COLUMN_ID + "='" + id + "'",
+				null, null, null, null);
+		String[] profile = new String[] { "", "" };
 		if (cursor != null) {
 			cursor.moveToFirst();
 			for (int i = 0; i < profile.length; ++i) {
@@ -90,7 +93,7 @@ public class MyDB {
 		}
 		return profile;
 	}
-	
+
 	public String[] getCurrentStatPulse (long id, int length) {
 		Cursor cursor = mDB.query(DB_TABLE_STAT, null, COLUMN_UID + "='" + id + "'",
 				null, null, null, null);
@@ -105,10 +108,38 @@ public class MyDB {
 		return statistics;
 	}
 	
-	public String[] getCurrentStat (long id) {
+	public String[] getCurrentStatSys (long id, int length) {
+		Cursor cursor = mDB.query(DB_TABLE_STAT, null, COLUMN_UID + "='" + id + "'",
+				null, null, null, null);
+		String[] statistics = new String[length];
+		if (cursor != null) {
+			cursor.moveToFirst();
+			for (int i = 0; i < statistics.length; ++i) {
+				statistics[i] = cursor.getString(2);
+				cursor.moveToNext();
+			}
+		}
+		return statistics;
+	}
+	
+	public String[] getCurrentStatDias (long id, int length) {
+		Cursor cursor = mDB.query(DB_TABLE_STAT, null, COLUMN_UID + "='" + id + "'",
+				null, null, null, null);
+		String[] statistics = new String[length];
+		if (cursor != null) {
+			cursor.moveToFirst();
+			for (int i = 0; i < statistics.length; ++i) {
+				statistics[i] = cursor.getString(3);
+				cursor.moveToNext();
+			}
+		}
+		return statistics;
+	}
+
+	public String[] getCurrentStat(long id) {
 		Cursor cursor = mDB.query(DB_TABLE_STAT, null, COLUMN_ID + "='" + id
 				+ "'", null, null, null, null);
-		String[] statistics = new String[] {"", "", "", "", "", ""};
+		String[] statistics = new String[] { "", "", "", "", "", "" };
 		if (cursor != null) {
 			cursor.moveToFirst();
 			for (int i = 0; i < statistics.length; ++i) {
@@ -117,8 +148,7 @@ public class MyDB {
 		}
 		return statistics;
 	}
-	
-	
+
 	// добавить запись в DB_TABLE
 	public void addRec(String name, String e_mail) {
 		ContentValues cv = new ContentValues();
@@ -128,7 +158,8 @@ public class MyDB {
 		Log.d(LOG_TAG, "row inserted, ID = " + rowID);
 	}
 
-	public void addStat(String pulse, String sys, String dias, String uid, String date, String time) {
+	public void addStat(String pulse, String sys, String dias, String uid,
+			String date, String time) {
 		ContentValues cv = new ContentValues();
 		cv.put(COLUMN_PULSE, pulse);
 		cv.put(COLUMN_SYS_PRESSURE, sys);
@@ -165,7 +196,7 @@ public class MyDB {
 		cv.put(COLUMN_DIAS_PRESSURE, statistics[2].toString());
 		mDB.update(DB_TABLE_STAT, cv, "_id = ?", new String[] { id });
 	}
-	
+
 	// класс по созданию и управлению БД
 	private class DBHelper extends SQLiteOpenHelper {
 
