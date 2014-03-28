@@ -32,5 +32,6 @@
     <string name="add_profile">Add profile</string>
     <string name="start">Start</string>
     <string name="stop">Stop</string>
+    <string name="graph">Graph</string>
 
 </resources>

@@ -91,6 +91,20 @@ public class MyDB {
 		return profile;
 	}
 	
+	public String[] getCurrentStatPulse (long id, int length) {
+		Cursor cursor = mDB.query(DB_TABLE_STAT, null, COLUMN_UID + "='" + id + "'",
+				null, null, null, null);
+		String[] statistics = new String[length];
+		if (cursor != null) {
+			cursor.moveToFirst();
+			for (int i = 0; i < statistics.length; ++i) {
+				statistics[i] = cursor.getString(1);
+				cursor.moveToNext();
+			}
+		}
+		return statistics;
+	}
+	
 	public String[] getCurrentStat (long id) {
 		Cursor cursor = mDB.query(DB_TABLE_STAT, null, COLUMN_ID + "='" + id
 				+ "'", null, null, null, null);
@@ -103,6 +117,7 @@ public class MyDB {
 		}
 		return statistics;
 	}
+	
 	
 	// добавить запись в DB_TABLE
 	public void addRec(String name, String e_mail) {

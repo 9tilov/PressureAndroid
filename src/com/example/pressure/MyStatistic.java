@@ -37,6 +37,11 @@ import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.text.TextUtils;
 
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.GraphViewSeries;
+import com.jjoe64.graphview.LineGraphView;
+import com.jjoe64.graphview.GraphView.GraphViewData;
+
 public class MyStatistic extends FragmentActivity implements OnClickListener,
 		LoaderCallbacks<Cursor>, NumberPicker.OnValueChangeListener {
 
@@ -45,10 +50,12 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 	String formattedDate, formattedTime, currentPulse, currentSys, currentDias;
 
 	MyDB db;
-	Button btnAdd, btnSave, btnLoad, btnEmail;
+	Button btnAdd, btnSave, btnLoad, btnEmail, btnGraph;
 	EditText etPulse, etSysPressure, etDiasPressure;
 	static String profile_id;
 	SimpleCursorAdapter scAdapter;
+
+	TextView tvPulse;
 
 	String[] profile_name;
 
@@ -72,8 +79,12 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		setContentView(R.layout.statistic);
 
 		btnAdd = (Button) findViewById(R.id.btnAddStat);
+		btnGraph = (Button) findViewById(R.id.btnGraph);
 		TextView name, e_mail;
 		btnAdd.setOnClickListener(this);
+		btnGraph.setOnClickListener(this);
+
+		tvPulse = (TextView) findViewById(R.id.tvTextPulse);
 
 		db = new MyDB(this);
 		db.open();
@@ -116,8 +127,6 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		formattedTime = time.format(c.getTime());
 	}
 
-	
-	
 	public void show() {
 
 		final Dialog dialog = new Dialog(MyStatistic.this);
@@ -162,9 +171,9 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 			public void onClick(View v) {
 				if (idCurrentName == 0) {
 					db.addStat(String.valueOf(npPulse.getValue()),
-						String.valueOf(npSysPressure.getValue()),
-						String.valueOf(npDiasPressure.getValue()), profile_id,
-						formattedDate, formattedTime);
+							String.valueOf(npSysPressure.getValue()),
+							String.valueOf(npDiasPressure.getValue()),
+							profile_id, formattedDate, formattedTime);
 					getSupportLoaderManager().getLoader(0).forceLoad();
 					addData();
 					dialog.dismiss();
@@ -220,7 +229,41 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		case R.id.btnAddStat:
 			show();
 			break;
+		case R.id.btnGraph:
+			Intent intent = new Intent(MyStatistic.this, Graph.class);
+			
+//			id_stat = db.getCurrentStat(Long.valueOf(profile_id));
+			intent.putExtra("id_stat_key", profile_id);
+			intent.putExtra("id_stat_count", String.valueOf(listStat.getCount()));
+		    startActivity(intent);
+			break;
 		}
+	}
+
+	public void showGraph() {
+		final Dialog dialog = new Dialog(MyStatistic.this);
+		dialog.setContentView(R.layout.graph);
+		dialog.setTitle("Graph");
+
+		int array[] = new int[] { 1, 2, 3, 4, 5, 6 };
+		int array2[] = new int[] { 10, 16, 2, 12, 20, 28 };
+		// init example series data
+		int num = 6;
+		GraphViewData[] data = new GraphViewData[num];
+		for (int i = 0; i < num; i++) {
+
+			data[i] = new GraphViewData(array[i], array2[i]);
+		}
+
+		GraphView graphView = new LineGraphView(this // context
+				, "GraphViewDemo" // heading
+		);
+		graphView.addSeries(new GraphViewSeries(data)); // data
+
+		LinearLayout layout = (LinearLayout) findViewById(R.id.graph1);
+		layout.addView(graphView);
+
+		dialog.show();
 	}
 
 	public void showSave() {
@@ -228,11 +271,9 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		dialog.setContentView(R.layout.dialog_save);
 		dialog.setTitle("Save your data");
 
-		final Button btnSave = (Button) dialog
-				.findViewById(R.id.btnSave);
+		final Button btnSave = (Button) dialog.findViewById(R.id.btnSave);
 
-		final Button btnEmail = (Button) dialog
-				.findViewById(R.id.btnEmail);
+		final Button btnEmail = (Button) dialog.findViewById(R.id.btnEmail);
 
 		btnSave.setOnClickListener(new OnClickListener() {
 			@Override
@@ -282,13 +323,13 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 
 	@Override
 	public boolean onKeyDown(int keycode, KeyEvent e) {
-	    switch(keycode) {
-	        case KeyEvent.KEYCODE_MENU:
-	            showSave();
-	            return true;
-	    }
+		switch (keycode) {
+		case KeyEvent.KEYCODE_MENU:
+			showSave();
+			return true;
+		}
 
-	    return super.onKeyDown(keycode, e);
+		return super.onKeyDown(keycode, e);
 	}
 
 	//
