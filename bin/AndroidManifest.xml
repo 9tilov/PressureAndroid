@@ -28,7 +28,8 @@
         
         <activity
             android:name=".Graph"
-            android:label="@string/graph" >
+            android:label="@string/graph"
+            android:screenOrientation="landscape" >
         </activity>
         <service android:name="MyService" android:process=":myservice"></service>
     </application>

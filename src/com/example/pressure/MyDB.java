@@ -136,6 +136,21 @@ public class MyDB {
 		return statistics;
 	}
 
+	public String[] getCurrentStatDate (long id, int length) {
+		Cursor cursor = mDB.query(DB_TABLE_STAT, null, COLUMN_UID + "='" + id + "'",
+				null, null, null, null);
+		String[] statistics = new String[length];
+		if (cursor != null) {
+			cursor.moveToFirst();
+			for (int i = 0; i < statistics.length; ++i) {
+				statistics[i] = cursor.getString(5);
+				cursor.moveToNext();
+			}
+		}
+		return statistics;
+	}
+	
+	
 	public String[] getCurrentStat(long id) {
 		Cursor cursor = mDB.query(DB_TABLE_STAT, null, COLUMN_ID + "='" + id
 				+ "'", null, null, null, null);

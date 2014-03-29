@@ -2,6 +2,7 @@ package com.example.pressure;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GraphView.GraphViewData;
+import com.jjoe64.graphview.GraphView.LegendAlign;
 import com.jjoe64.graphview.GraphViewSeries.GraphViewSeriesStyle;
 import com.jjoe64.graphview.GraphViewSeries;
 import com.jjoe64.graphview.LineGraphView;
@@ -17,7 +18,7 @@ import android.util.Log;
 public class Graph extends Activity {
 
 	String stat_id;
-	String[] statPulse, statSys, statDias;
+	String[] statPulse, statSys, statDias, statDate;
 	String count_data_string;
 
 	MyDB db;
@@ -42,7 +43,12 @@ public class Graph extends Activity {
 				Integer.valueOf(count_data_string));
 		statDias = db.getCurrentStatDias(Long.valueOf(stat_id),
 				Integer.valueOf(count_data_string));
+		statDate = db.getCurrentStatDate(Long.valueOf(stat_id),
+				Integer.valueOf(count_data_string));
+		
 		Log.d(LOG_TAG, "COUNT2= " + count_data_string);
+		
+		Log.d(LOG_TAG, "DATE= " + statDate[0]);
 		int count = Integer.valueOf(count_data_string);
 
 		// init example series data
@@ -66,7 +72,7 @@ public class Graph extends Activity {
 
 		GraphViewSeriesStyle styleSys = new GraphViewSeriesStyle();
 		styleSys.color = Color.rgb(200, 50, 0);
-		GraphViewSeries seriesSys = new GraphViewSeries("Sys", styleSys,
+		GraphViewSeries seriesSys = new GraphViewSeries("Sys. pressure", styleSys,
 				dataSys);
 
 		// init example series data
@@ -78,7 +84,7 @@ public class Graph extends Activity {
 
 		GraphViewSeriesStyle styleDias = new GraphViewSeriesStyle();
 		styleDias.color = Color.rgb(300, 50, 110);
-		GraphViewSeries seriesDias = new GraphViewSeries("Dias", styleDias,
+		GraphViewSeries seriesDias = new GraphViewSeries("Dias. pressure", styleDias,
 				dataDias);
 
 		GraphView graphView = new LineGraphView(this // context
@@ -89,10 +95,17 @@ public class Graph extends Activity {
 		graphView.addSeries(seriesSys);
 		graphView.addSeries(seriesDias);
 		graphView.addSeries(seriesPulse);
-		// graphView.addSeries(); // data
+		
+		graphView.setScrollable(true);
 		graphView.setScalable(true);
-		// optional - legend
 		graphView.setShowLegend(true);
+		
+		graphView.setViewPort(Double.valueOf(count_data_string) - 5, 4);
+		graphView.setScrollable(true);
+		graphView.getGraphViewStyle().setNumHorizontalLabels(4);
+		graphView.setHorizontalLabels(statDate);
+		graphView.setLegendAlign(LegendAlign.TOP);
+		graphView.setLegendWidth(240);
 		LinearLayout layout = (LinearLayout) findViewById(R.id.graph1);
 		layout.addView(graphView);
 	}

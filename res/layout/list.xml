@@ -61,7 +61,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="2dp"
-            android:text="bm">
+            android:text="b/m">
         </TextView>
         
         <TextView
@@ -72,30 +72,3 @@
         </TextView>
     </LinearLayout>
 </LinearLayout>
-
-<!--
-    <LinearLayout
-        android:layout_width="330dp"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal" >
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="10dp"
-            android:text="Date : "
-            android:textSize="18sp" >
-        </TextView>
-
-        <TextView
-            android:id="@+id/tvTextDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginLeft="10dp"
-            android:text=""
-            android:textSize="18sp" >
-        </TextView>
-    </LinearLayout>
--->

@@ -79,10 +79,8 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		setContentView(R.layout.statistic);
 
 		btnAdd = (Button) findViewById(R.id.btnAddStat);
-		btnGraph = (Button) findViewById(R.id.btnGraph);
 		TextView name, e_mail;
 		btnAdd.setOnClickListener(this);
-		btnGraph.setOnClickListener(this);
 
 		tvPulse = (TextView) findViewById(R.id.tvTextPulse);
 
@@ -121,7 +119,7 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		// //Получаем текущее время
 		Calendar c = Calendar.getInstance();
 		// SimpleDateFormat df = new SimpleDateFormat("ddMM");
-		SimpleDateFormat date = new SimpleDateFormat("dd/MM");
+		SimpleDateFormat date = new SimpleDateFormat("dd.MM.yy");
 		SimpleDateFormat time = new SimpleDateFormat("HH:mm");
 		formattedDate = date.format(c.getTime());
 		formattedTime = time.format(c.getTime());
@@ -229,39 +227,7 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		case R.id.btnAddStat:
 			show();
 			break;
-		case R.id.btnGraph:
-			Intent intent = new Intent(MyStatistic.this, Graph.class);
-			intent.putExtra("id_stat_key", profile_id);
-			intent.putExtra("id_stat_count", String.valueOf(listStat.getCount()));
-		    startActivity(intent);
-			break;
 		}
-	}
-
-	public void showGraph() {
-		final Dialog dialog = new Dialog(MyStatistic.this);
-		dialog.setContentView(R.layout.graph);
-		dialog.setTitle("Graph");
-
-		int array[] = new int[] { 1, 2, 3, 4, 5, 6 };
-		int array2[] = new int[] { 10, 16, 2, 12, 20, 28 };
-		// init example series data
-		int num = 6;
-		GraphViewData[] data = new GraphViewData[num];
-		for (int i = 0; i < num; i++) {
-
-			data[i] = new GraphViewData(array[i], array2[i]);
-		}
-
-		GraphView graphView = new LineGraphView(this // context
-				, "GraphViewDemo" // heading
-		);
-		graphView.addSeries(new GraphViewSeries(data)); // data
-
-		LinearLayout layout = (LinearLayout) findViewById(R.id.graph1);
-		layout.addView(graphView);
-
-		dialog.show();
 	}
 
 	public void showSave() {
@@ -269,9 +235,23 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		dialog.setContentView(R.layout.dialog_save);
 		dialog.setTitle("Save your data");
 
+		final Button btnGraph = (Button) dialog.findViewById(R.id.btnGraph);
+
 		final Button btnSave = (Button) dialog.findViewById(R.id.btnSave);
 
 		final Button btnEmail = (Button) dialog.findViewById(R.id.btnEmail);
+
+		btnGraph.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(MyStatistic.this, Graph.class);
+				intent.putExtra("id_stat_key", profile_id);
+				intent.putExtra("id_stat_count",
+						String.valueOf(listStat.getCount()));
+				startActivity(intent);
+				dialog.dismiss();
+			}
+		});
 
 		btnSave.setOnClickListener(new OnClickListener() {
 			@Override
