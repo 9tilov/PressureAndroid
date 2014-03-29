@@ -1,5 +1,6 @@
 package com.example.pressure;
 
+import java.util.LinkedList;
 import java.util.Vector;
 
 import android.content.ContentValues;
@@ -24,9 +25,9 @@ public class MyDB {
 	public static final String COLUMN_PULSE = "pulse";
 	public static final String COLUMN_SYS_PRESSURE = "sys";
 	public static final String COLUMN_DIAS_PRESSURE = "dias";
-	public static final String COLUMN_UID = "uid";
 	public static final String COLUMN_DATE = "date";
 	public static final String COLUMN_TIME = "time";
+	public static final String COLUMN_UID = "uid";
 
 	private static final String DB_CREATE = "create table " + DB_TABLE + "("
 			+ COLUMN_ID + " integer primary key autoincrement, " + COLUMN_NAME
@@ -36,8 +37,8 @@ public class MyDB {
 			+ DB_TABLE_STAT + "(" + COLUMN_ID
 			+ " integer primary key autoincrement, " + COLUMN_PULSE + " text, "
 			+ COLUMN_SYS_PRESSURE + " text, " + COLUMN_DIAS_PRESSURE
-			+ " text, " + COLUMN_UID + " text, " + COLUMN_DATE + " text, "
-			+ COLUMN_TIME + " text" + ");";
+			+ " text, " + COLUMN_DATE + " text, "
+			+ COLUMN_TIME + " text, " + COLUMN_UID + " text" + ");";
 
 	private final Context mCtx;
 
@@ -94,60 +95,24 @@ public class MyDB {
 		return profile;
 	}
 
-	public String[] getCurrentStatPulse(long id, int length) {
+	public LinkedList<String[]> getStat(long id, int length) {
+		LinkedList<String[]> list = new LinkedList<String[]>();
 		Cursor cursor = mDB.query(DB_TABLE_STAT, null, COLUMN_UID + "='" + id
 				+ "'", null, null, null, null);
 		String[] statistics = new String[length];
 		if (cursor != null) {
 			cursor.moveToFirst();
-			for (int i = 0; i < statistics.length; ++i) {
-				statistics[i] = cursor.getString(1);
-				cursor.moveToNext();
+			for (int i = 0; i < 3; ++i) {
+				for (int j = 0; j < statistics.length; ++j) {
+					statistics[j] = cursor.getString(i + 1);
+					cursor.moveToNext();
+				}
+				list.add(statistics);
+				cursor.moveToFirst();
+				statistics = new String[length];
 			}
 		}
-		return statistics;
-	}
-
-	public String[] getCurrentStatSys(long id, int length) {
-		Cursor cursor = mDB.query(DB_TABLE_STAT, null, COLUMN_UID + "='" + id
-				+ "'", null, null, null, null);
-		String[] statistics = new String[length];
-		if (cursor != null) {
-			cursor.moveToFirst();
-			for (int i = 0; i < statistics.length; ++i) {
-				statistics[i] = cursor.getString(2);
-				cursor.moveToNext();
-			}
-		}
-		return statistics;
-	}
-
-	public String[] getCurrentStatDias(long id, int length) {
-		Cursor cursor = mDB.query(DB_TABLE_STAT, null, COLUMN_UID + "='" + id
-				+ "'", null, null, null, null);
-		String[] statistics = new String[length];
-		if (cursor != null) {
-			cursor.moveToFirst();
-			for (int i = 0; i < statistics.length; ++i) {
-				statistics[i] = cursor.getString(3);
-				cursor.moveToNext();
-			}
-		}
-		return statistics;
-	}
-
-	public String[] getCurrentStatDate(long id, int length) {
-		Cursor cursor = mDB.query(DB_TABLE_STAT, null, COLUMN_UID + "='" + id
-				+ "'", null, null, null, null);
-		String[] statistics = new String[length];
-		if (cursor != null) {
-			cursor.moveToFirst();
-			for (int i = 0; i < statistics.length; ++i) {
-				statistics[i] = cursor.getString(5);
-				cursor.moveToNext();
-			}
-		}
-		return statistics;
+		return list;
 	}
 
 	public String[] getCurrentStat(long id) {

@@ -1,5 +1,8 @@
 package com.example.pressure;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GraphView.GraphViewData;
 import com.jjoe64.graphview.GraphView.LegendAlign;
@@ -19,7 +22,7 @@ import android.util.Log;
 public class Graph extends Activity {
 
 	String stat_id;
-	String[] statPulse, statSys, statDias, statDate;
+	String[] statPulse, statSys, statDias;
 	String count_data_string;
 
 	MyDB db;
@@ -38,27 +41,19 @@ public class Graph extends Activity {
 		db = new MyDB(this);
 		db.open();
 
-		statPulse = db.getCurrentStatPulse(Long.valueOf(stat_id),
+		LinkedList<String[]> list = new LinkedList<String[]>();
+		list = db.getStat(Long.valueOf(stat_id),
 				Integer.valueOf(count_data_string));
-		statSys = db.getCurrentStatSys(Long.valueOf(stat_id),
-				Integer.valueOf(count_data_string));
-		statDias = db.getCurrentStatDias(Long.valueOf(stat_id),
-				Integer.valueOf(count_data_string));
-		statDate = db.getCurrentStatDate(Long.valueOf(stat_id),
-				Integer.valueOf(count_data_string));
-
-		Log.d(LOG_TAG, "COUNT2= " + count_data_string);
-
-		Log.d(LOG_TAG, "DATE= " + statDate[0]);
+		
 		int count = Integer.valueOf(count_data_string);
 		GraphViewData[] dataPulse = new GraphViewData[count];
 		GraphViewData[] dataSys = new GraphViewData[count];
 		GraphViewData[] dataDias = new GraphViewData[count];
 
 		for (int i = 0; i < count; i++) {
-			dataPulse[i] = new GraphViewData(i, Double.valueOf(statPulse[i]));
-			dataSys[i] = new GraphViewData(i, Double.valueOf(statSys[i]));
-			dataDias[i] = new GraphViewData(i, Double.valueOf(statDias[i]));
+			dataPulse[i] = new GraphViewData(i, Double.valueOf(list.get(0)[i]));
+			dataSys[i] = new GraphViewData(i, Double.valueOf(list.get(1)[i]));
+			dataDias[i] = new GraphViewData(i, Double.valueOf(list.get(2)[i]));
 		}
 
 		GraphViewSeriesStyle stylePulse = new GraphViewSeriesStyle();
