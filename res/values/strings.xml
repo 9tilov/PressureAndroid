@@ -6,6 +6,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="add_record">Add record</string>
     <string name="delete_record">Delete record</string>
+    <string name="delete_all_records">Delete all records</string>
     <string name="edit_record">Edit record</string>
     <string name="btnSave">Save</string>
     <string name="exit">Выход</string>
@@ -33,6 +34,6 @@
     <string name="start">Start</string>
     <string name="stop">Stop</string>
     <string name="graph">Show graph</string>
-    <string name="graphShow">Graph will be shown after the first week</string>
+    <string name="graphShow">Graph will be shown after 10 records</string>
 
 </resources>

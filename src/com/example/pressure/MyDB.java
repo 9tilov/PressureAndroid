@@ -94,9 +94,9 @@ public class MyDB {
 		return profile;
 	}
 
-	public String[] getCurrentStatPulse (long id, int length) {
-		Cursor cursor = mDB.query(DB_TABLE_STAT, null, COLUMN_UID + "='" + id + "'",
-				null, null, null, null);
+	public String[] getCurrentStatPulse(long id, int length) {
+		Cursor cursor = mDB.query(DB_TABLE_STAT, null, COLUMN_UID + "='" + id
+				+ "'", null, null, null, null);
 		String[] statistics = new String[length];
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -107,10 +107,10 @@ public class MyDB {
 		}
 		return statistics;
 	}
-	
-	public String[] getCurrentStatSys (long id, int length) {
-		Cursor cursor = mDB.query(DB_TABLE_STAT, null, COLUMN_UID + "='" + id + "'",
-				null, null, null, null);
+
+	public String[] getCurrentStatSys(long id, int length) {
+		Cursor cursor = mDB.query(DB_TABLE_STAT, null, COLUMN_UID + "='" + id
+				+ "'", null, null, null, null);
 		String[] statistics = new String[length];
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -121,10 +121,10 @@ public class MyDB {
 		}
 		return statistics;
 	}
-	
-	public String[] getCurrentStatDias (long id, int length) {
-		Cursor cursor = mDB.query(DB_TABLE_STAT, null, COLUMN_UID + "='" + id + "'",
-				null, null, null, null);
+
+	public String[] getCurrentStatDias(long id, int length) {
+		Cursor cursor = mDB.query(DB_TABLE_STAT, null, COLUMN_UID + "='" + id
+				+ "'", null, null, null, null);
 		String[] statistics = new String[length];
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -136,9 +136,9 @@ public class MyDB {
 		return statistics;
 	}
 
-	public String[] getCurrentStatDate (long id, int length) {
-		Cursor cursor = mDB.query(DB_TABLE_STAT, null, COLUMN_UID + "='" + id + "'",
-				null, null, null, null);
+	public String[] getCurrentStatDate(long id, int length) {
+		Cursor cursor = mDB.query(DB_TABLE_STAT, null, COLUMN_UID + "='" + id
+				+ "'", null, null, null, null);
 		String[] statistics = new String[length];
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -149,8 +149,7 @@ public class MyDB {
 		}
 		return statistics;
 	}
-	
-	
+
 	public String[] getCurrentStat(long id) {
 		Cursor cursor = mDB.query(DB_TABLE_STAT, null, COLUMN_ID + "='" + id
 				+ "'", null, null, null, null);
@@ -193,7 +192,7 @@ public class MyDB {
 	}
 
 	public void delRecStat(long id) {
-		mDB.delete(DB_TABLE_STAT, COLUMN_ID + " = " + id, null);
+		mDB.delete(DB_TABLE_STAT, COLUMN_UID + " = " + id, null);
 	}
 
 	// редактировать запись в DB_TABLE

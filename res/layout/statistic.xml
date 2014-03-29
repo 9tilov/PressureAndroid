@@ -16,6 +16,7 @@
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:text="Name: "
+            android:textColor="#8B0000"
             android:textSize="15sp"
             android:textStyle="bold" >
         </TextView>
@@ -41,6 +42,7 @@
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:text="e-mail: "
+            android:textColor="#8B0000"
             android:textSize="15sp"
             android:textStyle="bold" >
         </TextView>
@@ -55,6 +57,15 @@
         </TextView>
     </LinearLayout>
 
+    <ListView
+        android:id="@+id/listStat"
+        android:layout_width="wrap_content"
+        android:layout_height="246dp"
+        android:layout_marginTop="10dp"
+        android:layout_weight="1.15"
+        android:divider="#8B0000"
+        android:dividerHeight="@dimen/twodp" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -64,19 +75,14 @@
 
         <Button
             android:id="@+id/btnAddStat"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
             android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp"
             android:background="@drawable/button"
             android:text="@string/addStat" />
     </LinearLayout>
-
-    <ListView
-        android:id="@+id/listStat"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:divider="#8B0000"
-        android:dividerHeight="@dimen/twodp" />
 
 </LinearLayout>

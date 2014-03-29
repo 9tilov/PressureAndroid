@@ -45,12 +45,13 @@ import com.jjoe64.graphview.GraphView.GraphViewData;
 public class MyStatistic extends FragmentActivity implements OnClickListener,
 		LoaderCallbacks<Cursor>, NumberPicker.OnValueChangeListener {
 
-	private static final int CM_DELETE_ID = 0, CM_EDIT_ID = 1;
+	private static final int CM_DELETE_ID = 0, CM_EDIT_ID = 1,
+			CM_DELETE_ALL_ID = 2;
 	long idCurrentName = 0;
 	String formattedDate, formattedTime, currentPulse, currentSys, currentDias;
 
 	MyDB db;
-	Button btnAdd, btnSave, btnLoad, btnEmail, btnGraph;
+	Button btnAdd, btnSave, btnLoad, btnEmail, btnGraph, btnYes, btnNo;
 	EditText etPulse, etSysPressure, etDiasPressure;
 	static String profile_id;
 	SimpleCursorAdapter scAdapter;
@@ -81,7 +82,6 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		btnAdd = (Button) findViewById(R.id.btnAddStat);
 		TextView name, e_mail;
 		btnAdd.setOnClickListener(this);
-
 		tvPulse = (TextView) findViewById(R.id.tvTextPulse);
 
 		db = new MyDB(this);
@@ -194,6 +194,7 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		super.onCreateContextMenu(menu, v, menuInfo);
 		menu.add(0, CM_EDIT_ID, 0, R.string.edit_record);
 		menu.add(0, CM_DELETE_ID, 0, R.string.delete_record);
+		menu.add(0, CM_DELETE_ALL_ID, 0, R.string.delete_all_records);
 	}
 
 	//
@@ -214,7 +215,9 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 			Log.d(LOG_TAG, "row inserted, sys= " + currentStat[1]);
 			Log.d(LOG_TAG, "row inserted, dias= " + currentStat[2]);
 			show();
-
+			return true;
+		} else if (item.getItemId() == CM_DELETE_ALL_ID) {
+			showChoice();
 			return true;
 		}
 		return super.onContextItemSelected(item);
@@ -244,7 +247,7 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		btnGraph.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (listStat.getCount() < 7)
+				if (listStat.getCount() < 10)
 					graphShow();
 				else {
 					Intent intent = new Intent(MyStatistic.this, Graph.class);
@@ -299,6 +302,33 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 			}
 		});
 
+		dialog.show();
+	}
+
+	public void showChoice() {
+		final Dialog dialog = new Dialog(MyStatistic.this);
+		dialog.setContentView(R.layout.dialog_choice);
+		dialog.setTitle("Are you sure?");
+
+		Button btnYes = (Button) dialog.findViewById(R.id.btnYes);
+		Button btnNo = (Button) dialog.findViewById(R.id.btnNo);
+
+		btnYes.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				db.delRecStat(Long.valueOf(profile_id));
+				getSupportLoaderManager().getLoader(0).forceLoad();
+				deleteData();
+				dialog.dismiss();
+			}
+		});
+
+		btnNo.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				dialog.dismiss();
+			}
+		});
 		dialog.show();
 	}
 

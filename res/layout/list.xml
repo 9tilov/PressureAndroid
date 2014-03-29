@@ -4,16 +4,16 @@
     android:layout_height="wrap_content"
     android:orientation="vertical" >
 
-
     <LinearLayout
-        android:layout_width="330dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal" >
 
         <TextView
             android:id="@+id/tvTextDate"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp" >
         </TextView>
 
         <TextView
@@ -21,7 +21,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="30dp">
+            android:layout_marginLeft="40dp" >
         </TextView>
 
         <TextView
@@ -36,15 +36,15 @@
             android:id="@+id/tvTextDias"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical">
+            android:layout_gravity="center_vertical" >
         </TextView>
-        
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="2dp"
-            android:text="mmhg">
+            android:text="mmhg" >
         </TextView>
 
         <TextView
@@ -52,23 +52,25 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="30dp"
-            android:text="">
+            android:layout_marginLeft="40dp"
+            android:text="" >
         </TextView>
-        
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="2dp"
-            android:text="b/m">
+            android:text="b/m" >
         </TextView>
-        
+
         <TextView
             android:id="@+id/tvTextTime"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="40dp">
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="40dp" >
         </TextView>
     </LinearLayout>
+
 </LinearLayout>

@@ -39,7 +39,7 @@ public class MainActivity extends FragmentActivity implements
 
 	private static final int CM_EDIT_ID = 0;
 	private static final int CM_DELETE_ID = 1;
-	
+
 	public final static String FILE_NAME = "filename";
 
 	static SharedPreferences sPref;
@@ -52,15 +52,15 @@ public class MainActivity extends FragmentActivity implements
 
 	long idCurrentName;
 	EditText editName, editMail;
-	
+
 	Button addProfile, buttonService;
 
 	String[] currentProfile = new String[] { "", "" };
 
 	long id_name;
-	
+
 	Animation anim = null;
-	
+
 	enum window {
 		profile, data
 	}
@@ -86,15 +86,14 @@ public class MainActivity extends FragmentActivity implements
 			startActivityForResult(intent, 1);
 		}
 
-		
 		TextView tv = (TextView) findViewById(R.id.tv);
 
-	    Intent intent = getIntent();
+		Intent intent = getIntent();
 
-	    String fileName = intent.getStringExtra(FILE_NAME);
-	    if (!TextUtils.isEmpty(fileName))
-	      tv.setText(fileName);
-	    
+		String fileName = intent.getStringExtra(FILE_NAME);
+		if (!TextUtils.isEmpty(fileName))
+			tv.setText(fileName);
+
 		// открываем подключение к БД
 		db = new MyDB(this);
 		db.open();
@@ -102,11 +101,9 @@ public class MainActivity extends FragmentActivity implements
 		// формируем столбцы сопоставления
 		String[] from = new String[] { MyDB.COLUMN_NAME };
 		int[] to = new int[] { R.id.tvName };
-		
-		
 
-		addProfile = (Button)findViewById(R.id.addProfile);
-		
+		addProfile = (Button) findViewById(R.id.addProfile);
+
 		addProfile.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -116,7 +113,7 @@ public class MainActivity extends FragmentActivity implements
 				showDialog(DIALOG);
 			}
 		});
-		 
+
 		// создааем адаптер и настраиваем список
 		scAdapter = new SimpleCursorAdapter(this, R.layout.item, null, from,
 				to, 0);
@@ -142,7 +139,7 @@ public class MainActivity extends FragmentActivity implements
 			}
 		});
 	}
-	
+
 	void saveState(window cnt, long id_name) {
 		sPref = getPreferences(MODE_PRIVATE);
 		Editor ed = sPref.edit();
@@ -184,7 +181,7 @@ public class MainActivity extends FragmentActivity implements
 						db.editRec(editName.getText().toString(), editMail
 								.getText().toString(), String
 								.valueOf(idCurrentName));
-						
+
 						getSupportLoaderManager().getLoader(0).forceLoad();
 						saveData();
 					}
@@ -196,7 +193,7 @@ public class MainActivity extends FragmentActivity implements
 					else {
 						db.addRec(editName.getText().toString(), editMail
 								.getText().toString());
-						
+
 						getSupportLoaderManager().getLoader(0).forceLoad();
 						addData();
 					}
