@@ -119,7 +119,7 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		// //Получаем текущее время
 		Calendar c = Calendar.getInstance();
 		// SimpleDateFormat df = new SimpleDateFormat("ddMM");
-		SimpleDateFormat date = new SimpleDateFormat("dd.MM.yy");
+		SimpleDateFormat date = new SimpleDateFormat("dd.MM");
 		SimpleDateFormat time = new SimpleDateFormat("HH:mm");
 		formattedDate = date.format(c.getTime());
 		formattedTime = time.format(c.getTime());
@@ -244,11 +244,15 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		btnGraph.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(MyStatistic.this, Graph.class);
-				intent.putExtra("id_stat_key", profile_id);
-				intent.putExtra("id_stat_count",
-						String.valueOf(listStat.getCount()));
-				startActivity(intent);
+				if (listStat.getCount() < 7)
+					graphShow();
+				else {
+					Intent intent = new Intent(MyStatistic.this, Graph.class);
+					intent.putExtra("id_stat_key", profile_id);
+					intent.putExtra("id_stat_count",
+							String.valueOf(listStat.getCount()));
+					startActivity(intent);
+				}
 				dialog.dismiss();
 			}
 		});
@@ -264,7 +268,6 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		btnEmail.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				// writeFileSD(profile_name[0]);
 				final Intent emailIntent = new Intent(
 						android.content.Intent.ACTION_SEND);
 
@@ -401,6 +404,10 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 
 	void saveOnSD() {
 		Toast.makeText(this, R.string.save_on_SD, Toast.LENGTH_SHORT).show();
+	}
+
+	void graphShow() {
+		Toast.makeText(this, R.string.graphShow, Toast.LENGTH_SHORT).show();
 	}
 
 	@Override

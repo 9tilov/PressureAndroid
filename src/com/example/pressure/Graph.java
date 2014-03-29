@@ -7,6 +7,7 @@ import com.jjoe64.graphview.GraphViewSeries.GraphViewSeriesStyle;
 import com.jjoe64.graphview.GraphViewSeries;
 import com.jjoe64.graphview.LineGraphView;
 
+import android.R.integer;
 import android.os.Bundle;
 import android.app.Activity;
 import android.graphics.Color;
@@ -20,7 +21,7 @@ public class Graph extends Activity {
 	String stat_id;
 	String[] statPulse, statSys, statDias, statDate;
 	String count_data_string;
-
+	
 	MyDB db;
 
 	final String LOG_TAG = "myLogs";
@@ -36,7 +37,7 @@ public class Graph extends Activity {
 		Log.d(LOG_TAG, "stat_id= " + stat_id);
 		db = new MyDB(this);
 		db.open();
-
+		
 		statPulse = db.getCurrentStatPulse(Long.valueOf(stat_id),
 				Integer.valueOf(count_data_string));
 		statSys = db.getCurrentStatSys(Long.valueOf(stat_id),
@@ -50,12 +51,17 @@ public class Graph extends Activity {
 		
 		Log.d(LOG_TAG, "DATE= " + statDate[0]);
 		int count = Integer.valueOf(count_data_string);
-
-		// init example series data
 		GraphViewData[] dataPulse = new GraphViewData[count];
+		GraphViewData[] dataSys = new GraphViewData[count];
+		GraphViewData[] dataDias = new GraphViewData[count];
+		
 		for (int i = 0; i < count; i++) {
-			dataPulse[i] = new GraphViewData(Double.valueOf(i),
+			dataPulse[i] = new GraphViewData(i,
 					Double.valueOf(statPulse[i]));
+			dataSys[i] = new GraphViewData(i,
+					Double.valueOf(statSys[i]));
+			dataDias[i] = new GraphViewData(i,
+					Double.valueOf(statDias[i]));
 		}
 
 		GraphViewSeriesStyle stylePulse = new GraphViewSeriesStyle();
@@ -63,24 +69,10 @@ public class Graph extends Activity {
 		GraphViewSeries seriesPulse = new GraphViewSeries("Pulse", stylePulse,
 				dataPulse);
 
-		// init example series data
-		GraphViewData[] dataSys = new GraphViewData[count];
-		for (int i = 0; i < count; i++) {
-			dataSys[i] = new GraphViewData(Double.valueOf(i),
-					Double.valueOf(statSys[i]));
-		}
-
 		GraphViewSeriesStyle styleSys = new GraphViewSeriesStyle();
 		styleSys.color = Color.rgb(200, 50, 0);
 		GraphViewSeries seriesSys = new GraphViewSeries("Sys. pressure", styleSys,
 				dataSys);
-
-		// init example series data
-		GraphViewData[] dataDias = new GraphViewData[count];
-		for (int i = 0; i < count; i++) {
-			dataDias[i] = new GraphViewData(Double.valueOf(i),
-					Double.valueOf(statDias[i]));
-		}
 
 		GraphViewSeriesStyle styleDias = new GraphViewSeriesStyle();
 		styleDias.color = Color.rgb(300, 50, 110);
@@ -91,7 +83,6 @@ public class Graph extends Activity {
 				, "Pressure statistics" // heading
 		);
 
-		
 		graphView.addSeries(seriesSys);
 		graphView.addSeries(seriesDias);
 		graphView.addSeries(seriesPulse);
@@ -100,10 +91,10 @@ public class Graph extends Activity {
 		graphView.setScalable(true);
 		graphView.setShowLegend(true);
 		
-		graphView.setViewPort(Double.valueOf(count_data_string) - 5, 4);
+		graphView.setViewPort(Double.valueOf(count_data_string) - 8, 7);
 		graphView.setScrollable(true);
-		graphView.getGraphViewStyle().setNumHorizontalLabels(4);
-		graphView.setHorizontalLabels(statDate);
+		graphView.setScalable(true);
+		graphView.getGraphViewStyle().setNumVerticalLabels(8);
 		graphView.setLegendAlign(LegendAlign.TOP);
 		graphView.setLegendWidth(240);
 		LinearLayout layout = (LinearLayout) findViewById(R.id.graph1);
