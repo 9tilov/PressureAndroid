@@ -37,8 +37,8 @@ public class MyDB {
 			+ DB_TABLE_STAT + "(" + COLUMN_ID
 			+ " integer primary key autoincrement, " + COLUMN_PULSE + " text, "
 			+ COLUMN_SYS_PRESSURE + " text, " + COLUMN_DIAS_PRESSURE
-			+ " text, " + COLUMN_DATE + " text, "
-			+ COLUMN_TIME + " text, " + COLUMN_UID + " text" + ");";
+			+ " text, " + COLUMN_DATE + " text, " + COLUMN_TIME + " text, "
+			+ COLUMN_UID + " text" + ");";
 
 	private final Context mCtx;
 
@@ -157,6 +157,10 @@ public class MyDB {
 	}
 
 	public void delRecStat(long id) {
+		mDB.delete(DB_TABLE_STAT, COLUMN_ID + " = " + id, null);
+	}
+
+	public void delRecAllStat(long id) {
 		mDB.delete(DB_TABLE_STAT, COLUMN_UID + " = " + id, null);
 	}
 

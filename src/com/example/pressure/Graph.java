@@ -20,7 +20,8 @@ import android.widget.LinearLayout;
 import android.util.Log;
 
 public class Graph extends Activity {
-
+		
+	
 	String stat_id;
 	String[] statPulse, statSys, statDias;
 	String count_data_string;
@@ -44,7 +45,7 @@ public class Graph extends Activity {
 		LinkedList<String[]> list = new LinkedList<String[]>();
 		list = db.getStat(Long.valueOf(stat_id),
 				Integer.valueOf(count_data_string));
-		
+
 		int count = Integer.valueOf(count_data_string);
 		GraphViewData[] dataPulse = new GraphViewData[count];
 		GraphViewData[] dataSys = new GraphViewData[count];
@@ -63,12 +64,12 @@ public class Graph extends Activity {
 
 		GraphViewSeriesStyle styleSys = new GraphViewSeriesStyle();
 		styleSys.color = Color.rgb(200, 50, 0);
-		GraphViewSeries seriesSys = new GraphViewSeries("Sys. pressure",
+		GraphViewSeries seriesSys = new GraphViewSeries("Sys.",
 				styleSys, dataSys);
 
 		GraphViewSeriesStyle styleDias = new GraphViewSeriesStyle();
 		styleDias.color = Color.rgb(300, 50, 160);
-		GraphViewSeries seriesDias = new GraphViewSeries("Dias. pressure",
+		GraphViewSeries seriesDias = new GraphViewSeries("Dias.",
 				styleDias, dataDias);
 
 		GraphView graphView = new LineGraphView(this // context
@@ -86,9 +87,9 @@ public class Graph extends Activity {
 		graphView.setViewPort(Double.valueOf(count_data_string) - 8, 7);
 		graphView.setScrollable(true);
 		graphView.setScalable(true);
-		graphView.getGraphViewStyle().setNumVerticalLabels(8);
+		graphView.getGraphViewStyle().setNumVerticalLabels(6);
 		graphView.setLegendAlign(LegendAlign.TOP);
-		graphView.setLegendWidth(240);
+		graphView.setLegendWidth(130);
 		LinearLayout layout = (LinearLayout) findViewById(R.id.graph1);
 		layout.addView(graphView);
 	}

@@ -12,6 +12,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -74,6 +75,8 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 	final int DIALOG_STAT = 1;
 	final String LOG_TAG = "myLogs";
 
+	TextView tvTextPulse;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -112,6 +115,76 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		listStat = (ListView) findViewById(R.id.listStat);
 		registerForContextMenu(listStat);
 
+		scAdapter.setViewBinder(new SimpleCursorAdapter.ViewBinder() {
+			public boolean setViewValue(View view, Cursor cursor,
+					int columnIndex) {
+				int color;
+				String s;
+				TextView tv;
+				switch (view.getId()) {
+				case R.id.tvTextPulse:
+					color = cursor.getInt(columnIndex);
+					s = String.valueOf(color);
+					tv = (TextView) view;
+					if ((Integer.valueOf(s) >= 60)
+							&& (Integer.valueOf(s) <= 80)) {
+						tv.setTextColor(Color.GREEN);
+						tv.setText(s);
+					} else if (((Integer.valueOf(s) > 80) && (Integer
+							.valueOf(s) <= 100))
+							|| ((Integer.valueOf(s) > 50) && (Integer
+									.valueOf(s) < 60))) {
+						tv.setTextColor(Color.YELLOW);
+						tv.setText(s);
+					} else {
+						tv.setTextColor(Color.RED);
+						tv.setText(s);
+					}
+					break;
+				case R.id.tvTextSys:
+					color = cursor.getInt(columnIndex);
+					s = String.valueOf(color);
+					tv = (TextView) view;
+					if ((Integer.valueOf(s) >= 110)
+							&& (Integer.valueOf(s) <= 130)) {
+						tv.setTextColor(Color.GREEN);
+						tv.setText(s);
+					} else if (((Integer.valueOf(s) > 130) && (Integer
+							.valueOf(s) < 140))
+							|| (((Integer.valueOf(s) >= 100)) && ((Integer
+									.valueOf(s) < 110)))) {
+						tv.setTextColor(Color.YELLOW);
+						tv.setText(s);
+					} else {
+						tv.setTextColor(Color.RED);
+						tv.setText(s);
+					}
+					break;
+				case R.id.tvTextDias:
+					color = cursor.getInt(columnIndex);
+					s = String.valueOf(color);
+					tv = (TextView) view;
+					if ((Integer.valueOf(s) >= 70)
+							&& (Integer.valueOf(s) <= 85)) {
+						tv.setTextColor(Color.GREEN);
+						tv.setText(s);
+					} else if (((Integer.valueOf(s) >= 60) && (Integer
+							.valueOf(s) < 70))
+							|| ((Integer.valueOf(s) > 85) && (Integer
+									.valueOf(s) < 90))) {
+						tv.setTextColor(Color.YELLOW);
+						tv.setText(s);
+					} else {
+						tv.setTextColor(Color.RED);
+						tv.setText(s);
+					}
+					break;
+				}
+				return false;
+			}
+
+		});
+
 		listStat.setAdapter(scAdapter);
 
 		// // создаем лоадер для чтения данных
@@ -123,6 +196,18 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		SimpleDateFormat time = new SimpleDateFormat("HH:mm");
 		formattedDate = date.format(c.getTime());
 		formattedTime = time.format(c.getTime());
+		scrollMyListViewToBottom();
+		// listStat.setSelection(listStat.getAdapter().getCount() - 1);
+	}
+
+	private void scrollMyListViewToBottom() {
+		listStat.post(new Runnable() {
+			@Override
+			public void run() {
+				// Select the last row so it will scroll into view...
+				listStat.setSelection(scAdapter.getCount() - 1);
+			}
+		});
 	}
 
 	public void show() {
@@ -156,7 +241,7 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 			npSysPressure.setValue(Integer.valueOf(currentStat[1]));
 			npDiasPressure.setValue(Integer.valueOf(currentStat[2]));
 		} else {
-			npPulse.setValue(65);
+			npPulse.setValue(70);
 			npSysPressure.setValue(120);
 			npDiasPressure.setValue(80);
 		}
@@ -172,8 +257,8 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 							String.valueOf(npSysPressure.getValue()),
 							String.valueOf(npDiasPressure.getValue()),
 							profile_id, formattedDate, formattedTime);
+					// tvTextPulse.setTextColor(Color.parseColor("#FFFFFF"));
 					getSupportLoaderManager().getLoader(0).forceLoad();
-					addData();
 					dialog.dismiss();
 				} else {
 					currentStat[0] = String.valueOf(npPulse.getValue());
@@ -184,6 +269,8 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 					saveData();
 					dialog.dismiss();
 				}
+				addData();
+				scrollMyListViewToBottom();
 			}
 		});
 		dialog.show();
@@ -206,15 +293,13 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 			// получаем новый курсор с данными
 			getSupportLoaderManager().getLoader(0).forceLoad();
 			deleteData();
+			scrollMyListViewToBottom();
 			return true;
 		} else if (item.getItemId() == CM_EDIT_ID) {
 			currentStat = db.getCurrentStat(acmi.id);
 			idCurrentName = acmi.id;
-			Log.d(LOG_TAG, "row inserted, id= " + idCurrentName);
-			Log.d(LOG_TAG, "row inserted, pulse = " + currentStat[0]);
-			Log.d(LOG_TAG, "row inserted, sys= " + currentStat[1]);
-			Log.d(LOG_TAG, "row inserted, dias= " + currentStat[2]);
 			show();
+			scrollMyListViewToBottom();
 			return true;
 		} else if (item.getItemId() == CM_DELETE_ALL_ID) {
 			showChoice();
@@ -316,10 +401,10 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		btnYes.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				db.delRecStat(Long.valueOf(profile_id));
+				db.delRecAllStat(Long.valueOf(profile_id));
 				getSupportLoaderManager().getLoader(0).forceLoad();
-				deleteData();
 				dialog.dismiss();
+				deleteData();
 			}
 		});
 
