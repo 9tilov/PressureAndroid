@@ -16,6 +16,7 @@
         android:id="@+id/editName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:hint="Your name"
         android:ems="10" >
     </EditText>
 
@@ -31,6 +32,7 @@
         android:id="@+id/editMail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:hint="Doctor's e-mail"
         android:ems="10" >
     </EditText>
 
