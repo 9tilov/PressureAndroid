@@ -51,6 +51,7 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 	long idCurrentName = 0;
 	String formattedDate, formattedTime;
 
+	
 	MyDB db;
 	static String profile_id;
 	SimpleCursorAdapter scAdapter;
@@ -214,7 +215,6 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		npSysPressure.setMinValue(60);
 		npSysPressure.setWrapSelectorWheel(false);
 		npSysPressure.setOnValueChangedListener(this);
-		
 
 		final NumberPicker npDiasPressure = (NumberPicker) dialog
 				.findViewById(R.id.npDiasPressure);
