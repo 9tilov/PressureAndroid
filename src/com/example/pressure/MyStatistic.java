@@ -49,43 +49,31 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 	private static final int CM_DELETE_ID = 0, CM_EDIT_ID = 1,
 			CM_DELETE_ALL_ID = 2;
 	long idCurrentName = 0;
-	String formattedDate, formattedTime, currentPulse, currentSys, currentDias;
+	String formattedDate, formattedTime;
 
 	MyDB db;
-	Button btnAdd, btnSave, btnLoad, btnEmail, btnGraph, btnYes, btnNo;
-	EditText etPulse, etSysPressure, etDiasPressure;
 	static String profile_id;
 	SimpleCursorAdapter scAdapter;
 
-	TextView tvPulse;
-
 	String[] profile_name;
 
-	NumberPicker npPulse, npSysPressure, npDiasPressure;
-
-	ListView listStat, pulse, sysPressure, diasPressure;
+	ListView listStat;
 
 	final String DIR_SD = "Pressure";
 	final String FILENAME_SD = "pressure_stat";
 
 	final String FILENAME = "Pressure_stat";
 
-	Cursor cursor;
 	String[] currentStat = new String[] { "", "", "" };
-	final int DIALOG_STAT = 1;
 	final String LOG_TAG = "myLogs";
-
-	TextView tvTextPulse;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.statistic);
 
-		btnAdd = (Button) findViewById(R.id.btnAddStat);
-		TextView name, e_mail;
+		Button btnAdd = (Button) findViewById(R.id.btnAddStat);
 		btnAdd.setOnClickListener(this);
-		tvPulse = (TextView) findViewById(R.id.tvTextPulse);
 
 		db = new MyDB(this);
 		db.open();
@@ -97,17 +85,14 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		int[] to = new int[] { R.id.tvTextPulse, R.id.tvTextSys,
 				R.id.tvTextDias, R.id.tvTextDate, R.id.tvTextTime };
 
-		name = (TextView) findViewById(R.id.profile_name);
-		e_mail = (TextView) findViewById(R.id.profile_e_mail);
+		TextView name = (TextView) findViewById(R.id.profile_name);
+		TextView e_mail = (TextView) findViewById(R.id.profile_e_mail);
 		profile_id = getIntent().getStringExtra("id_profile_key");
 
 		profile_name = db.getCurrentName(Long.parseLong(profile_id));
+
 		name.setText(profile_name[0]);
 		e_mail.setText(profile_name[1]);
-
-		npPulse = (NumberPicker) findViewById(R.id.npPulse);
-		npSysPressure = (NumberPicker) findViewById(R.id.npSysPressure);
-		npDiasPressure = (NumberPicker) findViewById(R.id.npDiasPressure);
 
 		// создааем адаптер и настраиваем список
 		scAdapter = new SimpleCursorAdapter(this, R.layout.list, null, from,
@@ -118,56 +103,57 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		scAdapter.setViewBinder(new SimpleCursorAdapter.ViewBinder() {
 			public boolean setViewValue(View view, Cursor cursor,
 					int columnIndex) {
-				int color;
 				String s;
 				TextView tv;
 				switch (view.getId()) {
 				case R.id.tvTextPulse:
-					color = cursor.getInt(columnIndex);
-					s = String.valueOf(color);
+					s = String.valueOf(cursor.getInt(columnIndex));
 					tv = (TextView) view;
 					if ((Integer.valueOf(s) >= 60)
 							&& (Integer.valueOf(s) <= 80)) {
 						tv.setTextColor(Color.GREEN);
 						tv.setText(s);
+						break;
 					} else if (((Integer.valueOf(s) > 80) && (Integer
 							.valueOf(s) <= 100))
 							|| ((Integer.valueOf(s) > 50) && (Integer
 									.valueOf(s) < 60))) {
 						tv.setTextColor(Color.YELLOW);
 						tv.setText(s);
+						break;
 					} else {
 						tv.setTextColor(Color.RED);
 						tv.setText(s);
+						break;
 					}
-					break;
 				case R.id.tvTextSys:
-					color = cursor.getInt(columnIndex);
-					s = String.valueOf(color);
+					s = String.valueOf(cursor.getInt(columnIndex));
 					tv = (TextView) view;
 					if ((Integer.valueOf(s) >= 110)
 							&& (Integer.valueOf(s) <= 130)) {
 						tv.setTextColor(Color.GREEN);
 						tv.setText(s);
+						break;
 					} else if (((Integer.valueOf(s) > 130) && (Integer
 							.valueOf(s) < 140))
 							|| (((Integer.valueOf(s) >= 100)) && ((Integer
 									.valueOf(s) < 110)))) {
 						tv.setTextColor(Color.YELLOW);
 						tv.setText(s);
+						break;
 					} else {
 						tv.setTextColor(Color.RED);
 						tv.setText(s);
+						break;
 					}
-					break;
 				case R.id.tvTextDias:
-					color = cursor.getInt(columnIndex);
-					s = String.valueOf(color);
+					s = String.valueOf(cursor.getInt(columnIndex));
 					tv = (TextView) view;
 					if ((Integer.valueOf(s) >= 70)
 							&& (Integer.valueOf(s) <= 85)) {
 						tv.setTextColor(Color.GREEN);
 						tv.setText(s);
+						break;
 					} else if (((Integer.valueOf(s) >= 60) && (Integer
 							.valueOf(s) < 70))
 							|| ((Integer.valueOf(s) > 85) && (Integer
@@ -177,8 +163,8 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 					} else {
 						tv.setTextColor(Color.RED);
 						tv.setText(s);
+						break;
 					}
-					break;
 				}
 				return false;
 			}
@@ -197,7 +183,6 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		formattedDate = date.format(c.getTime());
 		formattedTime = time.format(c.getTime());
 		scrollMyListViewToBottom();
-		// listStat.setSelection(listStat.getAdapter().getCount() - 1);
 	}
 
 	private void scrollMyListViewToBottom() {
@@ -215,6 +200,7 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		final Dialog dialog = new Dialog(MyStatistic.this);
 		dialog.setContentView(R.layout.dialog_stat);
 		dialog.setTitle("Statictics");
+
 		final NumberPicker npPulse = (NumberPicker) dialog
 				.findViewById(R.id.npPulse);
 		npPulse.setMaxValue(200);
@@ -228,6 +214,7 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		npSysPressure.setMinValue(60);
 		npSysPressure.setWrapSelectorWheel(false);
 		npSysPressure.setOnValueChangedListener(this);
+		
 
 		final NumberPicker npDiasPressure = (NumberPicker) dialog
 				.findViewById(R.id.npDiasPressure);
@@ -246,8 +233,7 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 			npDiasPressure.setValue(80);
 		}
 
-		final Button btnSaveStat = (Button) dialog
-				.findViewById(R.id.btnSaveState);
+		Button btnSaveStat = (Button) dialog.findViewById(R.id.btnSaveState);
 
 		btnSaveStat.setOnClickListener(new OnClickListener() {
 			@Override
@@ -257,7 +243,6 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 							String.valueOf(npSysPressure.getValue()),
 							String.valueOf(npDiasPressure.getValue()),
 							profile_id, formattedDate, formattedTime);
-					// tvTextPulse.setTextColor(Color.parseColor("#FFFFFF"));
 					getSupportLoaderManager().getLoader(0).forceLoad();
 					dialog.dismiss();
 				} else {
@@ -313,6 +298,7 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		Log.d(LOG_TAG, "row inserted, id= " + idCurrentName);
 		switch (v.getId()) {
 		case R.id.btnAddStat:
+			idCurrentName = 0;
 			show();
 			break;
 		}
@@ -323,25 +309,26 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		dialog.setContentView(R.layout.dialog_save);
 		dialog.setTitle("Save your data");
 
-		final Button btnGraph = (Button) dialog.findViewById(R.id.btnGraph);
+		Button btnGraph = (Button) dialog.findViewById(R.id.btnGraph);
 
-		final Button btnSave = (Button) dialog.findViewById(R.id.btnSave);
+		Button btnSave = (Button) dialog.findViewById(R.id.btnSave);
 
-		final Button btnEmail = (Button) dialog.findViewById(R.id.btnEmail);
+		Button btnEmail = (Button) dialog.findViewById(R.id.btnEmail);
 
 		btnGraph.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (listStat.getCount() < 10)
+				if (listStat.getCount() < 10) {
 					graphShow();
-				else {
+					dialog.dismiss();
+				} else {
 					Intent intent = new Intent(MyStatistic.this, Graph.class);
 					intent.putExtra("id_stat_key", profile_id);
 					intent.putExtra("id_stat_count",
 							String.valueOf(listStat.getCount()));
 					startActivity(intent);
+					dialog.dismiss();
 				}
-				dialog.dismiss();
 			}
 		});
 
@@ -403,8 +390,8 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 			public void onClick(View v) {
 				db.delRecAllStat(Long.valueOf(profile_id));
 				getSupportLoaderManager().getLoader(0).forceLoad();
-				dialog.dismiss();
 				deleteData();
+				dialog.dismiss();
 			}
 		});
 
@@ -422,7 +409,7 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		switch (keycode) {
 		case KeyEvent.KEYCODE_MENU:
 			showSave();
-			return true;
+			break;
 		}
 
 		return super.onKeyDown(keycode, e);
@@ -468,7 +455,6 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 	protected void onDestroy() {
 		db.close();
 		super.onDestroy();
-		// закрываем подключение при выходе
 	}
 
 	@Override
@@ -528,6 +514,5 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 	@Override
 	public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
 		// TODO Auto-generated method stub
-
 	}
 }

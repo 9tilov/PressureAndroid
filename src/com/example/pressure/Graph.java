@@ -1,29 +1,20 @@
 package com.example.pressure;
 
 import java.util.LinkedList;
-import java.util.List;
-
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GraphView.GraphViewData;
 import com.jjoe64.graphview.GraphView.LegendAlign;
 import com.jjoe64.graphview.GraphViewSeries.GraphViewSeriesStyle;
 import com.jjoe64.graphview.GraphViewSeries;
 import com.jjoe64.graphview.LineGraphView;
-
-import android.R.integer;
 import android.os.Bundle;
 import android.app.Activity;
 import android.graphics.Color;
 import android.util.Log;
-import android.view.Menu;
 import android.widget.LinearLayout;
-import android.util.Log;
 
 public class Graph extends Activity {
-		
-	
-	String stat_id;
-	String[] statPulse, statSys, statDias;
+
 	String count_data_string;
 
 	MyDB db;
@@ -35,7 +26,7 @@ public class Graph extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.graph);
 
-		stat_id = getIntent().getStringExtra("id_stat_key");
+		String stat_id = getIntent().getStringExtra("id_stat_key");
 		count_data_string = getIntent().getStringExtra("id_stat_count");
 
 		Log.d(LOG_TAG, "stat_id= " + stat_id);
@@ -64,13 +55,13 @@ public class Graph extends Activity {
 
 		GraphViewSeriesStyle styleSys = new GraphViewSeriesStyle();
 		styleSys.color = Color.rgb(200, 50, 0);
-		GraphViewSeries seriesSys = new GraphViewSeries("Sys.",
-				styleSys, dataSys);
+		GraphViewSeries seriesSys = new GraphViewSeries("Sys.", styleSys,
+				dataSys);
 
 		GraphViewSeriesStyle styleDias = new GraphViewSeriesStyle();
 		styleDias.color = Color.rgb(300, 50, 160);
-		GraphViewSeries seriesDias = new GraphViewSeries("Dias.",
-				styleDias, dataDias);
+		GraphViewSeries seriesDias = new GraphViewSeries("Dias.", styleDias,
+				dataDias);
 
 		GraphView graphView = new LineGraphView(this // context
 				, "Pressure statistics" // heading
@@ -95,8 +86,8 @@ public class Graph extends Activity {
 	}
 
 	protected void onDestroy() {
-		super.onDestroy();
 		// закрываем подключение при выходе
 		db.close();
+		super.onDestroy();
 	}
 }

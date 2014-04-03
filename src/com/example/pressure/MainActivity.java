@@ -37,10 +37,7 @@ import android.widget.Toast;
 public class MainActivity extends FragmentActivity implements
 		LoaderCallbacks<Cursor> {
 
-	private static final int CM_EDIT_ID = 0;
-	private static final int CM_DELETE_ID = 1;
-
-	public final static String FILE_NAME = "filename";
+	private static final int CM_EDIT_ID = 0, CM_DELETE_ID = 1;
 
 	static SharedPreferences sPref;
 
@@ -53,13 +50,9 @@ public class MainActivity extends FragmentActivity implements
 	long idCurrentName;
 	EditText editName, editMail;
 
-	Button addProfile, buttonService;
-
 	String[] currentProfile = new String[] { "", "" };
 
 	long id_name;
-
-	Animation anim = null;
 
 	enum window {
 		profile, data
@@ -67,8 +60,6 @@ public class MainActivity extends FragmentActivity implements
 
 	final String LOG_TAG = "Pressure";
 	final int DIALOG = 1;
-
-	final String LOG_TAG_NAME = "myLogsName";
 
 	/** Called when the activity is first created. */
 	public void onCreate(Bundle savedInstanceState) {
@@ -86,14 +77,6 @@ public class MainActivity extends FragmentActivity implements
 			startActivityForResult(intent, 1);
 		}
 
-		TextView tv = (TextView) findViewById(R.id.tv);
-
-		Intent intent = getIntent();
-
-		String fileName = intent.getStringExtra(FILE_NAME);
-		if (!TextUtils.isEmpty(fileName))
-			tv.setText(fileName);
-
 		// открываем подключение к БД
 		db = new MyDB(this);
 		db.open();
@@ -102,7 +85,7 @@ public class MainActivity extends FragmentActivity implements
 		String[] from = new String[] { MyDB.COLUMN_NAME };
 		int[] to = new int[] { R.id.tvName };
 
-		addProfile = (Button) findViewById(R.id.addProfile);
+		Button addProfile = (Button) findViewById(R.id.addProfile);
 
 		addProfile.setOnClickListener(new OnClickListener() {
 			@Override
@@ -175,31 +158,33 @@ public class MainActivity extends FragmentActivity implements
 				if (idCurrentName != 0) {
 					if ((0 == editName.getText().toString().length())
 							|| (0 == editMail.getText().toString().length())
-							|| (!(isValidEmail(editMail.getText().toString()))))
+							|| (!(isValidEmail(editMail.getText().toString())))) {
 						inCorrectData();
-					else {
+						break;
+					} else {
 						db.editRec(editName.getText().toString(), editMail
 								.getText().toString(), String
 								.valueOf(idCurrentName));
 
 						getSupportLoaderManager().getLoader(0).forceLoad();
 						saveData();
+						break;
 					}
 				} else {
 					if ((0 == editName.getText().toString().length())
 							|| (0 == editMail.getText().toString().length())
-							|| (!(isValidEmail(editMail.getText().toString()))))
+							|| (!(isValidEmail(editMail.getText().toString())))) {
 						inCorrectData();
-					else {
+						break;
+					} else {
 						db.addRec(editName.getText().toString(), editMail
 								.getText().toString());
-
 						getSupportLoaderManager().getLoader(0).forceLoad();
 						addData();
+						break;
 					}
 				}
-				break;
-			// нейтральная кнопка
+				// нейтральная кнопка
 			case Dialog.BUTTON_NEUTRAL:
 				break;
 			}
@@ -207,7 +192,6 @@ public class MainActivity extends FragmentActivity implements
 	};
 
 	protected void onPrepareDialog(int id, Dialog dialog) {
-		super.onPrepareDialog(id, dialog);
 		if (id == DIALOG) {
 			editName = (EditText) dialog.getWindow()
 					.findViewById(R.id.editName);
@@ -291,9 +275,8 @@ public class MainActivity extends FragmentActivity implements
 	}
 
 	protected void onDestroy() {
-		super.onDestroy();
-		// закрываем подключение при выходе
 		db.close();
+		super.onDestroy();
 	}
 
 	@Override
