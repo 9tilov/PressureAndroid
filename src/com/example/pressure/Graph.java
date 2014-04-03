@@ -14,7 +14,16 @@ import android.util.Log;
 import android.widget.LinearLayout;
 
 public class Graph extends Activity {
+<<<<<<< HEAD
 
+=======
+<<<<<<< HEAD
+
+=======
+		
+	
+	String stat_id;
+	String[] statPulse, statSys, statDias;
 	String count_data_string;
 
 	MyDB db;
@@ -62,7 +71,7 @@ public class Graph extends Activity {
 		styleDias.color = Color.rgb(300, 50, 160);
 		GraphViewSeries seriesDias = new GraphViewSeries("Dias.", styleDias,
 				dataDias);
-
+		
 		GraphView graphView = new LineGraphView(this // context
 				, "Pressure statistics" // heading
 		);
