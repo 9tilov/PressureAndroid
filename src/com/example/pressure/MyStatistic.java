@@ -38,11 +38,6 @@ import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.text.TextUtils;
 
-import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.GraphViewSeries;
-import com.jjoe64.graphview.LineGraphView;
-import com.jjoe64.graphview.GraphView.GraphViewData;
-
 public class MyStatistic extends FragmentActivity implements OnClickListener,
 		LoaderCallbacks<Cursor>, NumberPicker.OnValueChangeListener {
 
@@ -51,7 +46,7 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 	long idCurrentName = 0;
 	String formattedDate, formattedTime;
 
-	
+
 	MyDB db;
 	static String profile_id;
 	SimpleCursorAdapter scAdapter;

@@ -95,22 +95,38 @@ public class MyDB {
 		return profile;
 	}
 
-	public LinkedList<String[]> getStat(long id, int length) {
+	public LinkedList<String[]> getStat(long id, int length, int period) {
+
 		LinkedList<String[]> list = new LinkedList<String[]>();
+
 		Cursor cursor = mDB.query(DB_TABLE_STAT, null, COLUMN_UID + "='" + id
 				+ "'", null, null, null, null);
-		String[] statistics = new String[length];
+		String[] tempPulse = new String[length];
+		String[] tempSys = new String[length];
+		String[] tempDias = new String[length];
+		String[] pulse = new String[period];
+		String[] sys = new String[period];
+		String[] dias = new String[period];
+
 		if (cursor != null) {
 			cursor.moveToFirst();
-			for (int i = 0; i < 3; ++i) {
-				for (int j = 0; j < statistics.length; ++j) {
-					statistics[j] = cursor.getString(i + 1);
-					cursor.moveToNext();
-				}
-				list.add(statistics);
-				cursor.moveToFirst();
-				statistics = new String[length];
+			for (int j = 0; j < length; ++j) {
+				tempPulse[j] = cursor.getString(1);
+				tempSys[j] = cursor.getString(2);
+				tempDias[j] = cursor.getString(3);
+				cursor.moveToNext();
 			}
+		}
+
+		for (int i = 0; i < 3; ++i) {
+			for (int j = length - period; j < length; ++j) {
+				pulse[j - (length - period)] = tempPulse[j];
+				sys[j - (length - period)] = tempSys[j];
+				dias[j - (length - period)] = tempDias[j];
+			}
+			list.add(pulse);
+			list.add(sys);
+			list.add(dias);
 		}
 		return list;
 	}
