@@ -31,7 +31,8 @@ public class GraphAllPeriod extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.graph_all_period);
 		stat_id = getIntent().getStringExtra("id_stat_key_all_period");
-		count_data_string = getIntent().getStringExtra("id_stat_count_all_period");
+		count_data_string = getIntent().getStringExtra(
+				"id_stat_count_all_period");
 
 		LinearLayout layout = (LinearLayout) findViewById(R.id.graphAllPeriod);
 		layout.removeView(graphView);

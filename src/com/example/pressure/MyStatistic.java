@@ -43,9 +43,11 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 
 	private static final int CM_DELETE_ID = 0, CM_EDIT_ID = 1,
 			CM_DELETE_ALL_ID = 2;
-	long idCurrentName = 0;
+	public static final int SAVE_DATA_FLAG = 0, EDIT_DATA_FLAG = 1;
+	
+	int flag, idCurrentName;
+	
 	String formattedDate, formattedTime;
-
 
 	MyDB db;
 	static String profile_id;
@@ -57,8 +59,6 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 
 	final String DIR_SD = "Pressure";
 	final String FILENAME_SD = "pressure_stat";
-
-	final String FILENAME = "Pressure_stat";
 
 	String[] currentStat = new String[] { "", "", "" };
 	final String LOG_TAG = "myLogs";
@@ -168,17 +168,16 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		});
 
 		listStat.setAdapter(scAdapter);
+		scrollMyListViewToBottom();
 
 		// // создаем лоадер для чтения данных
 		getSupportLoaderManager().initLoader(0, null, this);
 		// //Получаем текущее время
 		Calendar c = Calendar.getInstance();
-		// SimpleDateFormat df = new SimpleDateFormat("ddMM");
 		SimpleDateFormat date = new SimpleDateFormat("dd.MM");
 		SimpleDateFormat time = new SimpleDateFormat("HH:mm");
 		formattedDate = date.format(c.getTime());
 		formattedTime = time.format(c.getTime());
-		scrollMyListViewToBottom();
 	}
 
 	private void scrollMyListViewToBottom() {
@@ -218,11 +217,11 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		npDiasPressure.setWrapSelectorWheel(false);
 		npDiasPressure.setOnValueChangedListener(this);
 
-		if (idCurrentName != 0) {
+		if (flag == EDIT_DATA_FLAG) {
 			npPulse.setValue(Integer.valueOf(currentStat[0]));
 			npSysPressure.setValue(Integer.valueOf(currentStat[1]));
 			npDiasPressure.setValue(Integer.valueOf(currentStat[2]));
-		} else {
+		} else if (flag == SAVE_DATA_FLAG){
 			npPulse.setValue(70);
 			npSysPressure.setValue(120);
 			npDiasPressure.setValue(80);
@@ -233,14 +232,14 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		btnSaveStat.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (idCurrentName == 0) {
+				if (flag == SAVE_DATA_FLAG) {
 					db.addStat(String.valueOf(npPulse.getValue()),
 							String.valueOf(npSysPressure.getValue()),
 							String.valueOf(npDiasPressure.getValue()),
 							profile_id, formattedDate, formattedTime);
 					getSupportLoaderManager().getLoader(0).forceLoad();
 					dialog.dismiss();
-				} else {
+				} else if (flag == EDIT_DATA_FLAG){
 					currentStat[0] = String.valueOf(npPulse.getValue());
 					currentStat[1] = String.valueOf(npSysPressure.getValue());
 					currentStat[2] = String.valueOf(npDiasPressure.getValue());
@@ -277,7 +276,7 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 			return true;
 		} else if (item.getItemId() == CM_EDIT_ID) {
 			currentStat = db.getCurrentStat(acmi.id);
-			idCurrentName = acmi.id;
+			idCurrentName = (int) acmi.id;
 			show();
 			scrollMyListViewToBottom();
 			return true;
@@ -293,7 +292,7 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		Log.d(LOG_TAG, "row inserted, id= " + idCurrentName);
 		switch (v.getId()) {
 		case R.id.btnAddStat:
-			idCurrentName = 0;
+			flag = SAVE_DATA_FLAG;
 			show();
 			break;
 		}

@@ -43,7 +43,7 @@ public class Graph3Month extends Activity {
 		);
 		db = new MyDB(this);
 		db.open();
-		period = 16;
+		period = 90;
 		if (period <= Integer.valueOf(count_data_string)) {
 			LinkedList<String[]> list = new LinkedList<String[]>();
 			list = db.getStat(Long.valueOf(stat_id),
@@ -91,7 +91,6 @@ public class Graph3Month extends Activity {
 			layout.addView(graphView);
 		} else
 			notEnoughRecords();
-
 	}
 
 	protected void onDestroy() {
@@ -105,4 +104,3 @@ public class Graph3Month extends Activity {
 				.show();
 	}
 }
-
