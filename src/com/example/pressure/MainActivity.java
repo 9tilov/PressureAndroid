@@ -1,7 +1,9 @@
 package com.example.pressure;
 
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -19,6 +21,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -33,6 +36,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 
 public class MainActivity extends FragmentActivity implements
 		LoaderCallbacks<Cursor> {
@@ -57,6 +61,10 @@ public class MainActivity extends FragmentActivity implements
 	enum window {
 		profile, data
 	}
+	
+	static boolean active = false;
+
+	AlarmManager am;
 
 	final String LOG_TAG = "Pressure";
 	final int DIALOG = 1;
@@ -65,9 +73,14 @@ public class MainActivity extends FragmentActivity implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
+		am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+		
+//		startService(new Intent(this, MyService.class));
+		
 		long[] mas = new long[2];
 		mas = loadState();
-		startService(new Intent(this, MyService.class));
+		
 		if (mas[0] == 0)
 			setContentView(R.layout.activity_main);
 		else {
@@ -76,7 +89,10 @@ public class MainActivity extends FragmentActivity implements
 			intent.putExtra("id_profile_key", String.valueOf(mas[1]));
 			startActivityForResult(intent, 1);
 		}
-
+		
+		setRepeatingAlarm();
+//		startService(new Intent(this, MyService.class));
+		
 		// открываем подключение к БД
 		db = new MyDB(this);
 		db.open();
@@ -122,6 +138,36 @@ public class MainActivity extends FragmentActivity implements
 			}
 		});
 	}
+	
+	public void onStart(){
+		super.onStart();
+		active= true;
+	}
+
+	public void onStop(){
+		super.onStop();
+		active= false;
+	}
+
+	//check if MainActivity is Active
+	public static boolean isActive(){
+		return active;
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.main, menu);
+		return true;
+	}
+
+	public void setRepeatingAlarm() {
+		  Intent intent = new Intent(this, Receiver.class);
+		  PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0,
+		    intent, PendingIntent.FLAG_CANCEL_CURRENT);
+		  am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(),
+		    (20 * 1000), pendingIntent);
+		 }
 
 	void saveState(window cnt, long id_name) {
 		sPref = getPreferences(MODE_PRIVATE);
