@@ -76,7 +76,7 @@ public class MainActivity extends FragmentActivity implements
 		
 		am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 		
-//		startService(new Intent(this, MyService.class));
+		startService(new Intent(this, Receiver.class));
 		
 		long[] mas = new long[2];
 		mas = loadState();
@@ -91,7 +91,6 @@ public class MainActivity extends FragmentActivity implements
 		}
 		
 		setRepeatingAlarm();
-//		startService(new Intent(this, MyService.class));
 		
 		// открываем подключение к БД
 		db = new MyDB(this);
@@ -137,21 +136,6 @@ public class MainActivity extends FragmentActivity implements
 				saveState(window.data, id_name);
 			}
 		});
-	}
-	
-	public void onStart(){
-		super.onStart();
-		active= true;
-	}
-
-	public void onStop(){
-		super.onStop();
-		active= false;
-	}
-
-	//check if MainActivity is Active
-	public static boolean isActive(){
-		return active;
 	}
 
 	@Override

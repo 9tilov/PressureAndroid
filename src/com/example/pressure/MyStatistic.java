@@ -13,6 +13,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -31,6 +32,7 @@ import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.sax.TextElementListener;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
@@ -44,9 +46,9 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 	private static final int CM_DELETE_ID = 0, CM_EDIT_ID = 1,
 			CM_DELETE_ALL_ID = 2;
 	public static final int SAVE_DATA_FLAG = 0, EDIT_DATA_FLAG = 1;
-	
+
 	int flag, idCurrentName;
-	
+
 	String formattedDate, formattedTime;
 
 	MyDB db;
@@ -62,6 +64,10 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 
 	String[] currentStat = new String[] { "", "", "" };
 	final String LOG_TAG = "myLogs";
+
+	String s;
+
+	TextView tv;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -97,70 +103,22 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		registerForContextMenu(listStat);
 
 		scAdapter.setViewBinder(new SimpleCursorAdapter.ViewBinder() {
+
 			public boolean setViewValue(View view, Cursor cursor,
 					int columnIndex) {
 				String s;
-				TextView tv;
+				s = String.valueOf(cursor.getInt(columnIndex));
+				TextView tv = (TextView) view;
 				switch (view.getId()) {
 				case R.id.tvTextPulse:
-					s = String.valueOf(cursor.getInt(columnIndex));
-					tv = (TextView) view;
-					if ((Integer.valueOf(s) >= 60)
-							&& (Integer.valueOf(s) <= 80)) {
-						tv.setTextColor(Color.GREEN);
-						tv.setText(s);
-						break;
-					} else if (((Integer.valueOf(s) > 80) && (Integer
-							.valueOf(s) <= 100))
-							|| ((Integer.valueOf(s) > 50) && (Integer
-									.valueOf(s) < 60))) {
-						tv.setTextColor(Color.YELLOW);
-						tv.setText(s);
-						break;
-					} else {
-						tv.setTextColor(Color.RED);
-						tv.setText(s);
-						break;
-					}
+					setColor(48, 49, 59, 60, 80, 81, 100, 101, tv, s);
+					break;
 				case R.id.tvTextSys:
-					s = String.valueOf(cursor.getInt(columnIndex));
-					tv = (TextView) view;
-					if ((Integer.valueOf(s) >= 110)
-							&& (Integer.valueOf(s) <= 130)) {
-						tv.setTextColor(Color.GREEN);
-						tv.setText(s);
-						break;
-					} else if (((Integer.valueOf(s) > 130) && (Integer
-							.valueOf(s) < 140))
-							|| (((Integer.valueOf(s) >= 100)) && ((Integer
-									.valueOf(s) < 110)))) {
-						tv.setTextColor(Color.YELLOW);
-						tv.setText(s);
-						break;
-					} else {
-						tv.setTextColor(Color.RED);
-						tv.setText(s);
-						break;
-					}
+					setColor(99, 100, 109, 110, 130, 131, 139, 140, tv, s);
+					break;
 				case R.id.tvTextDias:
-					s = String.valueOf(cursor.getInt(columnIndex));
-					tv = (TextView) view;
-					if ((Integer.valueOf(s) >= 70)
-							&& (Integer.valueOf(s) <= 85)) {
-						tv.setTextColor(Color.GREEN);
-						tv.setText(s);
-						break;
-					} else if (((Integer.valueOf(s) >= 60) && (Integer
-							.valueOf(s) < 70))
-							|| ((Integer.valueOf(s) > 85) && (Integer
-									.valueOf(s) < 90))) {
-						tv.setTextColor(Color.YELLOW);
-						tv.setText(s);
-					} else {
-						tv.setTextColor(Color.RED);
-						tv.setText(s);
-						break;
-					}
+					setColor(59, 60, 69, 70, 85, 86, 90, 91, tv, s);
+					break;
 				}
 				return false;
 			}
@@ -180,6 +138,23 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		formattedTime = time.format(c.getTime());
 	}
 
+	public void setColor(int redLower, int fromYellowLower, int toYellowLower,
+			int fromGreen, int toGreen, int fromYellowUp, int toYellowUp,
+			int redUp, TextView tv, String s) {
+		int index = Integer.valueOf(s);
+		if ((index >= fromGreen) && (index <= toGreen)) {
+			tv.setTextColor(Color.GREEN);
+			tv.setText(s);
+		} else if (((index >= fromYellowLower) && (index <= toYellowLower))
+				|| ((index >= fromYellowUp) && (index <= toYellowUp))) {
+			tv.setTextColor(Color.YELLOW);
+			tv.setText(s);
+		} else if ((index >= redUp) || (index <= redLower)) {
+			tv.setTextColor(Color.RED);
+			tv.setText(s);
+		}
+	}
+
 	private void scrollMyListViewToBottom() {
 		listStat.post(new Runnable() {
 			@Override
@@ -196,32 +171,18 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		dialog.setContentView(R.layout.dialog_stat);
 		dialog.setTitle("Statictics");
 
-		final NumberPicker npPulse = (NumberPicker) dialog
-				.findViewById(R.id.npPulse);
-		npPulse.setMaxValue(200);
-		npPulse.setMinValue(20);
-		npPulse.setWrapSelectorWheel(false);
-		npPulse.setOnValueChangedListener(this);
-
-		final NumberPicker npSysPressure = (NumberPicker) dialog
-				.findViewById(R.id.npSysPressure);
-		npSysPressure.setMaxValue(300);
-		npSysPressure.setMinValue(60);
-		npSysPressure.setWrapSelectorWheel(false);
-		npSysPressure.setOnValueChangedListener(this);
-
-		final NumberPicker npDiasPressure = (NumberPicker) dialog
-				.findViewById(R.id.npDiasPressure);
-		npDiasPressure.setMaxValue(250);
-		npDiasPressure.setMinValue(40);
-		npDiasPressure.setWrapSelectorWheel(false);
-		npDiasPressure.setOnValueChangedListener(this);
+		final NumberPicker npPulse = initNumberPicker(20, 200, R.id.npPulse,
+				dialog);
+		final NumberPicker npSysPressure = initNumberPicker(60, 300,
+				R.id.npSysPressure, dialog);
+		final NumberPicker npDiasPressure = initNumberPicker(40, 250,
+				R.id.npDiasPressure, dialog);
 
 		if (flag == EDIT_DATA_FLAG) {
 			npPulse.setValue(Integer.valueOf(currentStat[0]));
 			npSysPressure.setValue(Integer.valueOf(currentStat[1]));
 			npDiasPressure.setValue(Integer.valueOf(currentStat[2]));
-		} else if (flag == SAVE_DATA_FLAG){
+		} else if (flag == SAVE_DATA_FLAG) {
 			npPulse.setValue(70);
 			npSysPressure.setValue(120);
 			npDiasPressure.setValue(80);
@@ -239,7 +200,7 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 							profile_id, formattedDate, formattedTime);
 					getSupportLoaderManager().getLoader(0).forceLoad();
 					dialog.dismiss();
-				} else if (flag == EDIT_DATA_FLAG){
+				} else if (flag == EDIT_DATA_FLAG) {
 					currentStat[0] = String.valueOf(npPulse.getValue());
 					currentStat[1] = String.valueOf(npSysPressure.getValue());
 					currentStat[2] = String.valueOf(npDiasPressure.getValue());
@@ -253,6 +214,15 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 			}
 		});
 		dialog.show();
+	}
+
+	public NumberPicker initNumberPicker(int min, int max, int id, Dialog dialog) {
+		final NumberPicker np = (NumberPicker) dialog.findViewById(id);
+		np.setMaxValue(max);
+		np.setMinValue(min);
+		np.setWrapSelectorWheel(false);
+		np.setOnValueChangedListener(this);
+		return np;
 	}
 
 	public void onCreateContextMenu(ContextMenu menu, View v,
