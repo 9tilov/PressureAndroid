@@ -46,8 +46,7 @@ public class GraphMonth extends Activity {
 		period = 30;
 		if (period <= Integer.valueOf(count_data_string)) {
 			LinkedList<String[]> list = new LinkedList<String[]>();
-			list = db.getStat(Long.valueOf(stat_id),
-					Integer.valueOf(count_data_string), period);
+			list = db.getStat(Long.valueOf(stat_id), period);
 
 			int count = Integer.valueOf(period);
 			GraphViewData[] dataPulse = new GraphViewData[count];

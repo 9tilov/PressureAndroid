@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
 
 public class MyDB {
@@ -95,22 +96,27 @@ public class MyDB {
 		return profile;
 	}
 
-	public LinkedList<String[]> getStat(long id, int length, int period) {
+	public LinkedList<String[]> getStat(long id, int period) {
 
 		LinkedList<String[]> list = new LinkedList<String[]>();
+		
+		String sql = "SELECT COUNT(*) FROM " + DB_TABLE_STAT;
+		SQLiteStatement statement = mDB.compileStatement(sql);
+	    int count = (int)statement.simpleQueryForLong();
 
 		Cursor cursor = mDB.query(DB_TABLE_STAT, null, COLUMN_UID + "='" + id
 				+ "'", null, null, null, null);
-		String[] tempPulse = new String[length];
-		String[] tempSys = new String[length];
-		String[] tempDias = new String[length];
+		String[] tempPulse = new String[count];
+		String[] tempSys = new String[count];
+		String[] tempDias = new String[count];
 		String[] pulse = new String[period];
 		String[] sys = new String[period];
 		String[] dias = new String[period];
-
+		
+		Log.d(LOG_TAG, "COUNT = " + count);
 		if (cursor != null) {
 			cursor.moveToFirst();
-			for (int j = 0; j < length; ++j) {
+			for (int j = 0; j < count; ++j) {
 				tempPulse[j] = cursor.getString(1);
 				tempSys[j] = cursor.getString(2);
 				tempDias[j] = cursor.getString(3);
@@ -119,10 +125,10 @@ public class MyDB {
 		}
 
 		for (int i = 0; i < 3; ++i) {
-			for (int j = length - period; j < length; ++j) {
-				pulse[j - (length - period)] = tempPulse[j];
-				sys[j - (length - period)] = tempSys[j];
-				dias[j - (length - period)] = tempDias[j];
+			for (int j = count - period; j < count; ++j) {
+				pulse[j - (count - period)] = tempPulse[j];
+				sys[j - (count - period)] = tempSys[j];
+				dias[j - (count - period)] = tempDias[j];
 			}
 			list.add(pulse);
 			list.add(sys);

@@ -44,8 +44,7 @@ public class GraphWeek extends Activity {
 		db.open();
 		period = 7;
 		LinkedList<String[]> list = new LinkedList<String[]>();
-		list = db.getStat(Long.valueOf(stat_id),
-				Integer.valueOf(count_data_string), period);
+		list = db.getStat(Long.valueOf(stat_id), period);
 
 		int count = Integer.valueOf(period);
 		GraphViewData[] dataPulse = new GraphViewData[count];
