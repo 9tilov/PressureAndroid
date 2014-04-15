@@ -33,9 +33,9 @@ public class Graph extends Activity {
 	final String LOG_TAG = "myLogs";
 
 	int number_of_elements;
-	
+
 	TabHost tabs;
-	
+
 	TabHost.TabSpec spec;
 
 	protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +45,7 @@ public class Graph extends Activity {
 		tabs = (TabHost) findViewById(R.id.tabhost);
 
 		tabs.setup();
-		
+
 		setTab("tag1", R.id.graphWeek, "week");
 		setTab("tag2", R.id.graphMonth, "month");
 		setTab("tag3", R.id.graph3Month, "3 month");
@@ -83,7 +83,7 @@ public class Graph extends Activity {
 		db.close();
 		super.onDestroy();
 	}
-	
+
 	void setTab(String tag, int id, String periodName) {
 		spec = tabs.newTabSpec(tag);
 		spec.setContent(id);

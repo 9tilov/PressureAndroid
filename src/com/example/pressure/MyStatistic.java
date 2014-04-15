@@ -288,8 +288,8 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 				} else {
 					Intent intent = new Intent(MyStatistic.this, Graph.class);
 					intent.putExtra("id_stat_key", profile_id);
-//					intent.putExtra("id_stat_count",
-//							String.valueOf(listStat.getCount()));
+					// intent.putExtra("id_stat_count",
+					// String.valueOf(listStat.getCount()));
 					startActivity(intent);
 					dialog.dismiss();
 				}
