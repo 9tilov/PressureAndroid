@@ -37,7 +37,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 public class MainActivity extends FragmentActivity implements
 		LoaderCallbacks<Cursor> {
 
@@ -61,7 +60,7 @@ public class MainActivity extends FragmentActivity implements
 	enum window {
 		profile, data
 	}
-	
+
 	static boolean active = false;
 
 	AlarmManager am;
@@ -73,14 +72,14 @@ public class MainActivity extends FragmentActivity implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
+
 		am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-		
+
 		startService(new Intent(this, Receiver.class));
-		
+
 		long[] mas = new long[2];
 		mas = loadState();
-		
+
 		if (mas[0] == 0)
 			setContentView(R.layout.activity_main);
 		else {
@@ -89,9 +88,9 @@ public class MainActivity extends FragmentActivity implements
 			intent.putExtra("id_profile_key", String.valueOf(mas[1]));
 			startActivityForResult(intent, 1);
 		}
-		
+
 		setRepeatingAlarm();
-		
+
 		// открываем подключение к БД
 		db = new MyDB(this);
 		db.open();
@@ -146,12 +145,12 @@ public class MainActivity extends FragmentActivity implements
 	}
 
 	public void setRepeatingAlarm() {
-		  Intent intent = new Intent(this, Receiver.class);
-		  PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0,
-		    intent, PendingIntent.FLAG_CANCEL_CURRENT);
-		  am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(),
-		    (20 * 1000), pendingIntent);
-		 }
+		Intent intent = new Intent(this, Receiver.class);
+		PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0,
+				intent, PendingIntent.FLAG_CANCEL_CURRENT);
+		am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(),
+				(20 * 1000), pendingIntent);
+	}
 
 	void saveState(window cnt, long id_name) {
 		sPref = getPreferences(MODE_PRIVATE);

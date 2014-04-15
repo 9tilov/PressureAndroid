@@ -95,19 +95,19 @@ public class MyDB {
 		}
 		return profile;
 	}
-	
+
 	public int getCountElementsStat() {
 		String sql = "SELECT COUNT(*) FROM " + DB_TABLE_STAT;
 		SQLiteStatement statement = mDB.compileStatement(sql);
-	    int count = (int)statement.simpleQueryForLong();
-	    return count;
+		int count = (int) statement.simpleQueryForLong();
+		return count;
 	}
 
 	public LinkedList<String[]> getStat(long id, int period) {
 
 		LinkedList<String[]> list = new LinkedList<String[]>();
-		
-	    int count = getCountElementsStat();
+
+		int count = getCountElementsStat();
 
 		Cursor cursor = mDB.query(DB_TABLE_STAT, null, COLUMN_UID + "='" + id
 				+ "'", null, null, null, null);
@@ -117,7 +117,7 @@ public class MyDB {
 		String[] pulse = new String[period];
 		String[] sys = new String[period];
 		String[] dias = new String[period];
-		
+
 		Log.d(LOG_TAG, "COUNT = " + count);
 		if (cursor != null) {
 			cursor.moveToFirst();
