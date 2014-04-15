@@ -36,10 +36,6 @@
             android:name=".Receiver"
             android:label="@string/receiver" >
         </activity>
-        <activity
-            android:name=".MyService"
-            android:label="@string/receiver" >
-        </activity>
         <activity android:name="com.pushbots.push.PBMsg" />
         <activity android:name="com.pushbots.push.PBListener" />
 
@@ -61,24 +57,12 @@
                 <category android:name="com.example.pressure" />
             </intent-filter>
         </receiver>
-        <receiver android:name="com.pushbots.push.MsgReceiver" />
-
-        <service android:name="com.pushbots.push.GCMIntentService" />
-        <service android:name="org.openudid.OpenUDID_service" >
-            <intent-filter>
-                <action android:name="org.openudid.GETUDID" />
-            </intent-filter>
-        </service>
-
+        <receiver 
+            android:name="com.pushbots.push.MsgReceiver" />
         <receiver
             android:name="Receiver"
             android:process=":receive" >
         </receiver>
-
-        <service
-            android:name="MyService"
-            android:process=":myservice" >
-        </service>
     </application>
 
     <uses-permission
