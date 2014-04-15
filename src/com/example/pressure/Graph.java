@@ -69,7 +69,6 @@ public class Graph extends Activity {
 
 		db = new MyDB(this);
 		db.open();
-		period = 20;
 
 		number_of_elements = db.getCountElementsStat();
 		createGraph(7, layoutWeek, graphViewWeek);
