@@ -10,6 +10,7 @@ import com.jjoe64.graphview.GraphView.LegendAlign;
 import com.jjoe64.graphview.GraphViewSeries.GraphViewSeriesStyle;
 
 import android.app.Activity;
+import android.database.sqlite.SQLiteStatement;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,7 +20,6 @@ import android.widget.Toast;
 public class Graph3Month extends Activity {
 
 	String stat_id;
-	String count_data_string;
 	GraphView graphView;
 	int period = 0;
 
@@ -31,10 +31,8 @@ public class Graph3Month extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.month_3_graph);
 		stat_id = getIntent().getStringExtra("id_stat_key_3_month");
-		count_data_string = getIntent().getStringExtra("id_stat_count_3_month");
 
 		Log.d(LOG_TAG, "stat_idssss = " + stat_id);
-		Log.d(LOG_TAG, "count_data_stringssss = " + count_data_string);
 		LinearLayout layout = (LinearLayout) findViewById(R.id.graph3Month);
 		layout.removeView(graphView);
 
@@ -44,7 +42,10 @@ public class Graph3Month extends Activity {
 		db = new MyDB(this);
 		db.open();
 		period = 90;
-		if (period <= Integer.valueOf(count_data_string)) {
+		
+		int number_of_elements = db.getCountElementsStat();
+		
+		if (period <= number_of_elements) {
 			LinkedList<String[]> list = new LinkedList<String[]>();
 			list = db.getStat(Long.valueOf(stat_id), period);
 

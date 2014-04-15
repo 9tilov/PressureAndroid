@@ -44,6 +44,10 @@
             android:label="@string/graphAllPeriod" >
         </activity>
         <activity
+            android:name=".GraphPeriod"
+            android:label="@string/graphPeriod" >
+        </activity>
+        <activity
             android:name=".Graph"
             android:label="@string/graph"
             android:screenOrientation="landscape" >

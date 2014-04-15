@@ -1,24 +1,30 @@
 package com.example.pressure;
 
+import java.util.LinkedList;
+
 import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.GraphViewDataInterface;
+import com.jjoe64.graphview.GraphViewSeries;
+import com.jjoe64.graphview.LineGraphView;
+import com.jjoe64.graphview.GraphView.GraphViewData;
+import com.jjoe64.graphview.GraphView.LegendAlign;
+import com.jjoe64.graphview.GraphViewSeries.GraphViewSeriesStyle;
 
-import android.app.TabActivity;
+import android.app.Activity;
 import android.os.Bundle;
+import android.widget.LinearLayout;
 import android.widget.TabHost;
+import android.widget.Toast;
 
-import android.content.Intent;
+import android.graphics.Color;
 import android.util.Log;
 import android.widget.Button;
 
-public class Graph extends TabActivity {
+public class Graph extends Activity {
 
 	String stat_id;
 	String count_data_string;
 
 	MyDB db;
-
-	GraphView graphView;
 
 	int period = 0;
 
@@ -26,58 +32,50 @@ public class Graph extends TabActivity {
 
 	final String LOG_TAG = "myLogs";
 
-	@Override
+	int number_of_elements;
+	
+	TabHost tabs;
+	
+	TabHost.TabSpec spec;
+
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.graph);
 
-		stat_id = getIntent().getStringExtra("id_stat_key");
-		count_data_string = getIntent().getStringExtra("id_stat_count");
+		tabs = (TabHost) findViewById(R.id.tabhost);
 
-		Log.d(LOG_TAG, "stat_id= " + stat_id);
+		tabs.setup();
+		
+		setTab("tag1", R.id.graphWeek, "week");
+		setTab("tag2", R.id.graphMonth, "month");
+		setTab("tag3", R.id.graph3Month, "3 month");
+		setTab("tag4", R.id.graphAllPeriod, "all period");
+
+		stat_id = getIntent().getStringExtra("id_stat_key");
+
+		Log.d(LOG_TAG, "stat_idssss = " + stat_id);
+		LinearLayout layoutWeek = (LinearLayout) findViewById(R.id.graphWeek);
+		LinearLayout layoutMonth = (LinearLayout) findViewById(R.id.graphMonth);
+		LinearLayout layout3Month = (LinearLayout) findViewById(R.id.graph3Month);
+		LinearLayout layoutAllPeriod = (LinearLayout) findViewById(R.id.graphAllPeriod);
+
+		GraphView graphViewWeek = new LineGraphView(this, "Pressure statistics");
+		GraphView graphViewMonth = new LineGraphView(this,
+				"Pressure statistics");
+		GraphView graphView3Month = new LineGraphView(this,
+				"Pressure statistics");
+		GraphView graphViewAllPeriod = new LineGraphView(this,
+				"Pressure statistics");
+
 		db = new MyDB(this);
 		db.open();
-		TabHost tabHost = getTabHost();
+		period = 20;
 
-		TabHost.TabSpec tabSpec;
-
-		Intent intentWeek = new Intent(Graph.this, GraphWeek.class);
-		Intent intentMonth = new Intent(Graph.this, GraphMonth.class);
-		Intent intent3Month = new Intent(Graph.this, Graph3Month.class);
-		Intent intentAllPeriod = new Intent(Graph.this, GraphAllPeriod.class);
-
-		tabSpec = tabHost.newTabSpec("tag1");
-		tabSpec.setIndicator("all period");
-		intentAllPeriod.putExtra("id_stat_key_all_period", stat_id);
-		intentAllPeriod.putExtra("id_stat_count_all_period",
-				String.valueOf(count_data_string));
-		tabSpec.setContent(intentAllPeriod);
-		tabHost.addTab(tabSpec);
-
-		tabSpec = tabHost.newTabSpec("tag2");
-		tabSpec.setIndicator("week");
-		intentWeek.putExtra("id_stat_key_week", stat_id);
-		intentWeek.putExtra("id_stat_count_week",
-				String.valueOf(count_data_string));
-		tabSpec.setContent(intentWeek);
-		tabHost.addTab(tabSpec);
-
-		tabSpec = tabHost.newTabSpec("tag3");
-		tabSpec.setIndicator("month");
-		intentMonth.putExtra("id_stat_key_month", stat_id);
-		intentMonth.putExtra("id_stat_count_month",
-				String.valueOf(count_data_string));
-		tabSpec.setContent(intentMonth);
-		tabHost.addTab(tabSpec);
-
-		tabSpec = tabHost.newTabSpec("tag4");
-		tabSpec.setIndicator("3 months");
-		intent3Month.putExtra("id_stat_key_3_month", stat_id);
-		intent3Month.putExtra("id_stat_count_3_month",
-				String.valueOf(count_data_string));
-		tabSpec.setContent(intent3Month);
-		tabHost.addTab(tabSpec);
-
+		number_of_elements = db.getCountElementsStat();
+		createGraph(7, layoutWeek, graphViewWeek);
+		createGraph(30, layoutMonth, graphViewMonth);
+		createGraph(90, layout3Month, graphView3Month);
+		createGraph(number_of_elements, layoutAllPeriod, graphViewAllPeriod);
 	}
 
 	protected void onDestroy() {
@@ -85,5 +83,56 @@ public class Graph extends TabActivity {
 		db.close();
 		super.onDestroy();
 	}
+	
+	void setTab(String tag, int id, String periodName) {
+		spec = tabs.newTabSpec(tag);
+		spec.setContent(id);
+		spec.setIndicator(periodName);
+		tabs.addTab(spec);
+	}
 
+	public void createGraph(int period, LinearLayout layout, GraphView graphView) {
+		LinkedList<String[]> list = new LinkedList<String[]>();
+		list = db.getStat(Long.valueOf(stat_id), period);
+		int count = Integer.valueOf(period);
+		GraphViewData[] dataPulse = new GraphViewData[count];
+		GraphViewData[] dataSys = new GraphViewData[count];
+		GraphViewData[] dataDias = new GraphViewData[count];
+
+		for (int i = 0; i < count; ++i) {
+			dataPulse[i] = new GraphViewData(i + 1,
+					Double.valueOf(list.get(0)[i]));
+			dataSys[i] = new GraphViewData(i + 1,
+					Double.valueOf(list.get(1)[i]));
+			dataDias[i] = new GraphViewData(i + 1,
+					Double.valueOf(list.get(2)[i]));
+		}
+
+		GraphViewSeriesStyle stylePulse = new GraphViewSeriesStyle();
+		stylePulse.color = Color.rgb(90, 250, 0);
+		GraphViewSeries seriesPulse = new GraphViewSeries("Pulse", stylePulse,
+				dataPulse);
+
+		GraphViewSeriesStyle styleSys = new GraphViewSeriesStyle();
+		styleSys.color = Color.rgb(200, 50, 0);
+		GraphViewSeries seriesSys = new GraphViewSeries("Sys.", styleSys,
+				dataSys);
+
+		GraphViewSeriesStyle styleDias = new GraphViewSeriesStyle();
+		styleDias.color = Color.rgb(300, 50, 160);
+		GraphViewSeries seriesDias = new GraphViewSeries("Dias.", styleDias,
+				dataDias);
+
+		graphView.addSeries(seriesSys);
+		graphView.addSeries(seriesDias);
+		graphView.addSeries(seriesPulse);
+
+		graphView.setShowLegend(true);
+
+		graphView.getGraphViewStyle().setNumVerticalLabels(6);
+		graphView.setLegendAlign(LegendAlign.TOP);
+		graphView.setLegendWidth(130);
+
+		layout.addView(graphView);
+	}
 }
