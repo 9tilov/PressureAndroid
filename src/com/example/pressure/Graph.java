@@ -91,47 +91,49 @@ public class Graph extends Activity {
 	}
 
 	public void createGraph(int period, LinearLayout layout, GraphView graphView) {
-		LinkedList<String[]> list = new LinkedList<String[]>();
-		list = db.getStat(Long.valueOf(stat_id), period);
-		int count = Integer.valueOf(period);
-		GraphViewData[] dataPulse = new GraphViewData[count];
-		GraphViewData[] dataSys = new GraphViewData[count];
-		GraphViewData[] dataDias = new GraphViewData[count];
+		if (period <= number_of_elements) {
+			LinkedList<String[]> list = new LinkedList<String[]>();
+			list = db.getStat(Long.valueOf(stat_id), period);
+			int count = Integer.valueOf(period);
+			GraphViewData[] dataPulse = new GraphViewData[count];
+			GraphViewData[] dataSys = new GraphViewData[count];
+			GraphViewData[] dataDias = new GraphViewData[count];
 
-		for (int i = 0; i < count; ++i) {
-			dataPulse[i] = new GraphViewData(i + 1,
-					Double.valueOf(list.get(0)[i]));
-			dataSys[i] = new GraphViewData(i + 1,
-					Double.valueOf(list.get(1)[i]));
-			dataDias[i] = new GraphViewData(i + 1,
-					Double.valueOf(list.get(2)[i]));
+			for (int i = 0; i < count; ++i) {
+				dataPulse[i] = new GraphViewData(i + 1, Double.valueOf(list
+						.get(0)[i]));
+				dataSys[i] = new GraphViewData(i + 1, Double.valueOf(list
+						.get(1)[i]));
+				dataDias[i] = new GraphViewData(i + 1, Double.valueOf(list
+						.get(2)[i]));
+			}
+
+			GraphViewSeriesStyle stylePulse = new GraphViewSeriesStyle();
+			stylePulse.color = Color.rgb(90, 250, 0);
+			GraphViewSeries seriesPulse = new GraphViewSeries("Pulse",
+					stylePulse, dataPulse);
+
+			GraphViewSeriesStyle styleSys = new GraphViewSeriesStyle();
+			styleSys.color = Color.rgb(200, 50, 0);
+			GraphViewSeries seriesSys = new GraphViewSeries("Sys.", styleSys,
+					dataSys);
+
+			GraphViewSeriesStyle styleDias = new GraphViewSeriesStyle();
+			styleDias.color = Color.rgb(300, 50, 160);
+			GraphViewSeries seriesDias = new GraphViewSeries("Dias.",
+					styleDias, dataDias);
+
+			graphView.addSeries(seriesSys);
+			graphView.addSeries(seriesDias);
+			graphView.addSeries(seriesPulse);
+
+			graphView.setShowLegend(true);
+
+			graphView.getGraphViewStyle().setNumVerticalLabels(6);
+			graphView.setLegendAlign(LegendAlign.TOP);
+			graphView.setLegendWidth(130);
+
+			layout.addView(graphView);
 		}
-
-		GraphViewSeriesStyle stylePulse = new GraphViewSeriesStyle();
-		stylePulse.color = Color.rgb(90, 250, 0);
-		GraphViewSeries seriesPulse = new GraphViewSeries("Pulse", stylePulse,
-				dataPulse);
-
-		GraphViewSeriesStyle styleSys = new GraphViewSeriesStyle();
-		styleSys.color = Color.rgb(200, 50, 0);
-		GraphViewSeries seriesSys = new GraphViewSeries("Sys.", styleSys,
-				dataSys);
-
-		GraphViewSeriesStyle styleDias = new GraphViewSeriesStyle();
-		styleDias.color = Color.rgb(300, 50, 160);
-		GraphViewSeries seriesDias = new GraphViewSeries("Dias.", styleDias,
-				dataDias);
-
-		graphView.addSeries(seriesSys);
-		graphView.addSeries(seriesDias);
-		graphView.addSeries(seriesPulse);
-
-		graphView.setShowLegend(true);
-
-		graphView.getGraphViewStyle().setNumVerticalLabels(6);
-		graphView.setLegendAlign(LegendAlign.TOP);
-		graphView.setLegendWidth(130);
-
-		layout.addView(graphView);
 	}
 }

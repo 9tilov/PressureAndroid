@@ -39,7 +39,6 @@
     <string name="graphMonth">month</string>
     <string name="graph3Month">3 months</string>
     <string name="graphAllPeriod">all period</string>
-    <string name="graphPeriod">period</string>
     <string name="not_enough_records">Not enough records</string>
     <string name="receiver">Receiver</string>
     <string name="service">Service</string>
