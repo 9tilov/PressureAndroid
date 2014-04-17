@@ -32,6 +32,7 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -80,14 +81,14 @@ public class MainActivity extends FragmentActivity implements
 		long[] mas = new long[2];
 		mas = loadState();
 
-		if (mas[0] == 0)
-			setContentView(R.layout.activity_main);
-		else {
-			setContentView(R.layout.activity_main);
-			Intent intent = new Intent(MainActivity.this, MyStatistic.class);
-			intent.putExtra("id_profile_key", String.valueOf(mas[1]));
-			startActivityForResult(intent, 1);
-		}
+//		if (mas[0] == 0)
+//			setContentView(R.layout.activity_main);
+//		else {
+//			setContentView(R.layout.activity_main);
+//			Intent intent = new Intent(MainActivity.this, MyStatistic.class);
+//			intent.putExtra("id_profile_key", String.valueOf(mas[1]));
+//			startActivityForResult(intent, 1);
+//		}
 
 		setRepeatingAlarm();
 
@@ -99,7 +100,7 @@ public class MainActivity extends FragmentActivity implements
 		String[] from = new String[] { MyDB.COLUMN_NAME };
 		int[] to = new int[] { R.id.tvName };
 
-		Button addProfile = (Button) findViewById(R.id.addProfile);
+		ImageButton addProfile = (ImageButton) findViewById(R.id.addProfile);
 
 		addProfile.setOnClickListener(new OnClickListener() {
 			@Override

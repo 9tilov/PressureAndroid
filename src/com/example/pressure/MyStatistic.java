@@ -68,14 +68,16 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 	String s;
 
 	TextView tv;
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.statistic);
 
 		Button btnAdd = (Button) findViewById(R.id.btnAddStat);
+		Button btnProfile = (Button) findViewById(R.id.btnProfile);
 		btnAdd.setOnClickListener(this);
+		btnProfile.setOnClickListener(this);
 
 		db = new MyDB(this);
 		db.open();
@@ -87,14 +89,15 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		int[] to = new int[] { R.id.tvTextPulse, R.id.tvTextSys,
 				R.id.tvTextDias, R.id.tvTextDate, R.id.tvTextTime };
 
-		TextView name = (TextView) findViewById(R.id.profile_name);
-		TextView e_mail = (TextView) findViewById(R.id.profile_e_mail);
+//		TextView name = (TextView) findViewById(R.id.profile_name);
+//		TextView e_mail = (TextView) findViewById(R.id.profile_e_mail);
 		profile_id = getIntent().getStringExtra("id_profile_key");
 
 		profile_name = db.getCurrentName(Long.parseLong(profile_id));
 
-		name.setText(profile_name[0]);
-		e_mail.setText(profile_name[1]);
+//		name.setText(profile_name[0]);
+		btnProfile.setText(profile_name[0]);
+//		e_mail.setText(profile_name[1]);
 
 		// создааем адаптер и настраиваем список
 		scAdapter = new SimpleCursorAdapter(this, R.layout.list, null, from,
@@ -264,6 +267,10 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		case R.id.btnAddStat:
 			flag = SAVE_DATA_FLAG;
 			show();
+			break;
+		case R.id.btnProfile:
+			Intent intent = new Intent(MyStatistic.this, MainActivity.class);
+			startActivityForResult(intent, 1);
 			break;
 		}
 	}

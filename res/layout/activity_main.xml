@@ -4,11 +4,11 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <LinearLayout
-        android:id="@+id/linearLayout1"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:layout_alignParentLeft="true"
+        android:orientation="horizontal" >
 
         <TextView
             android:layout_width="wrap_content"
@@ -20,14 +20,15 @@
             android:textColor="#8B0000"
             android:textSize="20sp"
             android:textStyle="bold" />
-    </LinearLayout>
 
-    <TextView
-        android:id="@+id/tv"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="" >
-    </TextView>
+        <ImageButton
+            android:id="@+id/addProfile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:src="@android:drawable/ic_input_add" />
+    </RelativeLayout>
 
     <ListView
         android:id="@+id/lvData"
@@ -35,16 +36,5 @@
         android:layout_height="206dp"
         android:layout_weight="0.80" >
     </ListView>
-
-    <Button
-        android:id="@+id/addProfile"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginTop="5dp"
-        android:background="@drawable/button"
-        android:text="@string/add_profile" />
 
 </LinearLayout>
