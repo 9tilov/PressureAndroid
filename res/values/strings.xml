@@ -26,7 +26,7 @@
     <string name="pulse">Pulse</string>
     <string name="statistics">Statistics</string>
     <string name="addStat">Add statistics</string>
-    <string name="correct">Enter correrct e-mail</string>
+    <string name="correct">Enter your name</string>
     <string name="save">Save</string>
     <string name="save_on_email">Pass by mail</string>
     <string name="save_on_SD">Statistic was saved in folder \"Pressure\"</string>
@@ -41,6 +41,7 @@
     <string name="graphAllPeriod">all period</string>
     <string name="not_enough_records">Not enough records</string>
     <string name="receiver">Receiver</string>
+    <string name="edit_profile">Profile</string>
     <string name="service">Service</string>
 
 </resources>

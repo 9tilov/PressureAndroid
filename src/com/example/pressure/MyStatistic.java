@@ -68,7 +68,7 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 	String s;
 
 	TextView tv;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

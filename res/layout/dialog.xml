@@ -35,5 +35,29 @@
         android:hint="Doctor's e-mail"
         android:ems="10" >
     </EditText>
+    
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="41dp"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/profileGraph"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_weight="0.04"
+            android:text="Show graph after rotation " />
+
+        <CheckBox
+            android:id="@+id/checkBoxRotation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="116dp" />
+
+    </RelativeLayout>
 
 </LinearLayout>

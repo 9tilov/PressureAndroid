@@ -34,7 +34,9 @@
         android:id="@+id/lvData"
         android:layout_width="match_parent"
         android:layout_height="206dp"
-        android:layout_weight="0.80" >
+        android:layout_weight="0.80" 
+        android:divider="#8B0000"
+        android:dividerHeight="@dimen/twodp" >
     </ListView>
 
 </LinearLayout>

@@ -52,7 +52,7 @@ public class MainActivity extends FragmentActivity implements
 	final String SAVED_NAME = "saved_name";
 
 	long idCurrentName;
-	EditText editName, editMail;
+	EditText editName, editMail, addName;
 
 	String[] currentProfile = new String[] { "", "" };
 
@@ -67,7 +67,7 @@ public class MainActivity extends FragmentActivity implements
 	AlarmManager am;
 
 	final String LOG_TAG = "Pressure";
-	final int DIALOG = 1;
+	final int DIALOG_EDIT = 1, DIALOG_ADD = 2;
 
 	/** Called when the activity is first created. */
 	public void onCreate(Bundle savedInstanceState) {
@@ -80,15 +80,6 @@ public class MainActivity extends FragmentActivity implements
 
 		long[] mas = new long[2];
 		mas = loadState();
-
-//		if (mas[0] == 0)
-//			setContentView(R.layout.activity_main);
-//		else {
-//			setContentView(R.layout.activity_main);
-//			Intent intent = new Intent(MainActivity.this, MyStatistic.class);
-//			intent.putExtra("id_profile_key", String.valueOf(mas[1]));
-//			startActivityForResult(intent, 1);
-//		}
 
 		setRepeatingAlarm();
 
@@ -108,7 +99,7 @@ public class MainActivity extends FragmentActivity implements
 				idCurrentName = 0;
 				currentProfile[0] = "";
 				currentProfile[1] = "";
-				showDialog(DIALOG);
+				showDialog(DIALOG_ADD);
 			}
 		});
 
@@ -140,7 +131,6 @@ public class MainActivity extends FragmentActivity implements
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
@@ -201,14 +191,11 @@ public class MainActivity extends FragmentActivity implements
 						break;
 					}
 				} else {
-					if ((0 == editName.getText().toString().length())
-							|| (0 == editMail.getText().toString().length())
-							|| (!(isValidEmail(editMail.getText().toString())))) {
+					if ((0 == addName.getText().toString().length())) {
 						inCorrectData();
 						break;
 					} else {
-						db.addRec(editName.getText().toString(), editMail
-								.getText().toString());
+						db.addRec(addName.getText().toString());
 						getSupportLoaderManager().getLoader(0).forceLoad();
 						addData();
 						break;
@@ -222,23 +209,39 @@ public class MainActivity extends FragmentActivity implements
 	};
 
 	protected void onPrepareDialog(int id, Dialog dialog) {
-		if (id == DIALOG) {
+		if (id == DIALOG_EDIT) {
 			editName = (EditText) dialog.getWindow()
 					.findViewById(R.id.editName);
 			editMail = (EditText) dialog.getWindow()
 					.findViewById(R.id.editMail);
 			editName.setText(currentProfile[0]);
 			editMail.setText(currentProfile[1]);
+		} else if (id == DIALOG_ADD) {
+			addName = (EditText) dialog.getWindow().findViewById(
+					R.id.addNewName);
 		}
 	}
 
 	@Override
 	protected Dialog onCreateDialog(int id) {
 		AlertDialog.Builder adb = new AlertDialog.Builder(this);
-		if (id == DIALOG) {
+		if (id == DIALOG_EDIT) {
 
 			LinearLayout view = (LinearLayout) getLayoutInflater().inflate(
 					R.layout.dialog, null);
+			// устанавливаем ее, как содержимое тела диалога
+			adb.setView(view);
+
+			// кнопка положительного ответа
+			adb.setPositiveButton(R.string.yes, myClickListener);
+			// кнопка нейтрального ответа
+			adb.setNeutralButton(R.string.cancel, myClickListener);
+
+			Dialog dialog = adb.create();
+			return dialog;
+		} else if (id == DIALOG_ADD) {
+			LinearLayout view = (LinearLayout) getLayoutInflater().inflate(
+					R.layout.dialog_add_name, null);
 			// устанавливаем ее, как содержимое тела диалога
 			adb.setView(view);
 
@@ -273,7 +276,7 @@ public class MainActivity extends FragmentActivity implements
 		} else if (item.getItemId() == CM_EDIT_ID) {
 			currentProfile = db.getCurrentName(acmi.id);
 			idCurrentName = acmi.id;
-			showDialog(DIALOG);
+			showDialog(DIALOG_EDIT);
 			return true;
 		}
 		return super.onContextItemSelected(item);
