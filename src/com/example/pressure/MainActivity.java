@@ -81,6 +81,7 @@ public class MainActivity extends FragmentActivity implements
 		long[] mas = new long[2];
 		mas = loadState();
 
+<<<<<<< HEAD
 		if (mas[0] == 0)
 			setContentView(R.layout.activity_main);
 		else {
@@ -90,6 +91,8 @@ public class MainActivity extends FragmentActivity implements
 			startActivityForResult(intent, 1);
 		}
 
+=======
+>>>>>>> 5b3a258fb25342946c0ac19fc7940285d50ab58d
 		setRepeatingAlarm();
 
 		// открываем подключение к БД
