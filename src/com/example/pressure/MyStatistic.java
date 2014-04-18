@@ -9,6 +9,7 @@ import java.util.Calendar;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
@@ -67,6 +68,12 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.statistic);
 
+		if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+			Intent intent = new Intent(MyStatistic.this, Graph.class);
+			intent.putExtra("id_stat_key", profile_id);
+			startActivityForResult(intent, 1);
+		}
+
 		Button btnAdd = (Button) findViewById(R.id.btnAddStat);
 		Button btnProfile = (Button) findViewById(R.id.btnProfile);
 		btnAdd.setOnClickListener(this);
@@ -82,15 +89,11 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		int[] to = new int[] { R.id.tvTextPulse, R.id.tvTextSys,
 				R.id.tvTextDias, R.id.tvTextDate, R.id.tvTextTime };
 
-		// TextView name = (TextView) findViewById(R.id.profile_name);
-		// TextView e_mail = (TextView) findViewById(R.id.profile_e_mail);
 		profile_id = getIntent().getStringExtra("id_profile_key");
 
 		profile_name = db.getCurrentName(Long.parseLong(profile_id));
 
-		// name.setText(profile_name[0]);
 		btnProfile.setText(profile_name[0]);
-		// e_mail.setText(profile_name[1]);
 
 		// создааем адаптер и настраиваем список
 		scAdapter = new SimpleCursorAdapter(this, R.layout.list, null, from,
@@ -287,8 +290,6 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 				} else {
 					Intent intent = new Intent(MyStatistic.this, Graph.class);
 					intent.putExtra("id_stat_key", profile_id);
-					// intent.putExtra("id_stat_count",
-					// String.valueOf(listStat.getCount()));
 					startActivity(intent);
 					dialog.dismiss();
 				}
@@ -340,6 +341,16 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		dialog.show();
 	}
 
+	private void getScreenOrientation() {
+		if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+
+		} else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+			Intent intent = new Intent(MyStatistic.this, Graph.class);
+			intent.putExtra("id_stat_key", profile_id);
+			startActivity(intent);
+		}
+	}
+
 	public void showChoice() {
 		final Dialog dialog = new Dialog(MyStatistic.this);
 		dialog.setContentView(R.layout.dialog_choice);
@@ -374,7 +385,6 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 			showSave();
 			break;
 		}
-
 		return super.onKeyDown(keycode, e);
 	}
 
@@ -478,9 +488,10 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 	public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
 		// TODO Auto-generated method stub
 	}
-	//Запрещаем использование кнопки "Назад"
-		@Override
-		public void onBackPressed() {
-		}
-	
+
+	// Запрещаем использование кнопки "Назад"
+	@Override
+	public void onBackPressed() {
+	}
+
 }

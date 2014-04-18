@@ -10,6 +10,8 @@ import com.jjoe64.graphview.GraphView.LegendAlign;
 import com.jjoe64.graphview.GraphViewSeries.GraphViewSeriesStyle;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.widget.LinearLayout;
 import android.widget.TabHost;
@@ -40,6 +42,8 @@ public class Graph extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.graph);
+		if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
+			finish();
 
 		tabs = (TabHost) findViewById(R.id.tabhost);
 
@@ -134,5 +138,10 @@ public class Graph extends Activity {
 
 			layout.addView(graphView);
 		}
+	}
+
+	// Запрещаем использование кнопки "Назад"
+	@Override
+	public void onBackPressed() {
 	}
 }

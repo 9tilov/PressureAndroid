@@ -28,25 +28,9 @@
             android:label="@string/statistics" >
         </activity>
         <activity
-            android:name=".GraphWeek"
-            android:label="@string/graphWeek" >
-        </activity>
-        <activity
-            android:name=".GraphMonth"
-            android:label="@string/graphMonth" >
-        </activity>
-        <activity
-            android:name=".Graph3Month"
-            android:label="@string/graph3Month" >
-        </activity>
-        <activity
-            android:name=".GraphAllPeriod"
-            android:label="@string/graphAllPeriod" >
-        </activity>
-        <activity
             android:name=".Graph"
-            android:label="@string/graph"
-            android:screenOrientation="landscape" >
+            android:label="@string/graph">
+            <!-- android:screenOrientation="landscape" --> 
         </activity>
         <activity
             android:name=".Receiver"

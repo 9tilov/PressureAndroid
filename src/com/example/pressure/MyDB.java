@@ -163,6 +163,7 @@ public class MyDB {
 		Log.d(LOG_TAG, "row inserted, ID = " + rowID);
 	}
 
+	
 	public void addStat(String pulse, String sys, String dias, String uid,
 			String date, String time) {
 		ContentValues cv = new ContentValues();
