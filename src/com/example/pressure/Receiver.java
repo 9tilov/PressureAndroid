@@ -14,19 +14,13 @@ public class Receiver extends BroadcastReceiver {
 	public void onReceive(Context context, Intent intent) {
 		NotificationManager nm = (NotificationManager) context
 				.getSystemService(Context.NOTIFICATION_SERVICE);
-		CharSequence from = "Nithin";
-		CharSequence message = "Crazy About Android...";
-		PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
-				new Intent(), 0);
 		Notification notif = new Notification(R.drawable.ic_pressure,
-				"Crazy About Android...", System.currentTimeMillis());
+				"Measure your pressure...", System.currentTimeMillis());
 
-		// Интент для активити, которую мы хотим запускать при нажатии на
-		// уведомление
 		intent = new Intent(context, MainActivity.class);
-		notif.setLatestEventInfo(context, "Test", "Do something!",
-				PendingIntent.getActivity(context, 0, intent,
-						PendingIntent.FLAG_CANCEL_CURRENT));
+		notif.setLatestEventInfo(context, "Pressure",
+				"Measure your pressure...", PendingIntent.getActivity(context,
+						0, intent, PendingIntent.FLAG_CANCEL_CURRENT));
 		notif.flags = Notification.DEFAULT_LIGHTS
 				| Notification.FLAG_AUTO_CANCEL;
 		nm.notify(1, notif);
