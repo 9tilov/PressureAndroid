@@ -6,14 +6,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -25,20 +22,16 @@ import android.view.View;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.AdapterContextMenuInfo;
-import android.sax.TextElementListener;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
-import android.text.TextUtils;
 
 public class MyStatistic extends FragmentActivity implements OnClickListener,
 		LoaderCallbacks<Cursor>, NumberPicker.OnValueChangeListener {
@@ -89,15 +82,15 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		int[] to = new int[] { R.id.tvTextPulse, R.id.tvTextSys,
 				R.id.tvTextDias, R.id.tvTextDate, R.id.tvTextTime };
 
-//		TextView name = (TextView) findViewById(R.id.profile_name);
-//		TextView e_mail = (TextView) findViewById(R.id.profile_e_mail);
+		// TextView name = (TextView) findViewById(R.id.profile_name);
+		// TextView e_mail = (TextView) findViewById(R.id.profile_e_mail);
 		profile_id = getIntent().getStringExtra("id_profile_key");
 
 		profile_name = db.getCurrentName(Long.parseLong(profile_id));
 
-//		name.setText(profile_name[0]);
+		// name.setText(profile_name[0]);
 		btnProfile.setText(profile_name[0]);
-//		e_mail.setText(profile_name[1]);
+		// e_mail.setText(profile_name[1]);
 
 		// создааем адаптер и настраиваем список
 		scAdapter = new SimpleCursorAdapter(this, R.layout.list, null, from,
@@ -269,8 +262,7 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 			show();
 			break;
 		case R.id.btnProfile:
-			Intent intent = new Intent(MyStatistic.this, MainActivity.class);
-			startActivityForResult(intent, 1);
+			finish();
 			break;
 		}
 	}
@@ -486,4 +478,9 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 	public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
 		// TODO Auto-generated method stub
 	}
+	//Запрещаем использование кнопки "Назад"
+		@Override
+		public void onBackPressed() {
+		}
+	
 }

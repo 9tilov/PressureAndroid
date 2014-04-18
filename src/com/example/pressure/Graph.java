@@ -13,7 +13,6 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.widget.LinearLayout;
 import android.widget.TabHost;
-import android.widget.Toast;
 
 import android.graphics.Color;
 import android.util.Log;
