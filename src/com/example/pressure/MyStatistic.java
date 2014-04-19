@@ -23,6 +23,8 @@ import android.view.View;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.NumberPicker;
 import android.widget.TextView;
@@ -86,9 +88,16 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 			startActivityForResult(intent, 1);
 		}
 
-		Button btnAdd = (Button) findViewById(R.id.btnAddStat);
+		ImageView btnAdd = (ImageView) findViewById(R.id.btnAddStat);
+		btnAdd.setOnClickListener(new OnClickListener() {
+			@Override
+	        public void onClick(View v) {
+	            flag = SAVE_DATA_FLAG;
+				show();
+	        }
+	    });
+		
 		Button btnProfile = (Button) findViewById(R.id.btnProfile);
-		btnAdd.setOnClickListener(this);
 		btnProfile.setOnClickListener(this);
 
 		// формируем столбцы сопоставления
@@ -183,7 +192,7 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 				R.id.npSysPressure, dialog);
 		final NumberPicker npDiasPressure = initNumberPicker(40, 250,
 				R.id.npDiasPressure, dialog);
-
+		
 		if (flag == EDIT_DATA_FLAG) {
 			npPulse.setValue(Integer.valueOf(currentStat[0]));
 			npSysPressure.setValue(Integer.valueOf(currentStat[1]));
@@ -253,6 +262,7 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		} else if (item.getItemId() == CM_EDIT_ID) {
 			currentStat = db.getCurrentStat(acmi.id);
 			idCurrentName = (int) acmi.id;
+			flag = EDIT_DATA_FLAG;
 			show();
 			scrollMyListViewToBottom();
 			return true;
@@ -267,10 +277,10 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 	public void onClick(View v) {
 		Log.d(LOG_TAG, "row inserted, id= " + idCurrentName);
 		switch (v.getId()) {
-		case R.id.btnAddStat:
-			flag = SAVE_DATA_FLAG;
-			show();
-			break;
+//		case R.id.btnAddStat:
+//			flag = SAVE_DATA_FLAG;
+//			show();
+//			break;
 		case R.id.btnProfile:
 			finish();
 			break;

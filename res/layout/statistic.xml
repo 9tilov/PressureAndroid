@@ -30,23 +30,22 @@
         android:divider="#8B0000"
         android:dividerHeight="@dimen/twodp" />
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="10dp"
+        android:layout_weight="0.01"
+        android:gravity="bottom"
         android:orientation="horizontal" >
 
-        <Button
+        <ImageView
             android:id="@+id/btnAddStat"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginTop="5dp"
-            android:background="@drawable/button"
-            android:text="@string/addStat" />
-    </LinearLayout>
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:clickable="true"
+            android:src="@drawable/heartbeat_button" />
+
+    </RelativeLayout>
 
 </LinearLayout>
