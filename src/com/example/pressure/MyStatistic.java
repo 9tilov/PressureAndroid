@@ -277,10 +277,6 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 	public void onClick(View v) {
 		Log.d(LOG_TAG, "row inserted, id= " + idCurrentName);
 		switch (v.getId()) {
-//		case R.id.btnAddStat:
-//			flag = SAVE_DATA_FLAG;
-//			show();
-//			break;
 		case R.id.btnProfile:
 			finish();
 			break;
