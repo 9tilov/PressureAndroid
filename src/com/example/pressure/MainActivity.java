@@ -112,6 +112,9 @@ public class MainActivity extends FragmentActivity implements
 			}
 		});
 
+		Intent intent = new Intent(MainActivity.this, MyStatistic.class);
+		intent.putExtra("rotation", String.valueOf(rotation));
+
 		// создааем адаптер и настраиваем список
 		scAdapter = new SimpleCursorAdapter(this, R.layout.item, null, from,
 				to, 0);
@@ -185,8 +188,11 @@ public class MainActivity extends FragmentActivity implements
 		return massive;
 	}
 
+	// обработчик закрытия окна статистики
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		mas = loadState();
+		rotation = mas[2];
 		saveState(window.profile, id_name, rotation);
 	}
 
@@ -208,6 +214,7 @@ public class MainActivity extends FragmentActivity implements
 		} else if (id == DIALOG_ADD) {
 			addName = (EditText) dialog.getWindow().findViewById(
 					R.id.addNewName);
+			addName.setText("");
 		}
 	}
 
@@ -223,7 +230,6 @@ public class MainActivity extends FragmentActivity implements
 							|| (!(isValidEmail(editMail.getText().toString())))) {
 						rotation = checkCheckBox(checkBox);
 						saveState(window.profile, id_name, rotation);
-						inCorrectData();
 						break;
 					} else {
 						db.editRec(editName.getText().toString(), editMail

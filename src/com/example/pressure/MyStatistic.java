@@ -282,26 +282,9 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		dialog.setContentView(R.layout.dialog_save);
 		dialog.setTitle("Save your data");
 
-		Button btnGraph = (Button) dialog.findViewById(R.id.btnGraph);
-
 		Button btnSave = (Button) dialog.findViewById(R.id.btnSave);
 
 		Button btnEmail = (Button) dialog.findViewById(R.id.btnEmail);
-
-		btnGraph.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if (listStat.getCount() < 10) {
-					graphShow();
-					dialog.dismiss();
-				} else {
-					Intent intent = new Intent(MyStatistic.this, Graph.class);
-					intent.putExtra("id_stat_key", profile_id);
-					startActivity(intent);
-					dialog.dismiss();
-				}
-			}
-		});
 
 		btnSave.setOnClickListener(new OnClickListener() {
 			@Override
@@ -316,7 +299,7 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 			public void onClick(View v) {
 				final Intent emailIntent = new Intent(
 						android.content.Intent.ACTION_SEND);
-
+				writeFileSD(profile_name[0]);
 				emailIntent.setType("plain/text");
 				// Кому
 				emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL,
@@ -467,10 +450,6 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 
 	void deleteData() {
 		Toast.makeText(this, R.string.deleted, Toast.LENGTH_SHORT).show();
-	}
-
-	void correctData() {
-		Toast.makeText(this, R.string.correct, Toast.LENGTH_SHORT).show();
 	}
 
 	void saveOnSD() {

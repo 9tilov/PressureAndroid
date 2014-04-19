@@ -7,7 +7,7 @@
     <string name="add_record">Add record</string>
     <string name="delete_record">Delete record</string>
     <string name="delete_all_records">Delete all records</string>
-    <string name="edit_record">Edit record</string>
+    <string name="edit_record">Edit profile</string>
     <string name="btnSave">Save</string>
     <string name="exit">Выход</string>
     <string name="save_data">Save data?</string>
@@ -15,7 +15,6 @@
     <string name="no">No</string>
     <string name="cancel">Cancel</string>
     <string name="saved">Saved</string>
-    <string name="name">Enter your name</string>
     <string name="deleted">Deleted</string>
     <string name="new_name">New name</string>
     <string name="add_name">Add name</string>
