@@ -54,9 +54,11 @@
             android:id="@+id/checkBoxRotation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/profileGraph"
+            android:layout_alignBottom="@+id/profileGraph"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="116dp" />
+            android:layout_marginRight="90dp"
+            android:checked="true"/>
 
     </RelativeLayout>
 

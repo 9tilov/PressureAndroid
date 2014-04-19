@@ -42,6 +42,7 @@ public class Graph extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.graph);
+
 		if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
 			finish();
 

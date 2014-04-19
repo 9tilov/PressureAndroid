@@ -68,7 +68,19 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.statistic);
 
-		if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+		profile_id = getIntent().getStringExtra("id_profile_key");
+		String rotation = getIntent().getStringExtra("rotation");
+
+		Log.d(LOG_TAG, "profile_id = " + String.valueOf(profile_id));
+		Log.d(LOG_TAG, "rotation_stat = " + String.valueOf(rotation));
+		db = new MyDB(this);
+		db.open();
+
+		int number_of_elements = db.getCountElementsStat();
+
+		if ((getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
+				&& (Integer.valueOf(rotation) == 0)
+				&& (number_of_elements >= 7)) {
 			Intent intent = new Intent(MyStatistic.this, Graph.class);
 			intent.putExtra("id_stat_key", profile_id);
 			startActivityForResult(intent, 1);
@@ -79,17 +91,12 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		btnAdd.setOnClickListener(this);
 		btnProfile.setOnClickListener(this);
 
-		db = new MyDB(this);
-		db.open();
-
 		// формируем столбцы сопоставления
 		String[] from = new String[] { MyDB.COLUMN_PULSE,
 				MyDB.COLUMN_SYS_PRESSURE, MyDB.COLUMN_DIAS_PRESSURE,
 				MyDB.COLUMN_DATE, MyDB.COLUMN_TIME };
 		int[] to = new int[] { R.id.tvTextPulse, R.id.tvTextSys,
 				R.id.tvTextDias, R.id.tvTextDate, R.id.tvTextTime };
-
-		profile_id = getIntent().getStringExtra("id_profile_key");
 
 		profile_name = db.getCurrentName(Long.parseLong(profile_id));
 
@@ -339,16 +346,6 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		});
 
 		dialog.show();
-	}
-
-	private void getScreenOrientation() {
-		if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-
-		} else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-			Intent intent = new Intent(MyStatistic.this, Graph.class);
-			intent.putExtra("id_stat_key", profile_id);
-			startActivity(intent);
-		}
 	}
 
 	public void showChoice() {

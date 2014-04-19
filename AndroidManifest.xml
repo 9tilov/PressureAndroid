@@ -8,8 +8,6 @@
         android:minSdkVersion="11"
         android:targetSdkVersion="18" />
 
-
-
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_pressure"
@@ -28,73 +26,20 @@
             android:label="@string/statistics" >
         </activity>
         <activity
-            android:name=".GraphWeek"
-            android:label="@string/graphWeek" >
-        </activity>
-        <activity
-            android:name=".GraphMonth"
-            android:label="@string/graphMonth" >
-        </activity>
-        <activity
-            android:name=".Graph3Month"
-            android:label="@string/graph3Month" >
-        </activity>
-        <activity
-            android:name=".GraphAllPeriod"
-            android:label="@string/graphAllPeriod" >
-        </activity>
-        <activity
             android:name=".Graph"
-            android:label="@string/graph"
-            android:screenOrientation="landscape" >
+            android:label="@string/graph" >
+
+            <!-- android:screenOrientation="landscape" -->
         </activity>
         <activity
             android:name=".Receiver"
             android:label="@string/receiver" >
         </activity>
-        <activity
-            android:name=".MyService"
-            android:label="@string/receiver" >
-        </activity>
-        <activity android:name="com.pushbots.push.PBMsg" />
-        <activity android:name="com.pushbots.push.PBListener" />
-
-        <receiver
-            android:name="com.google.android.gcm.GCMBroadcastReceiver"
-            android:permission="com.google.android.c2dm.permission.SEND" >
-            <intent-filter>
-                <intent-filter>
-                    <action android:name="com.example.pressure.MESSAGE" />
-
-                    <category android:name="android.intent.category.DEFAULT" />
-                </intent-filter>
-
-                <!-- Receives the actual messages. -->
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-                <!-- Receives the registration id. -->
-                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
-
-                <category android:name="com.example.pressure" />
-            </intent-filter>
-        </receiver>
-        <receiver android:name="com.pushbots.push.MsgReceiver" />
-
-        <service android:name="com.pushbots.push.GCMIntentService" />
-        <service android:name="org.openudid.OpenUDID_service" >
-            <intent-filter>
-                <action android:name="org.openudid.GETUDID" />
-            </intent-filter>
-        </service>
 
         <receiver
             android:name="Receiver"
             android:process=":receive" >
         </receiver>
-
-        <service
-            android:name="MyService"
-            android:process=":myservice" >
-        </service>
     </application>
 
     <uses-permission

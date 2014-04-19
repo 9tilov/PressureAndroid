@@ -26,6 +26,7 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -44,6 +45,7 @@ public class MainActivity extends FragmentActivity implements
 
 	final String SAVED_TEXT = "saved_text";
 	final String SAVED_NAME = "saved_name";
+	final String CHECKED = "isChecked";
 
 	long idCurrentName;
 	EditText editName, editMail, addName;
@@ -55,6 +57,10 @@ public class MainActivity extends FragmentActivity implements
 	enum window {
 		profile, data
 	}
+
+	long[] mas = new long[3];
+	CheckBox checkBox;
+	long rotation = 0;
 
 	static boolean active = false;
 
@@ -72,18 +78,18 @@ public class MainActivity extends FragmentActivity implements
 
 		startService(new Intent(this, Receiver.class));
 
-		long[] mas = new long[2];
 		mas = loadState();
+		rotation = mas[2];
 
-		if (mas[0] == 0)
+		if (mas[0] == 0) {
 			setContentView(R.layout.activity_main);
-		else {
+		} else {
 			setContentView(R.layout.activity_main);
 			Intent intent = new Intent(MainActivity.this, MyStatistic.class);
 			intent.putExtra("id_profile_key", String.valueOf(mas[1]));
+			intent.putExtra("rotation", String.valueOf(rotation));
 			startActivityForResult(intent, 1);
 		}
-
 		setRepeatingAlarm();
 
 		// открываем подключение к БД
@@ -126,8 +132,9 @@ public class MainActivity extends FragmentActivity implements
 				Cursor cur = (Cursor) lvData.getAdapter().getItem(position);
 				id_name = cur.getLong(cur.getColumnIndex("_id"));
 				intent.putExtra("id_profile_key", String.valueOf(id_name));
+				intent.putExtra("rotation", String.valueOf(rotation));
 				startActivityForResult(intent, 1);
-				saveState(window.data, id_name);
+				saveState(window.data, id_name, rotation);
 			}
 		});
 	}
@@ -146,11 +153,19 @@ public class MainActivity extends FragmentActivity implements
 				(20 * 1000), pendingIntent);
 	}
 
-	void saveState(window cnt, long id_name) {
+	public long checkCheckBox(View v) {
+		CheckBox checkBox = (CheckBox) v;
+		if (!checkBox.isChecked())
+			return 1;
+		return 0;
+	}
+
+	void saveState(window cnt, long id_name, long isChecked) {
 		sPref = getPreferences(MODE_PRIVATE);
 		Editor ed = sPref.edit();
 		ed.putLong(SAVED_TEXT, cnt.ordinal());
 		ed.putLong(SAVED_NAME, id_name);
+		ed.putLong(CHECKED, isChecked);
 		ed.commit();
 		Log.d(LOG_TAG, "cnt = " + cnt);
 	}
@@ -159,17 +174,41 @@ public class MainActivity extends FragmentActivity implements
 		sPref = getPreferences(MODE_PRIVATE);
 		long state = sPref.getLong(SAVED_TEXT, 0);
 		long name = sPref.getLong(SAVED_NAME, 0);
-		long[] massive = new long[2];
+		long checkState = sPref.getLong(CHECKED, 0);
+		long[] massive = new long[3];
 		massive[0] = state;
 		massive[1] = name;
+		massive[2] = checkState;
 		Log.d(LOG_TAG, "string = " + massive[0]);
 		Log.d(LOG_TAG, "string_name = " + massive[1]);
+		Log.d(LOG_TAG, "checkState = " + massive[2]);
 		return massive;
 	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		saveState(window.profile, id_name);
+		saveState(window.profile, id_name, rotation);
+	}
+
+	protected void onPrepareDialog(int id, Dialog dialog) {
+		if (id == DIALOG_EDIT) {
+			editName = (EditText) dialog.getWindow()
+					.findViewById(R.id.editName);
+			editMail = (EditText) dialog.getWindow()
+					.findViewById(R.id.editMail);
+			editName.setText(currentProfile[0]);
+			editMail.setText(currentProfile[1]);
+			checkBox = (CheckBox) dialog.getWindow().findViewById(
+					R.id.checkBoxRotation);
+			if (mas[2] == 1)
+				checkBox.setChecked(false);
+			else
+				checkBox.setChecked(true);
+			rotation = checkCheckBox(checkBox);
+		} else if (id == DIALOG_ADD) {
+			addName = (EditText) dialog.getWindow().findViewById(
+					R.id.addNewName);
+		}
 	}
 
 	DialogInterface.OnClickListener myClickListener = new DialogInterface.OnClickListener() {
@@ -182,14 +221,17 @@ public class MainActivity extends FragmentActivity implements
 					if ((0 == editName.getText().toString().length())
 							|| (0 == editMail.getText().toString().length())
 							|| (!(isValidEmail(editMail.getText().toString())))) {
+						rotation = checkCheckBox(checkBox);
+						saveState(window.profile, id_name, rotation);
 						inCorrectData();
 						break;
 					} else {
 						db.editRec(editName.getText().toString(), editMail
 								.getText().toString(), String
 								.valueOf(idCurrentName));
-
 						getSupportLoaderManager().getLoader(0).forceLoad();
+						rotation = checkCheckBox(checkBox);
+						saveState(window.profile, id_name, rotation);
 						saveData();
 						break;
 					}
@@ -210,20 +252,6 @@ public class MainActivity extends FragmentActivity implements
 			}
 		}
 	};
-
-	protected void onPrepareDialog(int id, Dialog dialog) {
-		if (id == DIALOG_EDIT) {
-			editName = (EditText) dialog.getWindow()
-					.findViewById(R.id.editName);
-			editMail = (EditText) dialog.getWindow()
-					.findViewById(R.id.editMail);
-			editName.setText(currentProfile[0]);
-			editMail.setText(currentProfile[1]);
-		} else if (id == DIALOG_ADD) {
-			addName = (EditText) dialog.getWindow().findViewById(
-					R.id.addNewName);
-		}
-	}
 
 	@Override
 	protected Dialog onCreateDialog(int id) {
