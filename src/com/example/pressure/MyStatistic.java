@@ -77,7 +77,7 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		Log.d(LOG_TAG, "rotation_stat = " + String.valueOf(rotation));
 		db = new MyDB(this);
 		db.open();
-
+		
 		int number_of_elements = db.getCountElementsStat();
 
 		if ((getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
@@ -97,9 +97,14 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 	        }
 	    });
 		
-		Button btnProfile = (Button) findViewById(R.id.btnProfile);
-		btnProfile.setOnClickListener(this);
+		TextView btnProfile = (TextView) findViewById(R.id.btnProfile);
+		btnProfile.setOnClickListener(new OnClickListener() {
 
+	        @Override
+	        public void onClick(View v) {
+	        	finish();
+	        }
+	    });
 		// формируем столбцы сопоставления
 		String[] from = new String[] { MyDB.COLUMN_PULSE,
 				MyDB.COLUMN_SYS_PRESSURE, MyDB.COLUMN_DIAS_PRESSURE,
@@ -273,15 +278,15 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		return super.onContextItemSelected(item);
 	}
 
-	@Override
-	public void onClick(View v) {
-		Log.d(LOG_TAG, "row inserted, id= " + idCurrentName);
-		switch (v.getId()) {
-		case R.id.btnProfile:
-			finish();
-			break;
-		}
-	}
+//	@Override
+//	public void onClick(View v) {
+//		Log.d(LOG_TAG, "row inserted, id= " + idCurrentName);
+//		switch (v.getId()) {
+//		case R.id.btnProfile:
+//			finish();
+//			break;
+//		}
+//	}
 
 	public void showSave() {
 		final Dialog dialog = new Dialog(MyStatistic.this);
@@ -474,6 +479,12 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 	// Запрещаем использование кнопки "Назад"
 	@Override
 	public void onBackPressed() {
+	}
+
+	@Override
+	public void onClick(View arg0) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
