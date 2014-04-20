@@ -6,9 +6,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -22,8 +24,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnClickListener;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.NumberPicker;
@@ -63,48 +66,46 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 
 	String s;
 
+	ImageView btnAddStat;
+
 	TextView tv;
 
+	String rotation;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.statistic);
 
-		profile_id = getIntent().getStringExtra("id_profile_key");
-		String rotation = getIntent().getStringExtra("rotation");
-
 		Log.d(LOG_TAG, "profile_id = " + String.valueOf(profile_id));
 		Log.d(LOG_TAG, "rotation_stat = " + String.valueOf(rotation));
 		db = new MyDB(this);
 		db.open();
-		
-		int number_of_elements = db.getCountElementsStat();
 
-		if ((getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
+		btnAddStat = (ImageView) findViewById(R.id.btnAddStat);
+		btnAddStat.setOnClickListener(this);
+		Animation animRotateIn_icon = AnimationUtils.loadAnimation(this,
+				R.anim.rotate);
+		btnAddStat.startAnimation(animRotateIn_icon);
+
+		int number_of_elements = db.getCountElementsStat();
+		if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+			profile_id = getIntent().getStringExtra("id_profile_key");
+			rotation = getIntent().getStringExtra("rotation");
+		}else if ((getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
 				&& (Integer.valueOf(rotation) == 0)
 				&& (number_of_elements >= 7)) {
 			Intent intent = new Intent(MyStatistic.this, Graph.class);
 			intent.putExtra("id_stat_key", profile_id);
 			startActivityForResult(intent, 1);
-		}
+		} 
 
-		ImageView btnAdd = (ImageView) findViewById(R.id.btnAddStat);
-		btnAdd.setOnClickListener(new OnClickListener() {
-			@Override
-	        public void onClick(View v) {
-	            flag = SAVE_DATA_FLAG;
-				show();
-	        }
-	    });
-		
 		TextView btnProfile = (TextView) findViewById(R.id.btnProfile);
 		btnProfile.setOnClickListener(new OnClickListener() {
-
-	        @Override
-	        public void onClick(View v) {
-	        	finish();
-	        }
-	    });
+			@Override
+			public void onClick(View v) {
+				finish();
+			}
+		});
 		// формируем столбцы сопоставления
 		String[] from = new String[] { MyDB.COLUMN_PULSE,
 				MyDB.COLUMN_SYS_PRESSURE, MyDB.COLUMN_DIAS_PRESSURE,
@@ -158,6 +159,17 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		formattedTime = time.format(c.getTime());
 	}
 
+	@Override
+	public void onClick(View v) {
+		Log.d(LOG_TAG, "row inserted, id= " + idCurrentName);
+		switch (v.getId()) {
+		case R.id.btnAddStat:
+			flag = SAVE_DATA_FLAG;
+			show();
+			break;
+		}
+	}
+
 	public void setColor(int redLower, int fromYellowLower, int toYellowLower,
 			int fromGreen, int toGreen, int fromYellowUp, int toYellowUp,
 			int redUp, TextView tv, String s) {
@@ -197,7 +209,7 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 				R.id.npSysPressure, dialog);
 		final NumberPicker npDiasPressure = initNumberPicker(40, 250,
 				R.id.npDiasPressure, dialog);
-		
+
 		if (flag == EDIT_DATA_FLAG) {
 			npPulse.setValue(Integer.valueOf(currentStat[0]));
 			npSysPressure.setValue(Integer.valueOf(currentStat[1]));
@@ -208,7 +220,8 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 			npDiasPressure.setValue(80);
 		}
 
-		Button btnSaveStat = (Button) dialog.findViewById(R.id.btnSaveState);
+		Button btnSaveStat = (Button) dialog.getWindow().findViewById(
+				R.id.btnSaveState);
 
 		btnSaveStat.setOnClickListener(new OnClickListener() {
 			@Override
@@ -278,15 +291,15 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		return super.onContextItemSelected(item);
 	}
 
-//	@Override
-//	public void onClick(View v) {
-//		Log.d(LOG_TAG, "row inserted, id= " + idCurrentName);
-//		switch (v.getId()) {
-//		case R.id.btnProfile:
-//			finish();
-//			break;
-//		}
-//	}
+	// @Override
+	// public void onClick(View v) {
+	// Log.d(LOG_TAG, "row inserted, id= " + idCurrentName);
+	// switch (v.getId()) {
+	// case R.id.btnProfile:
+	// finish();
+	// break;
+	// }
+	// }
 
 	public void showSave() {
 		final Dialog dialog = new Dialog(MyStatistic.this);
@@ -479,12 +492,6 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 	// Запрещаем использование кнопки "Назад"
 	@Override
 	public void onBackPressed() {
-	}
-
-	@Override
-	public void onClick(View arg0) {
-		// TODO Auto-generated method stub
-		
 	}
 
 }

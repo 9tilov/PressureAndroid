@@ -76,13 +76,13 @@
                 android:layout_marginRight="114dp"
                 android:text="mmhg" />
 
-            <ImageView
+            <!-- <ImageView
                 android:id="@+id/imageView1"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 android:layout_centerVertical="true"
                 android:layout_toLeftOf="@+id/tvTextSys"
-                android:src="@drawable/tonomer" />
+                android:src="@drawable/tonomer" /> -->
         </RelativeLayout>
 
         <RelativeLayout
@@ -100,14 +100,14 @@
                 android:layout_marginRight="14dp"
                 android:text="b/m" />
 
-            <ImageView
+           <!--  <ImageView
                 android:id="@+id/imagePulse"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_alignTop="@+id/tvTextPulse"
                 android:layout_marginRight="5dp"
                 android:layout_toLeftOf="@+id/tvTextPulse"
-                android:src="@drawable/heart_icon" />
+                android:src="@drawable/heart_icon" /> -->
 
             <TextView
                 android:id="@+id/tvTextPulse"

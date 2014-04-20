@@ -158,7 +158,6 @@ public class MyDB {
 	public void addRec(String name) {
 		ContentValues cv = new ContentValues();
 		cv.put(COLUMN_NAME, name);
-//		cv.put(COLUMN_EMAIL, name + "@example.example");
 		cv.put(COLUMN_EMAIL, "");
 		long rowID = mDB.insert(DB_TABLE, null, cv);
 		Log.d(LOG_TAG, "row inserted, ID = " + rowID);
