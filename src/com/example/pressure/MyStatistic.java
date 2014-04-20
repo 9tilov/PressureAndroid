@@ -70,11 +70,13 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 
 	TextView tv;
 
-	String rotation;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.statistic);
+
+		profile_id = getIntent().getStringExtra("id_profile_key");
+		String rotation = getIntent().getStringExtra("rotation");
 
 		Log.d(LOG_TAG, "profile_id = " + String.valueOf(profile_id));
 		Log.d(LOG_TAG, "rotation_stat = " + String.valueOf(rotation));
@@ -88,10 +90,8 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		btnAddStat.startAnimation(animRotateIn_icon);
 
 		int number_of_elements = db.getCountElementsStat();
-		if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
-			profile_id = getIntent().getStringExtra("id_profile_key");
-			rotation = getIntent().getStringExtra("rotation");
-		}else if ((getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
+
+		if ((getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
 				&& (Integer.valueOf(rotation) == 0)
 				&& (number_of_elements >= 7)) {
 			Intent intent = new Intent(MyStatistic.this, Graph.class);
