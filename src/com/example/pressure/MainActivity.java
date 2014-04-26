@@ -1,5 +1,7 @@
 package com.example.pressure;
 
+import java.util.Calendar;
+
 import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -19,6 +21,7 @@ import android.support.v4.widget.SimpleCursorAdapter;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,6 +34,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 public class MainActivity extends FragmentActivity implements
@@ -52,10 +56,19 @@ public class MainActivity extends FragmentActivity implements
 
 	String[] currentProfile = new String[] { "", "" };
 
+	TimePicker timePicker;
+	
+	Calendar cal_alarm;
+	
 	long id_name;
 
 	enum window {
 		profile, data
+	}
+	
+	static class time {
+		public static int hour = 0;
+		public static int minute = 0;
 	}
 
 	long[] mas = new long[3];
@@ -67,7 +80,7 @@ public class MainActivity extends FragmentActivity implements
 	AlarmManager am;
 
 	final String LOG_TAG = "Pressure";
-	final int DIALOG_EDIT = 1, DIALOG_ADD = 2;
+	final int DIALOG_EDIT = 1, DIALOG_ADD = 2, DIALOG_SETTINGS = 3;
 
 	/** Called when the activity is first created. */
 	public void onCreate(Bundle savedInstanceState) {
@@ -126,7 +139,12 @@ public class MainActivity extends FragmentActivity implements
 		// создаем лоадер для чтения данных
 		getSupportLoaderManager().initLoader(0, null, this);
 
-		lvData.setAdapter(scAdapter);
+		if (db.emptyDataBase() == false) {
+			db.addRec("Guest");
+			lvData.setAdapter(scAdapter);
+			getSupportLoaderManager().getLoader(0).forceLoad();
+		} else
+			lvData.setAdapter(scAdapter);
 
 		lvData.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,
@@ -149,11 +167,15 @@ public class MainActivity extends FragmentActivity implements
 	}
 
 	public void setRepeatingAlarm() {
+		cal_alarm = Calendar.getInstance();
+		cal_alarm.setTimeInMillis(System.currentTimeMillis());
+		cal_alarm.set(Calendar.HOUR_OF_DAY, time.hour);
+		cal_alarm.set(Calendar.MINUTE, time.minute);
 		Intent intent = new Intent(this, Receiver.class);
 		PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0,
 				intent, PendingIntent.FLAG_CANCEL_CURRENT);
-		am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(),
-				(20 * 1000), pendingIntent);
+		am.setRepeating(AlarmManager.RTC_WAKEUP, cal_alarm.getTimeInMillis(),
+				AlarmManager.INTERVAL_DAY, pendingIntent);
 	}
 
 	public long checkCheckBox(View v) {
@@ -204,17 +226,23 @@ public class MainActivity extends FragmentActivity implements
 					.findViewById(R.id.editMail);
 			editName.setText(currentProfile[0]);
 			editMail.setText(currentProfile[1]);
+		} else if (id == DIALOG_ADD) {
+			addName = (EditText) dialog.getWindow().findViewById(
+					R.id.addNewName);
+			addName.setText("");
+		} else if (id == DIALOG_SETTINGS) {
 			checkBox = (CheckBox) dialog.getWindow().findViewById(
 					R.id.checkBoxRotation);
+			cal_alarm = Calendar.getInstance();
+			timePicker = (TimePicker) dialog.getWindow().findViewById(R.id.timePicker);
+			timePicker.setIs24HourView(true);
+			timePicker.setCurrentHour(cal_alarm.get(Calendar.HOUR_OF_DAY));
+			timePicker.setCurrentMinute(cal_alarm.get(Calendar.MINUTE));
 			if (mas[2] == 1)
 				checkBox.setChecked(false);
 			else
 				checkBox.setChecked(true);
 			rotation = checkCheckBox(checkBox);
-		} else if (id == DIALOG_ADD) {
-			addName = (EditText) dialog.getWindow().findViewById(
-					R.id.addNewName);
-			addName.setText("");
 		}
 	}
 
@@ -258,6 +286,26 @@ public class MainActivity extends FragmentActivity implements
 			}
 		}
 	};
+	
+	DialogInterface.OnClickListener myClickListenerSettings = new DialogInterface.OnClickListener() {
+		public void onClick(DialogInterface dialog, int which) {
+			// EditTextValidator firstnameValidator = new EditTextValidator();
+			switch (which) {
+			// положительная кнопка
+			case Dialog.BUTTON_POSITIVE:
+				rotation = checkCheckBox(checkBox);
+				saveState(window.profile, id_name, rotation);
+				time.hour = timePicker.getCurrentHour();
+				time.minute = timePicker.getCurrentMinute();
+				setRepeatingAlarm();
+				saveData();
+				break;
+				// нейтральная кнопка
+			case Dialog.BUTTON_NEUTRAL:
+				break;
+			}
+		}
+	};
 
 	@Override
 	protected Dialog onCreateDialog(int id) {
@@ -289,8 +337,31 @@ public class MainActivity extends FragmentActivity implements
 
 			Dialog dialog = adb.create();
 			return dialog;
+		} else if (id == DIALOG_SETTINGS) {
+			LinearLayout view = (LinearLayout) getLayoutInflater().inflate(
+					R.layout.dialog_settings, null);
+			// устанавливаем ее, как содержимое тела диалога
+			adb.setView(view);
+
+			// кнопка положительного ответа
+			adb.setPositiveButton(R.string.yes, myClickListenerSettings);
+			// кнопка нейтрального ответа
+			adb.setNeutralButton(R.string.cancel, myClickListenerSettings);
+
+			Dialog dialog = adb.create();
+			return dialog;
 		}
 		return super.onCreateDialog(id);
+	}
+
+	@Override
+	public boolean onKeyDown(int keycode, KeyEvent e) {
+		switch (keycode) {
+		case KeyEvent.KEYCODE_MENU:
+			showDialog(DIALOG_SETTINGS);
+			break;
+		}
+		return super.onKeyDown(keycode, e);
 	}
 
 	public void onCreateContextMenu(ContextMenu menu, View v,

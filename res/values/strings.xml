@@ -33,7 +33,7 @@
     <string name="start">Start</string>
     <string name="stop">Stop</string>
     <string name="graph">Show graph</string>
-    <string name="graphShow">Graph will be shown after 10 records</string>
+    <string name="graphShow">Graph will be shown after 7 records</string>
     <string name="graphWeek">week</string>
     <string name="graphMonth">month</string>
     <string name="graph3Month">3 months</string>

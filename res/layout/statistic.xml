@@ -6,10 +6,10 @@
 
     <TextView
         android:id="@+id/btnProfile"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:drawableEnd="@drawable/pointer"
         android:drawableStart="@drawable/user_icon1"
-        android:text="aaaaa"
         android:textSize="25dp" />
 
      <RelativeLayout

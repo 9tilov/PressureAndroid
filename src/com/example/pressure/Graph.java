@@ -11,6 +11,7 @@ import com.jjoe64.graphview.GraphViewSeries.GraphViewSeriesStyle;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.widget.LinearLayout;
@@ -22,7 +23,7 @@ import android.widget.Button;
 
 public class Graph extends Activity {
 
-	String stat_id;
+	String stat_id, rotation;
 	String count_data_string;
 
 	MyDB db;
@@ -43,8 +44,15 @@ public class Graph extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.graph);
 
-		if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
+		rotation = getIntent().getStringExtra("rotation");
+		if (Integer.valueOf(rotation) == 1) {
+			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+		}
+
+		if ((getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
+				&& (Integer.valueOf(rotation) == 0)) {
 			finish();
+		}
 
 		tabs = (TabHost) findViewById(R.id.tabhost);
 
@@ -113,7 +121,7 @@ public class Graph extends Activity {
 			}
 
 			GraphViewSeriesStyle stylePulse = new GraphViewSeriesStyle();
-			stylePulse.color = Color.rgb(90, 250, 0);
+			stylePulse.color = Color.rgb(0, 500, 0);
 			GraphViewSeries seriesPulse = new GraphViewSeries("Pulse",
 					stylePulse, dataPulse);
 
@@ -123,7 +131,7 @@ public class Graph extends Activity {
 					dataSys);
 
 			GraphViewSeriesStyle styleDias = new GraphViewSeriesStyle();
-			styleDias.color = Color.rgb(300, 50, 160);
+			styleDias.color = Color.rgb(500, 500, 0);
 			GraphViewSeries seriesDias = new GraphViewSeries("Dias.",
 					styleDias, dataDias);
 
@@ -139,10 +147,5 @@ public class Graph extends Activity {
 
 			layout.addView(graphView);
 		}
-	}
-
-	// Запрещаем использование кнопки "Назад"
-	@Override
-	public void onBackPressed() {
 	}
 }

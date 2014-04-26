@@ -36,7 +36,7 @@
         android:ems="10" >
     </EditText>
     
-    <RelativeLayout
+   <!--  <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="41dp"
         android:orientation="horizontal" >
@@ -60,6 +60,6 @@
             android:layout_marginRight="90dp"
             android:checked="true"/>
 
-    </RelativeLayout>
+    </RelativeLayout> -->
 
 </LinearLayout>

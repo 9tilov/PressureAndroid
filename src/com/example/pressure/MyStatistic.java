@@ -70,16 +70,18 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 
 	TextView tv;
 
+	String rotation;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.statistic);
 
 		profile_id = getIntent().getStringExtra("id_profile_key");
-		String rotation = getIntent().getStringExtra("rotation");
+		rotation = getIntent().getStringExtra("rotation");
 
-		Log.d(LOG_TAG, "profile_id = " + String.valueOf(profile_id));
-		Log.d(LOG_TAG, "rotation_stat = " + String.valueOf(rotation));
+		Log.d(LOG_TAG, "rot = " + rotation);
+
 		db = new MyDB(this);
 		db.open();
 
@@ -96,8 +98,9 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 				&& (number_of_elements >= 7)) {
 			Intent intent = new Intent(MyStatistic.this, Graph.class);
 			intent.putExtra("id_stat_key", profile_id);
+			intent.putExtra("rotation", String.valueOf(rotation));
 			startActivityForResult(intent, 1);
-		} 
+		}
 
 		TextView btnProfile = (TextView) findViewById(R.id.btnProfile);
 		btnProfile.setOnClickListener(new OnClickListener() {
@@ -291,24 +294,37 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		return super.onContextItemSelected(item);
 	}
 
-	// @Override
-	// public void onClick(View v) {
-	// Log.d(LOG_TAG, "row inserted, id= " + idCurrentName);
-	// switch (v.getId()) {
-	// case R.id.btnProfile:
-	// finish();
-	// break;
-	// }
-	// }
-
 	public void showSave() {
 		final Dialog dialog = new Dialog(MyStatistic.this);
 		dialog.setContentView(R.layout.dialog_save);
-		dialog.setTitle("Save your data");
+		dialog.setTitle("Settings");
 
 		Button btnSave = (Button) dialog.findViewById(R.id.btnSave);
 
 		Button btnEmail = (Button) dialog.findViewById(R.id.btnEmail);
+
+		Button btnGraph = (Button) dialog.findViewById(R.id.btnGraph);
+		
+		if (Integer.valueOf(rotation) == 1)
+			btnGraph.setEnabled(true);
+		else
+			btnGraph.setEnabled(false);
+
+		btnGraph.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (listStat.getCount() < 7) {
+					graphShow();
+					dialog.dismiss();
+				} else {
+					Intent intent = new Intent(MyStatistic.this, Graph.class);
+					intent.putExtra("id_stat_key", profile_id);
+					intent.putExtra("rotation", String.valueOf(rotation));
+					startActivityForResult(intent, 1);
+					dialog.dismiss();
+				}
+			}
+		});
 
 		btnSave.setOnClickListener(new OnClickListener() {
 			@Override
@@ -392,7 +408,6 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		return super.onKeyDown(keycode, e);
 	}
 
-	//
 	void writeFileSD(String path) {
 		// проверяем доступность SD
 		if (!Environment.getExternalStorageState().equals(
@@ -430,7 +445,7 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 	}
 
 	protected void onDestroy() {
-		db.close();
+		Log.d(LOG_TAG, "closeDB");
 		super.onDestroy();
 	}
 

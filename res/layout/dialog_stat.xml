@@ -43,23 +43,6 @@
         android:layout_centerHorizontal="true"
         android:width="100dip" />
 
-    <NumberPicker
-        android:id="@+id/npPulse"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/npDiasPressure"
-        android:layout_toRightOf="@+id/npDiasPressure"
-        android:width="100dip" />
-
-    <NumberPicker
-        android:id="@+id/npSysPressure"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textView3"
-        android:layout_marginTop="24dp"
-        android:layout_toLeftOf="@+id/npDiasPressure"
-        android:width="100dip" />
-
     <Button
         android:id="@+id/btnSaveState"
         android:layout_width="match_parent"
@@ -73,5 +56,22 @@
         android:layout_marginTop="5dp"
         android:background="@drawable/button"
         android:text="@string/save" />
+
+    <NumberPicker
+        android:id="@+id/npSysPressure"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/btnSaveState"
+        android:layout_below="@+id/textView3"
+        android:layout_marginTop="24dp"
+        android:width="100dip" />
+
+    <NumberPicker
+        android:id="@+id/npPulse"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btnSaveState"
+        android:layout_alignRight="@+id/btnSaveState"
+        android:width="100dip" />
 
 </RelativeLayout>

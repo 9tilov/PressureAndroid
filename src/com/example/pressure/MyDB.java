@@ -78,8 +78,12 @@ public class MyDB {
 	}
 
 	public Cursor getAllDataStat(String id) {
+		if (!mDB.isOpen()) {
+			return null;
+		}
 		return mDB.query(DB_TABLE_STAT, null, COLUMN_UID + "='" + id + "'",
 				null, null, null, null);
+
 	}
 
 	public String[] getCurrentName(long id) {
@@ -163,7 +167,6 @@ public class MyDB {
 		Log.d(LOG_TAG, "row inserted, ID = " + rowID);
 	}
 
-	
 	public void addStat(String pulse, String sys, String dias, String uid,
 			String date, String time) {
 		ContentValues cv = new ContentValues();
