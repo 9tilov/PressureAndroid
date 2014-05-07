@@ -35,6 +35,10 @@
             android:name=".Receiver"
             android:label="@string/receiver" >
         </activity>
+        <activity
+            android:name=".Settings"
+            android:label="@string/settings" >
+        </activity>
 
         <receiver
             android:name="Receiver"

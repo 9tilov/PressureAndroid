@@ -304,7 +304,7 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		Button btnEmail = (Button) dialog.findViewById(R.id.btnEmail);
 
 		Button btnGraph = (Button) dialog.findViewById(R.id.btnGraph);
-		
+
 		if (Integer.valueOf(rotation) == 1)
 			btnGraph.setEnabled(true);
 		else

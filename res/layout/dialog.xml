@@ -16,8 +16,8 @@
         android:id="@+id/editName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Your name"
-        android:ems="10" >
+        android:ems="10"
+        android:hint="Your name" >
     </EditText>
 
     <TextView
@@ -32,11 +32,12 @@
         android:id="@+id/editMail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Doctor's e-mail"
-        android:ems="10" >
+        android:ems="10"
+        android:hint="Doctor&apos;s e-mail" >
     </EditText>
-    
-   <!--  <RelativeLayout
+
+    <!--
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="41dp"
         android:orientation="horizontal" >
@@ -60,6 +61,7 @@
             android:layout_marginRight="90dp"
             android:checked="true"/>
 
-    </RelativeLayout> -->
+    </RelativeLayout>
+    -->
 
 </LinearLayout>

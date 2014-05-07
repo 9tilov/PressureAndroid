@@ -29,7 +29,9 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -49,31 +51,35 @@ public class MainActivity extends FragmentActivity implements
 
 	final String SAVED_TEXT = "saved_text";
 	final String SAVED_NAME = "saved_name";
-	final String CHECKED = "isChecked";
+	final String CHECKED_GRAPH = "isCheckedGraph";
+	final String CHECKED_NOTIF = "isCheckedNotif";
 
 	long idCurrentName;
-	EditText editName, editMail, addName;
+	EditText editName, editMail, addName, editNotif;
 
 	String[] currentProfile = new String[] { "", "" };
 
 	TimePicker timePicker;
-	
+
 	Calendar cal_alarm;
-	
+
+	Button btnAddNotif;
+
 	long id_name;
 
 	enum window {
 		profile, data
 	}
-	
+
 	static class time {
 		public static int hour = 0;
 		public static int minute = 0;
 	}
 
 	long[] mas = new long[3];
-	CheckBox checkBox;
+	CheckBox checkBoxGraph, checkBoxNotif;
 	long rotation = 0;
+	long notification = 1;
 
 	static boolean active = false;
 
@@ -155,7 +161,7 @@ public class MainActivity extends FragmentActivity implements
 				intent.putExtra("id_profile_key", String.valueOf(id_name));
 				intent.putExtra("rotation", String.valueOf(rotation));
 				startActivityForResult(intent, 1);
-				saveState(window.data, id_name, rotation);
+				saveState(window.data, id_name, rotation, notification);
 			}
 		});
 	}
@@ -178,19 +184,21 @@ public class MainActivity extends FragmentActivity implements
 				AlarmManager.INTERVAL_DAY, pendingIntent);
 	}
 
-	public long checkCheckBox(View v) {
-		CheckBox checkBox = (CheckBox) v;
-		if (!checkBox.isChecked())
-			return 1;
-		return 0;
-	}
+//	public long checkCheckBox(View v) {
+//		CheckBox checkBoxGraph = (CheckBox) v;
+//		if (!checkBoxGraph.isChecked())
+//			return 1;
+//		return 0;
+//	}
 
-	void saveState(window cnt, long id_name, long isChecked) {
+	void saveState(window cnt, long id_name, long isCheckedGraph,
+			long isCheckedNotif) {
 		sPref = getPreferences(MODE_PRIVATE);
 		Editor ed = sPref.edit();
 		ed.putLong(SAVED_TEXT, cnt.ordinal());
 		ed.putLong(SAVED_NAME, id_name);
-		ed.putLong(CHECKED, isChecked);
+		ed.putLong(CHECKED_GRAPH, isCheckedGraph);
+		ed.putLong(CHECKED_NOTIF, isCheckedNotif);
 		ed.commit();
 		Log.d(LOG_TAG, "cnt = " + cnt);
 	}
@@ -199,14 +207,16 @@ public class MainActivity extends FragmentActivity implements
 		sPref = getPreferences(MODE_PRIVATE);
 		long state = sPref.getLong(SAVED_TEXT, 0);
 		long name = sPref.getLong(SAVED_NAME, 0);
-		long checkState = sPref.getLong(CHECKED, 0);
-		long[] massive = new long[3];
+		long checkStateGraph = sPref.getLong(CHECKED_GRAPH, 0);
+		long checkStateNotif = sPref.getLong(CHECKED_NOTIF, 0);
+		long[] massive = new long[4];
 		massive[0] = state;
 		massive[1] = name;
-		massive[2] = checkState;
+		massive[2] = checkStateGraph;
+		massive[3] = checkStateNotif;
 		Log.d(LOG_TAG, "string = " + massive[0]);
 		Log.d(LOG_TAG, "string_name = " + massive[1]);
-		Log.d(LOG_TAG, "checkState = " + massive[2]);
+		Log.d(LOG_TAG, "checkStateGraph = " + massive[2]);
 		return massive;
 	}
 
@@ -215,7 +225,8 @@ public class MainActivity extends FragmentActivity implements
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		mas = loadState();
 		rotation = mas[2];
-		saveState(window.profile, id_name, rotation);
+		notification = mas[3];
+		saveState(window.profile, id_name, rotation, notification);
 	}
 
 	protected void onPrepareDialog(int id, Dialog dialog) {
@@ -231,18 +242,70 @@ public class MainActivity extends FragmentActivity implements
 					R.id.addNewName);
 			addName.setText("");
 		} else if (id == DIALOG_SETTINGS) {
-			checkBox = (CheckBox) dialog.getWindow().findViewById(
+
+			// формируем столбцы сопоставления
+//			String[] from = new String[] { MyDB.COLUMN_TIME,
+//					MyDB.COLUMN_NOTIF_MESSAGE };
+//			int[] to = new int[] { R.id.timeSettings, R.id.notifSettings };
+			// создааем адаптер и настраиваем список
+//			SimpleCursorAdapter dialogAdapter = new SimpleCursorAdapter(this,
+//					R.layout.list_settings, null, from, to, 0);
+			final ListView listSettings = (ListView) dialog.getWindow()
+					.findViewById(R.id.listNotif);
+
+			// добавляем контекстное меню к списку
+			registerForContextMenu(listSettings);
+
+			// создаем лоадер для чтения данных
+			getSupportLoaderManager().initLoader(0, null, this);
+			
+//			listSettings.setAdapter(dialogAdapter);
+			getSupportLoaderManager().getLoader(0).forceLoad();
+
+			editNotif = (EditText) dialog.getWindow().findViewById(
+					R.id.editNotif);
+
+			btnAddNotif = (Button) dialog.getWindow().findViewById(
+					R.id.btnAddNotif);
+
+			mas = loadState();
+			checkBoxGraph = (CheckBox) dialog.getWindow().findViewById(
 					R.id.checkBoxRotation);
+			checkBoxNotif = (CheckBox) dialog.getWindow().findViewById(
+					R.id.checkBoxTimePicker);
+
 			cal_alarm = Calendar.getInstance();
-			timePicker = (TimePicker) dialog.getWindow().findViewById(R.id.timePicker);
+			timePicker = (TimePicker) dialog.getWindow().findViewById(
+					R.id.timePicker);
 			timePicker.setIs24HourView(true);
 			timePicker.setCurrentHour(cal_alarm.get(Calendar.HOUR_OF_DAY));
 			timePicker.setCurrentMinute(cal_alarm.get(Calendar.MINUTE));
+
+			if (mas[3] == 0) {
+				checkBoxNotif.setChecked(true);
+				timePicker.setVisibility(View.VISIBLE);
+			} else {
+				checkBoxNotif.setChecked(false);
+				timePicker.setVisibility(View.INVISIBLE);
+			}
+
+			checkBoxNotif
+					.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+						@Override
+						public void onCheckedChanged(CompoundButton checkView,
+								boolean isChecked) {
+							if (checkView.isChecked())
+								timePicker.setVisibility(View.VISIBLE);
+							else
+								timePicker.setVisibility(View.INVISIBLE);
+						}
+					});
 			if (mas[2] == 1)
-				checkBox.setChecked(false);
+				checkBoxGraph.setChecked(false);
 			else
-				checkBox.setChecked(true);
-			rotation = checkCheckBox(checkBox);
+				checkBoxGraph.setChecked(true);
+//			rotation = checkCheckBox(checkBoxGraph);
 		}
 	}
 
@@ -256,16 +319,20 @@ public class MainActivity extends FragmentActivity implements
 					if ((0 == editName.getText().toString().length())
 							|| (0 == editMail.getText().toString().length())
 							|| (!(isValidEmail(editMail.getText().toString())))) {
-						rotation = checkCheckBox(checkBox);
-						saveState(window.profile, id_name, rotation);
+//						rotation = checkCheckBox(checkBoxGraph);
+//						notification = checkCheckBox(checkBoxNotif);
+						saveState(window.profile, id_name, rotation,
+								notification);
 						break;
 					} else {
 						db.editRec(editName.getText().toString(), editMail
 								.getText().toString(), String
 								.valueOf(idCurrentName));
 						getSupportLoaderManager().getLoader(0).forceLoad();
-						rotation = checkCheckBox(checkBox);
-						saveState(window.profile, id_name, rotation);
+//						rotation = checkCheckBox(checkBoxGraph);
+//						notification = checkCheckBox(checkBoxNotif);
+						saveState(window.profile, id_name, rotation,
+								notification);
 						saveData();
 						break;
 					}
@@ -286,21 +353,28 @@ public class MainActivity extends FragmentActivity implements
 			}
 		}
 	};
-	
+
 	DialogInterface.OnClickListener myClickListenerSettings = new DialogInterface.OnClickListener() {
 		public void onClick(DialogInterface dialog, int which) {
-			// EditTextValidator firstnameValidator = new EditTextValidator();
 			switch (which) {
 			// положительная кнопка
 			case Dialog.BUTTON_POSITIVE:
-				rotation = checkCheckBox(checkBox);
-				saveState(window.profile, id_name, rotation);
+//				rotation = checkCheckBox(checkBoxGraph);
+//				notification = checkCheckBox(checkBoxNotif);
+				Log.d(LOG_TAG, "notification = " + notification);
+				saveState(window.profile, id_name, rotation, notification);
 				time.hour = timePicker.getCurrentHour();
 				time.minute = timePicker.getCurrentMinute();
+//				db.addRec(editNotif.getText().toString());
+//				db.addNotif(
+//						String.valueOf(editNotif.getText()),
+//						String.valueOf(time.hour) + ":"
+//								+ String.valueOf(time.minute));
+				getSupportLoaderManager().getLoader(0).forceLoad();
 				setRepeatingAlarm();
 				saveData();
 				break;
-				// нейтральная кнопка
+			// нейтральная кнопка
 			case Dialog.BUTTON_NEUTRAL:
 				break;
 			}
@@ -339,7 +413,7 @@ public class MainActivity extends FragmentActivity implements
 			return dialog;
 		} else if (id == DIALOG_SETTINGS) {
 			LinearLayout view = (LinearLayout) getLayoutInflater().inflate(
-					R.layout.dialog_settings, null);
+					R.layout.settings, null);
 			// устанавливаем ее, как содержимое тела диалога
 			adb.setView(view);
 
@@ -348,6 +422,19 @@ public class MainActivity extends FragmentActivity implements
 			// кнопка нейтрального ответа
 			adb.setNeutralButton(R.string.cancel, myClickListenerSettings);
 
+			
+			
+			
+//			btnAddNotif.setOnClickListener(new OnClickListener() {
+//				@Override
+//				public void onClick(View v) {
+//					db.addNotif(
+//							String.valueOf(editNotif.getText()),
+//							String.valueOf(time.hour) + ":"
+//									+ String.valueOf(time.minute));
+//					getSupportLoaderManager().getLoader(0).forceLoad();
+//				}
+//			});
 			Dialog dialog = adb.create();
 			return dialog;
 		}
@@ -358,7 +445,8 @@ public class MainActivity extends FragmentActivity implements
 	public boolean onKeyDown(int keycode, KeyEvent e) {
 		switch (keycode) {
 		case KeyEvent.KEYCODE_MENU:
-			showDialog(DIALOG_SETTINGS);
+			Intent intent = new Intent(MainActivity.this, Settings.class);
+			startActivity(intent);
 			break;
 		}
 		return super.onKeyDown(keycode, e);

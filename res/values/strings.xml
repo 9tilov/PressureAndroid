@@ -6,8 +6,10 @@
     <string name="hello_world">Hello world!</string>
     <string name="add_record">Add record</string>
     <string name="delete_record">Delete record</string>
+    <string name="delete_notif">Delete notification</string>
     <string name="delete_all_records">Delete all records</string>
     <string name="edit_record">Edit profile</string>
+    <string name="edit_notif">Edit notification</string>
     <string name="btnSave">Save</string>
     <string name="exit">Выход</string>
     <string name="save_data">Save data?</string>
@@ -42,5 +44,6 @@
     <string name="receiver">Receiver</string>
     <string name="edit_profile">Profile</string>
     <string name="service">Service</string>
+    <string name="settings">Settings</string>
 
 </resources>

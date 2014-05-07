@@ -2,6 +2,7 @@ package com.example.pressure;
 
 import java.util.LinkedList;
 
+import android.R.string;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -17,6 +18,7 @@ public class MyDB {
 
 	private static final String DB_TABLE = "mytab";
 	private static final String DB_TABLE_STAT = "mytabstat";
+	private static final String DB_TABLE_NOTIF = "mytabnotif";
 
 	public static final String COLUMN_ID = "_id";
 	public static final String COLUMN_NAME = "name";
@@ -29,6 +31,10 @@ public class MyDB {
 	public static final String COLUMN_TIME = "time";
 	public static final String COLUMN_UID = "uid";
 
+	public static final String COLUMN_NOTIF_MESSAGE = "notif_message";
+	public static final String COLUMN_NOTIF_HOUR = "notif_hour";
+	public static final String COLUMN_NOTIF_MINUTE = "notif_minute";
+
 	private static final String DB_CREATE = "create table " + DB_TABLE + "("
 			+ COLUMN_ID + " integer primary key autoincrement, " + COLUMN_NAME
 			+ " text, " + COLUMN_EMAIL + " text" + ");";
@@ -39,6 +45,12 @@ public class MyDB {
 			+ COLUMN_SYS_PRESSURE + " text, " + COLUMN_DIAS_PRESSURE
 			+ " text, " + COLUMN_DATE + " text, " + COLUMN_TIME + " text, "
 			+ COLUMN_UID + " text" + ");";
+
+	private static final String DB_CREATE_NOTIF = "create table "
+			+ DB_TABLE_NOTIF + "(" + COLUMN_ID
+			+ " integer primary key autoincrement, " + COLUMN_NOTIF_MESSAGE
+			+ " text, " + COLUMN_NOTIF_HOUR + " text, " + COLUMN_NOTIF_MINUTE
+			+ " text" + ");";
 
 	private final Context mCtx;
 
@@ -83,7 +95,10 @@ public class MyDB {
 		}
 		return mDB.query(DB_TABLE_STAT, null, COLUMN_UID + "='" + id + "'",
 				null, null, null, null);
+	}
 
+	public Cursor getAllDataNotif() {
+		return mDB.query(DB_TABLE_NOTIF, null, null, null, null, null, null);
 	}
 
 	public String[] getCurrentName(long id) {
@@ -158,6 +173,20 @@ public class MyDB {
 		return statistics;
 	}
 
+	public String[] getCurrentNotif(long id) {
+		Cursor cursor = mDB.query(DB_TABLE_NOTIF, null, COLUMN_ID + "='" + id
+				+ "'", null, null, null, null);
+		String[] notif = new String[] { "", "", "" };
+		if (cursor != null) {
+			cursor.moveToFirst();
+			for (int i = 0; i < notif.length; ++i) {
+				notif[i] = notif[i] + cursor.getString(i + 1);
+			}
+		}
+		// Log.d(LOG_TAG, "name = " + name);
+		return notif;
+	}
+
 	// добавить запись в DB_TABLE
 	public void addRec(String name) {
 		ContentValues cv = new ContentValues();
@@ -180,6 +209,15 @@ public class MyDB {
 		Log.d(LOG_TAG, "row inserted, pulse = " + rowID);
 	}
 
+	public void addNotif(String message, String hour, String minute) {
+		ContentValues cv = new ContentValues();
+		cv.put(COLUMN_NOTIF_MESSAGE, message);
+		cv.put(COLUMN_NOTIF_HOUR, hour);
+		cv.put(COLUMN_NOTIF_MINUTE, minute);
+		long rowID = mDB.insert(DB_TABLE_NOTIF, null, cv);
+		Log.d(LOG_TAG, "notif = " + rowID);
+	}
+
 	// удалить запись из DB_TABLE
 	public void delRec(long id) {
 		int delCount = mDB.delete(DB_TABLE, COLUMN_ID + " = " + id, null);
@@ -192,6 +230,10 @@ public class MyDB {
 
 	public void delRecAllStat(long id) {
 		mDB.delete(DB_TABLE_STAT, COLUMN_UID + " = " + id, null);
+	}
+
+	public void delRecNotif(long id) {
+		mDB.delete(DB_TABLE_NOTIF, COLUMN_ID + " = " + id, null);
 	}
 
 	// редактировать запись в DB_TABLE
@@ -209,6 +251,14 @@ public class MyDB {
 		cv.put(COLUMN_DIAS_PRESSURE, statistics[2].toString());
 		mDB.update(DB_TABLE_STAT, cv, "_id = ?", new String[] { id });
 	}
+	
+	public void editNotif(String notif, String hour, String minute, String id) {
+		ContentValues cv = new ContentValues();
+		cv.put(COLUMN_NOTIF_MESSAGE, notif);
+		cv.put(COLUMN_NOTIF_HOUR, hour);
+		cv.put(COLUMN_NOTIF_MINUTE, minute);
+		mDB.update(DB_TABLE_NOTIF, cv, "_id = ?", new String[] { id });
+	}
 
 	// класс по созданию и управлению БД
 	private class DBHelper extends SQLiteOpenHelper {
@@ -223,6 +273,7 @@ public class MyDB {
 		public void onCreate(SQLiteDatabase db) {
 			db.execSQL(DB_CREATE);
 			db.execSQL(DB_STAT_CREATE);
+			db.execSQL(DB_CREATE_NOTIF);
 		}
 
 		@Override
