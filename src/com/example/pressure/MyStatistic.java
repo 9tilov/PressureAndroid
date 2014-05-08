@@ -10,6 +10,7 @@ import java.util.Calendar;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.database.Cursor;
@@ -17,6 +18,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.KeyEvent;
@@ -56,6 +58,8 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 
 	String[] profile_name;
 
+	String[] savedValues = new String[2];
+
 	ListView listStat;
 
 	final String DIR_SD = "Pressure";
@@ -76,14 +80,14 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.statistic);
-
-		profile_id = getIntent().getStringExtra("id_profile_key");
-		rotation = getIntent().getStringExtra("rotation");
-
-		Log.d(LOG_TAG, "rot = " + rotation);
-
+		
 		db = new MyDB(this);
 		db.open();
+
+		savedValues = LoadPreferences();
+
+		profile_id = savedValues[0];
+		rotation = savedValues[1];
 
 		btnAddStat = (ImageView) findViewById(R.id.btnAddStat);
 		btnAddStat.setOnClickListener(this);
@@ -97,9 +101,7 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 				&& (Integer.valueOf(rotation) == 0)
 				&& (number_of_elements >= 7)) {
 			Intent intent = new Intent(MyStatistic.this, Graph.class);
-			intent.putExtra("id_stat_key", profile_id);
-			intent.putExtra("rotation", String.valueOf(rotation));
-			startActivityForResult(intent, 1);
+			startActivity(intent);
 		}
 
 		TextView btnProfile = (TextView) findViewById(R.id.btnProfile);
@@ -171,6 +173,15 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 			show();
 			break;
 		}
+	}
+
+	private String[] LoadPreferences() {
+		SharedPreferences sharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(getApplicationContext());
+		String[] data = new String[2];
+		data[0] = sharedPreferences.getString("idName", "1");
+		data[1] = sharedPreferences.getString("rotation", "0");
+		return data;
 	}
 
 	public void setColor(int redLower, int fromYellowLower, int toYellowLower,
@@ -269,7 +280,6 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		menu.add(0, CM_DELETE_ALL_ID, 0, R.string.delete_all_records);
 	}
 
-	//
 	public boolean onContextItemSelected(MenuItem item) {
 		AdapterContextMenuInfo acmi = (AdapterContextMenuInfo) item
 				.getMenuInfo();

@@ -10,10 +10,11 @@ import com.jjoe64.graphview.GraphView.LegendAlign;
 import com.jjoe64.graphview.GraphViewSeries.GraphViewSeriesStyle;
 
 import android.app.Activity;
-import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.widget.LinearLayout;
 import android.widget.TabHost;
 
@@ -32,6 +33,8 @@ public class Graph extends Activity {
 
 	Button btnWeek, btnMonth, btn3Month, btnAll;
 
+	String[] savedValues = new String[2];
+
 	final String LOG_TAG = "myLogs";
 
 	int number_of_elements;
@@ -44,7 +47,11 @@ public class Graph extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.graph);
 
-		rotation = getIntent().getStringExtra("rotation");
+		savedValues = LoadPreferences();
+
+		stat_id = savedValues[0];
+		rotation = savedValues[1];
+
 		if (Integer.valueOf(rotation) == 1) {
 			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 		}
@@ -62,8 +69,6 @@ public class Graph extends Activity {
 		setTab("tag2", R.id.graphMonth, "month");
 		setTab("tag3", R.id.graph3Month, "3 month");
 		setTab("tag4", R.id.graphAllPeriod, "all period");
-
-		stat_id = getIntent().getStringExtra("id_stat_key");
 
 		Log.d(LOG_TAG, "stat_idssss = " + stat_id);
 		LinearLayout layoutWeek = (LinearLayout) findViewById(R.id.graphWeek);
@@ -87,6 +92,15 @@ public class Graph extends Activity {
 		createGraph(30, layoutMonth, graphViewMonth);
 		createGraph(90, layout3Month, graphView3Month);
 		createGraph(number_of_elements, layoutAllPeriod, graphViewAllPeriod);
+	}
+
+	private String[] LoadPreferences() {
+		SharedPreferences sharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(getApplicationContext());
+		String[] data = new String[2];
+		data[0] = sharedPreferences.getString("idName", "");
+		data[1] = sharedPreferences.getString("rotation", "0");
+		return data;
 	}
 
 	protected void onDestroy() {

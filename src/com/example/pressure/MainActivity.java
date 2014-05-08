@@ -10,15 +10,14 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.KeyEvent;
@@ -31,7 +30,6 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -67,19 +65,17 @@ public class MainActivity extends FragmentActivity implements
 
 	long id_name;
 
-	enum window {
-		profile, data
-	}
-
 	static class time {
 		public static int hour = 0;
 		public static int minute = 0;
 	}
 
-	long[] mas = new long[3];
+	String[] savedValues = new String[4];
+
 	CheckBox checkBoxGraph, checkBoxNotif;
 	long rotation = 0;
 	long notification = 1;
+	int stateActivity;
 
 	static boolean active = false;
 
@@ -97,17 +93,16 @@ public class MainActivity extends FragmentActivity implements
 
 		startService(new Intent(this, Receiver.class));
 
-		mas = loadState();
-		rotation = mas[2];
+		savedValues = LoadPreferences();
+		rotation = Long.valueOf(savedValues[1]);
+		stateActivity = Integer.valueOf(savedValues[3]);
 
-		if (mas[0] == 0) {
+		if (stateActivity == 0) {
 			setContentView(R.layout.activity_main);
 		} else {
 			setContentView(R.layout.activity_main);
 			Intent intent = new Intent(MainActivity.this, MyStatistic.class);
-			intent.putExtra("id_profile_key", String.valueOf(mas[1]));
-			intent.putExtra("rotation", String.valueOf(rotation));
-			startActivityForResult(intent, 1);
+			startActivity(intent);
 		}
 		setRepeatingAlarm();
 
@@ -130,9 +125,6 @@ public class MainActivity extends FragmentActivity implements
 				showDialog(DIALOG_ADD);
 			}
 		});
-
-		Intent intent = new Intent(MainActivity.this, MyStatistic.class);
-		intent.putExtra("rotation", String.valueOf(rotation));
 
 		// создааем адаптер и настраиваем список
 		scAdapter = new SimpleCursorAdapter(this, R.layout.item, null, from,
@@ -158,10 +150,11 @@ public class MainActivity extends FragmentActivity implements
 				Intent intent = new Intent(MainActivity.this, MyStatistic.class);
 				Cursor cur = (Cursor) lvData.getAdapter().getItem(position);
 				id_name = cur.getLong(cur.getColumnIndex("_id"));
-				intent.putExtra("id_profile_key", String.valueOf(id_name));
-				intent.putExtra("rotation", String.valueOf(rotation));
-				startActivityForResult(intent, 1);
-				saveState(window.data, id_name, rotation, notification);
+				SavePreferences("idName", String.valueOf(id_name));
+				stateActivity = 1;
+				SavePreferences("state", String.valueOf(stateActivity));
+				startActivity(intent);
+
 			}
 		});
 	}
@@ -184,49 +177,23 @@ public class MainActivity extends FragmentActivity implements
 				AlarmManager.INTERVAL_DAY, pendingIntent);
 	}
 
-//	public long checkCheckBox(View v) {
-//		CheckBox checkBoxGraph = (CheckBox) v;
-//		if (!checkBoxGraph.isChecked())
-//			return 1;
-//		return 0;
-//	}
-
-	void saveState(window cnt, long id_name, long isCheckedGraph,
-			long isCheckedNotif) {
-		sPref = getPreferences(MODE_PRIVATE);
-		Editor ed = sPref.edit();
-		ed.putLong(SAVED_TEXT, cnt.ordinal());
-		ed.putLong(SAVED_NAME, id_name);
-		ed.putLong(CHECKED_GRAPH, isCheckedGraph);
-		ed.putLong(CHECKED_NOTIF, isCheckedNotif);
-		ed.commit();
-		Log.d(LOG_TAG, "cnt = " + cnt);
+	private void SavePreferences(String key, String value) {
+		SharedPreferences sharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(getApplicationContext());
+		SharedPreferences.Editor editor = sharedPreferences.edit();
+		editor.putString(key, value);
+		editor.commit();
 	}
 
-	long[] loadState() {
-		sPref = getPreferences(MODE_PRIVATE);
-		long state = sPref.getLong(SAVED_TEXT, 0);
-		long name = sPref.getLong(SAVED_NAME, 0);
-		long checkStateGraph = sPref.getLong(CHECKED_GRAPH, 0);
-		long checkStateNotif = sPref.getLong(CHECKED_NOTIF, 0);
-		long[] massive = new long[4];
-		massive[0] = state;
-		massive[1] = name;
-		massive[2] = checkStateGraph;
-		massive[3] = checkStateNotif;
-		Log.d(LOG_TAG, "string = " + massive[0]);
-		Log.d(LOG_TAG, "string_name = " + massive[1]);
-		Log.d(LOG_TAG, "checkStateGraph = " + massive[2]);
-		return massive;
-	}
-
-	// обработчик закрытия окна статистики
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		mas = loadState();
-		rotation = mas[2];
-		notification = mas[3];
-		saveState(window.profile, id_name, rotation, notification);
+	private String[] LoadPreferences() {
+		SharedPreferences sharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(getApplicationContext());
+		String[] data = new String[4];
+		data[0] = sharedPreferences.getString("idName", "");
+		data[1] = sharedPreferences.getString("rotation", "0");
+		data[2] = sharedPreferences.getString("notification", "1");
+		data[3] = sharedPreferences.getString("state", "0");
+		return data;
 	}
 
 	protected void onPrepareDialog(int id, Dialog dialog) {
@@ -241,98 +208,22 @@ public class MainActivity extends FragmentActivity implements
 			addName = (EditText) dialog.getWindow().findViewById(
 					R.id.addNewName);
 			addName.setText("");
-		} else if (id == DIALOG_SETTINGS) {
-
-			// формируем столбцы сопоставления
-//			String[] from = new String[] { MyDB.COLUMN_TIME,
-//					MyDB.COLUMN_NOTIF_MESSAGE };
-//			int[] to = new int[] { R.id.timeSettings, R.id.notifSettings };
-			// создааем адаптер и настраиваем список
-//			SimpleCursorAdapter dialogAdapter = new SimpleCursorAdapter(this,
-//					R.layout.list_settings, null, from, to, 0);
-			final ListView listSettings = (ListView) dialog.getWindow()
-					.findViewById(R.id.listNotif);
-
-			// добавляем контекстное меню к списку
-			registerForContextMenu(listSettings);
-
-			// создаем лоадер для чтения данных
-			getSupportLoaderManager().initLoader(0, null, this);
-
-//			listSettings.setAdapter(dialogAdapter);
-			getSupportLoaderManager().getLoader(0).forceLoad();
-
-			editNotif = (EditText) dialog.getWindow().findViewById(
-					R.id.editNotif);
-
-			btnAddNotif = (Button) dialog.getWindow().findViewById(
-					R.id.btnAddNotif);
-
-			mas = loadState();
-			checkBoxGraph = (CheckBox) dialog.getWindow().findViewById(
-					R.id.checkBoxRotation);
-			checkBoxNotif = (CheckBox) dialog.getWindow().findViewById(
-					R.id.checkBoxTimePicker);
-
-			cal_alarm = Calendar.getInstance();
-			timePicker = (TimePicker) dialog.getWindow().findViewById(
-					R.id.timePicker);
-			timePicker.setIs24HourView(true);
-			timePicker.setCurrentHour(cal_alarm.get(Calendar.HOUR_OF_DAY));
-			timePicker.setCurrentMinute(cal_alarm.get(Calendar.MINUTE));
-
-			if (mas[3] == 0) {
-				checkBoxNotif.setChecked(true);
-				timePicker.setVisibility(View.VISIBLE);
-			} else {
-				checkBoxNotif.setChecked(false);
-				timePicker.setVisibility(View.INVISIBLE);
-			}
-
-			checkBoxNotif
-					.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-
-						@Override
-						public void onCheckedChanged(CompoundButton checkView,
-								boolean isChecked) {
-							if (checkView.isChecked())
-								timePicker.setVisibility(View.VISIBLE);
-							else
-								timePicker.setVisibility(View.INVISIBLE);
-						}
-					});
-			if (mas[2] == 1)
-				checkBoxGraph.setChecked(false);
-			else
-				checkBoxGraph.setChecked(true);
-//			rotation = checkCheckBox(checkBoxGraph);
 		}
 	}
 
 	DialogInterface.OnClickListener myClickListener = new DialogInterface.OnClickListener() {
 		public void onClick(DialogInterface dialog, int which) {
-			// EditTextValidator firstnameValidator = new EditTextValidator();
 			switch (which) {
 			// положительная кнопка
 			case Dialog.BUTTON_POSITIVE:
 				if (idCurrentName != 0) {
-					if ((0 == editName.getText().toString().length())
-							|| (0 == editMail.getText().toString().length())
-							|| (!(isValidEmail(editMail.getText().toString())))) {
-//						rotation = checkCheckBox(checkBoxGraph);
-//						notification = checkCheckBox(checkBoxNotif);
-						saveState(window.profile, id_name, rotation,
-								notification);
+					if ((!(isValidEmail(editMail.getText().toString())))) {
 						break;
 					} else {
 						db.editRec(editName.getText().toString(), editMail
 								.getText().toString(), String
 								.valueOf(idCurrentName));
 						getSupportLoaderManager().getLoader(0).forceLoad();
-//						rotation = checkCheckBox(checkBoxGraph);
-//						notification = checkCheckBox(checkBoxNotif);
-						saveState(window.profile, id_name, rotation,
-								notification);
 						saveData();
 						break;
 					}
@@ -348,33 +239,6 @@ public class MainActivity extends FragmentActivity implements
 					}
 				}
 				// нейтральная кнопка
-			case Dialog.BUTTON_NEUTRAL:
-				break;
-			}
-		}
-	};
-
-	DialogInterface.OnClickListener myClickListenerSettings = new DialogInterface.OnClickListener() {
-		public void onClick(DialogInterface dialog, int which) {
-			switch (which) {
-			// положительная кнопка
-			case Dialog.BUTTON_POSITIVE:
-//				rotation = checkCheckBox(checkBoxGraph);
-//				notification = checkCheckBox(checkBoxNotif);
-				Log.d(LOG_TAG, "notification = " + notification);
-				saveState(window.profile, id_name, rotation, notification);
-				time.hour = timePicker.getCurrentHour();
-				time.minute = timePicker.getCurrentMinute();
-//				db.addRec(editNotif.getText().toString());
-//				db.addNotif(
-//						String.valueOf(editNotif.getText()),
-//						String.valueOf(time.hour) + ":"
-//								+ String.valueOf(time.minute));
-				getSupportLoaderManager().getLoader(0).forceLoad();
-				setRepeatingAlarm();
-				saveData();
-				break;
-			// нейтральная кнопка
 			case Dialog.BUTTON_NEUTRAL:
 				break;
 			}
@@ -409,32 +273,6 @@ public class MainActivity extends FragmentActivity implements
 			// кнопка нейтрального ответа
 			adb.setNeutralButton(R.string.cancel, myClickListener);
 
-			Dialog dialog = adb.create();
-			return dialog;
-		} else if (id == DIALOG_SETTINGS) {
-			LinearLayout view = (LinearLayout) getLayoutInflater().inflate(
-					R.layout.settings, null);
-			// устанавливаем ее, как содержимое тела диалога
-			adb.setView(view);
-
-			// кнопка положительного ответа
-			adb.setPositiveButton(R.string.yes, myClickListenerSettings);
-			// кнопка нейтрального ответа
-			adb.setNeutralButton(R.string.cancel, myClickListenerSettings);
-
-
-
-
-//			btnAddNotif.setOnClickListener(new OnClickListener() {
-//				@Override
-//				public void onClick(View v) {
-//					db.addNotif(
-//							String.valueOf(editNotif.getText()),
-//							String.valueOf(time.hour) + ":"
-//									+ String.valueOf(time.minute));
-//					getSupportLoaderManager().getLoader(0).forceLoad();
-//				}
-//			});
 			Dialog dialog = adb.create();
 			return dialog;
 		}
