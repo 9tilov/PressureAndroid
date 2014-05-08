@@ -251,7 +251,7 @@ public class MyDB {
 		cv.put(COLUMN_DIAS_PRESSURE, statistics[2].toString());
 		mDB.update(DB_TABLE_STAT, cv, "_id = ?", new String[] { id });
 	}
-	
+
 	public void editNotif(String notif, String hour, String minute, String id) {
 		ContentValues cv = new ContentValues();
 		cv.put(COLUMN_NOTIF_MESSAGE, notif);

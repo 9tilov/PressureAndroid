@@ -258,7 +258,7 @@ public class MainActivity extends FragmentActivity implements
 
 			// создаем лоадер для чтения данных
 			getSupportLoaderManager().initLoader(0, null, this);
-			
+
 //			listSettings.setAdapter(dialogAdapter);
 			getSupportLoaderManager().getLoader(0).forceLoad();
 
@@ -422,9 +422,9 @@ public class MainActivity extends FragmentActivity implements
 			// кнопка нейтрального ответа
 			adb.setNeutralButton(R.string.cancel, myClickListenerSettings);
 
-			
-			
-			
+
+
+
 //			btnAddNotif.setOnClickListener(new OnClickListener() {
 //				@Override
 //				public void onClick(View v) {
