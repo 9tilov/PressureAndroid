@@ -23,13 +23,8 @@ public class Receiver extends BroadcastReceiver {
 //	}
 	
 	
-	MyDB db;
-	
-	
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		db = new MyDB(context);
-		db.open();
 		Bundle bundle = intent.getExtras();
 		String m_message = bundle.getString("message");
 		
@@ -42,9 +37,10 @@ public class Receiver extends BroadcastReceiver {
 		
 		notif.setLatestEventInfo(context, "Pressure", m_message, PendingIntent
 				.getActivity(context, 0, intent,
-						PendingIntent.FLAG_CANCEL_CURRENT));
+						PendingIntent.FLAG_UPDATE_CURRENT));
 		notif.flags = Notification.DEFAULT_LIGHTS
 				| Notification.FLAG_AUTO_CANCEL;
+		notif.defaults = Notification.DEFAULT_ALL;
 		nm.notify(1, notif);
 	}
 

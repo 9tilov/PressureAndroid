@@ -1,7 +1,11 @@
 package com.example.pressure;
 
+import java.sql.Date;
+import java.text.DateFormat;
 import java.util.Calendar;
+import java.util.LinkedList;
 
+import android.R.integer;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -12,12 +16,15 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.text.format.Time;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.KeyEvent;
@@ -62,7 +69,7 @@ public class MainActivity extends FragmentActivity implements
 	TimePicker timePicker;
 
 	Calendar cal_alarm;
-
+	AlarmManager am;
 	Button btnAddNotif;
 
 	long id_name;
@@ -76,12 +83,12 @@ public class MainActivity extends FragmentActivity implements
 
 	CheckBox checkBoxGraph, checkBoxNotif;
 	long rotation = 0;
-	long notification = 1;
+	int notification = 1;
 	int stateActivity;
 
 	static boolean active = false;
 
-	AlarmManager am;
+	
 
 	final String LOG_TAG = "Pressure";
 	final int DIALOG_EDIT = 1, DIALOG_ADD = 2, DIALOG_SETTINGS = 3;
@@ -90,6 +97,8 @@ public class MainActivity extends FragmentActivity implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
+		
 
 		am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
@@ -107,13 +116,61 @@ public class MainActivity extends FragmentActivity implements
 			startActivity(intent);
 		}
 
-		// receiver = new Receiver("111");
-
-		setRepeatingAlarm();
-
 		// открываем подключение к БД
 		db = new MyDB(this);
 		db.open();
+
+		int count_element_notif = db.getCountElementsSettings();
+		
+		String[] data_notif_fields = new String[count_element_notif];
+		for (int i = 0; i < count_element_notif; ++i) {
+			data_notif_fields[i] = "";
+		}
+
+		String[] data_notif = new String[] { "", "", "" };
+
+		LinkedList<String[]> list = new LinkedList<String[]>();
+
+		Log.d(LOG_TAG,
+				"count_element_notif = " + String.valueOf(count_element_notif));
+		
+		notification = Integer.valueOf(savedValues[2]);
+
+		Cursor cursor = db.getAllDataNotif();
+		for (int i = 0; i < count_element_notif; ++i) {
+
+			if (cursor != null) {
+				cursor.moveToNext();
+				data_notif_fields[i] = data_notif_fields[i]
+						+ cursor.getString(0);
+
+				Log.d(LOG_TAG, "data_notif = " + data_notif_fields[i]);
+			}
+
+			data_notif = db.getCurrentNotif(Long.valueOf(data_notif_fields[i]));
+			list.add(data_notif);
+			
+			
+//			Calendar c = Calendar.getInstance();
+//			Date dt = new Date();
+
+			Time dtNow = new Time();
+			dtNow.setToNow();
+			int hours = dtNow.hour;
+			int minutes = dtNow.minute;
+			
+//			String currentDateTimeString = DateFormat.getDateTimeInstance().format(new Date());
+			
+			Log.d(LOG_TAG, "time_h = " + hours);
+			Log.d(LOG_TAG, "time_m = " + minutes);
+
+			if ((notification == 0) && (Integer.valueOf(list.get(i)[1]) >= hours) && (Integer.valueOf(list.get(i)[2]) >= minutes))
+				setRepeatingAlarm(Integer.valueOf(data_notif_fields[i]),
+					list.get(i)[0], Integer.valueOf(list.get(i)[1]), Integer.valueOf(list.get(i)[2]), notification);
+			
+//			Log.d(LOG_TAG, "time_h = " + list.get(i)[1]);
+//			Log.d(LOG_TAG, "time_m = " + list.get(i)[2]);
+		}
 
 		// формируем столбцы сопоставления
 		String[] from = new String[] { MyDB.COLUMN_NAME };
@@ -159,7 +216,6 @@ public class MainActivity extends FragmentActivity implements
 				stateActivity = 1;
 				SavePreferences("state", String.valueOf(stateActivity));
 				startActivity(intent);
-
 			}
 		});
 	}
@@ -170,23 +226,29 @@ public class MainActivity extends FragmentActivity implements
 		return true;
 	}
 
-	public void setRepeatingAlarm() {
+	public void setRepeatingAlarm(int id, String message, int hour, int minute, int notif) {
 		cal_alarm = Calendar.getInstance();
 		cal_alarm.setTimeInMillis(System.currentTimeMillis());
-		cal_alarm.set(Calendar.HOUR_OF_DAY, 8);
-		cal_alarm.set(Calendar.MINUTE, 29);
+		cal_alarm.set(Calendar.HOUR_OF_DAY, hour);
+		cal_alarm.set(Calendar.MINUTE, minute);
+		
 		Intent intent = new Intent(this, Receiver.class);
-//		Bundle bundle = new Bundle();
-		intent.putExtra("message", "aaaa");
-//		bundle.putString("message", "aaaa");
-//		intent.putExtras(bundle);
-		// intent.putExtra("abc", Boolean.FALSE);
-		// PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0,
-		// intent, PendingIntent.FLAG_CANCEL_CURRENT);
-		PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0,
-				intent, 0);
-		am.setRepeating(AlarmManager.RTC_WAKEUP, cal_alarm.getTimeInMillis(),
+		intent.putExtra("message", message);
+		
+		PendingIntent pendingIntent = PendingIntent.getBroadcast(this, id,
+				intent, PendingIntent.FLAG_UPDATE_CURRENT);
+		am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(),
 				AlarmManager.INTERVAL_DAY, pendingIntent);
+		if (notif == 1) 
+			am.cancel(pendingIntent);
+	}
+	
+	public void setRepeatingAlarmCancel(int id, String message) {
+		Intent intent = new Intent(this, Receiver.class);
+		intent.putExtra("message", message);
+		PendingIntent pendingIntent = PendingIntent.getBroadcast(this, id,
+				intent, PendingIntent.FLAG_UPDATE_CURRENT);
+		am.cancel(pendingIntent);
 	}
 
 	private void SavePreferences(String key, String value) {

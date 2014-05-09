@@ -75,6 +75,8 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 	TextView tv;
 
 	String rotation;
+	
+	int number_of_elements;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -95,7 +97,7 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 				R.anim.rotate);
 		btnAddStat.startAnimation(animRotateIn_icon);
 
-		int number_of_elements = db.getCountElementsStat();
+		number_of_elements = db.getCountElementsStat();
 
 		if ((getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
 				&& (Integer.valueOf(rotation) == 0)
@@ -108,6 +110,7 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		btnProfile.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				SavePreferences("state", "0");
 				finish();
 			}
 		});
@@ -174,6 +177,14 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 			break;
 		}
 	}
+	
+	private void SavePreferences(String key, String value) {
+		SharedPreferences sharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(getApplicationContext());
+		SharedPreferences.Editor editor = sharedPreferences.edit();
+		editor.putString(key, value);
+		editor.commit();
+	}
 
 	private String[] LoadPreferences() {
 		SharedPreferences sharedPreferences = PreferenceManager
@@ -206,7 +217,7 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 			@Override
 			public void run() {
 				// Select the last row so it will scroll into view...
-				listStat.setSelection(scAdapter.getCount() - 1);
+				listStat.setSelection(number_of_elements);
 			}
 		});
 	}

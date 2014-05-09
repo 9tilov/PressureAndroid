@@ -27,6 +27,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TimePicker;
@@ -65,10 +66,14 @@ public class Settings extends FragmentActivity implements
 	int rotation = 0;
 	int notification = 1;
 	int stateActivity;
+	
+	ListView listNotif;
 
 	Button btnAddNotif;
 
 	String[] savedValues = new String[3];
+	
+	int count_element_notif;
 
 	static class time {
 		public static int hour = 0;
@@ -94,7 +99,7 @@ public class Settings extends FragmentActivity implements
 
 		editNotif = (EditText) findViewById(R.id.editNotif);
 
-		final ListView listNotif = (ListView) findViewById(R.id.listNotif);
+		listNotif = (ListView) findViewById(R.id.listNotif);
 
 		cal_alarm = Calendar.getInstance();
 
@@ -114,16 +119,18 @@ public class Settings extends FragmentActivity implements
 
 		if (notification == 0) {
 			checkBoxNotif.setChecked(true);
-			timePicker.setVisibility(View.VISIBLE);
-			btnAddNotif.setVisibility(View.VISIBLE);
-			editNotif.setVisibility(View.VISIBLE);
-
+			
+			timePicker.setEnabled(true);
+			btnAddNotif.setEnabled(true);
+			editNotif.setEnabled(true);
+			listNotif.setEnabled(true);
 		} else {
 			checkBoxNotif.setChecked(false);
-			timePicker.setVisibility(View.INVISIBLE);
-			btnAddNotif.setVisibility(View.INVISIBLE);
-			editNotif.setVisibility(View.INVISIBLE);
-			listNotif.setVisibility(View.INVISIBLE);
+			
+			timePicker.setEnabled(false);
+			btnAddNotif.setEnabled(false);
+			editNotif.setEnabled(false);
+			listNotif.setEnabled(false);
 		}
 
 		checkBoxNotif
@@ -133,15 +140,15 @@ public class Settings extends FragmentActivity implements
 					public void onCheckedChanged(CompoundButton checkView,
 							boolean isChecked) {
 						if (checkView.isChecked()) {
-							timePicker.setVisibility(View.VISIBLE);
-							btnAddNotif.setVisibility(View.VISIBLE);
-							editNotif.setVisibility(View.VISIBLE);
-							listNotif.setVisibility(View.VISIBLE);
+							timePicker.setEnabled(true);
+							btnAddNotif.setEnabled(true);
+							editNotif.setEnabled(true);
+							listNotif.setEnabled(true);
 						} else {
-							timePicker.setVisibility(View.INVISIBLE);
-							btnAddNotif.setVisibility(View.INVISIBLE);
-							editNotif.setVisibility(View.INVISIBLE);
-							listNotif.setVisibility(View.INVISIBLE);
+							timePicker.setEnabled(false);
+							btnAddNotif.setEnabled(false);
+							editNotif.setEnabled(false);
+							listNotif.setEnabled(false);
 						}
 					}
 				});
@@ -161,6 +168,8 @@ public class Settings extends FragmentActivity implements
 		getSupportLoaderManager().initLoader(0, null, this);
 
 		listNotif.setAdapter(scAdapter);
+		
+		count_element_notif = db.getCountElementsSettings();
 
 		Button btnSaveSettings = (Button) findViewById(R.id.btnSaveSettings);
 
@@ -173,6 +182,8 @@ public class Settings extends FragmentActivity implements
 						String.valueOf(time.hour), String.valueOf(time.minute));
 				editNotif.setText("");
 				getSupportLoaderManager().getLoader(0).forceLoad();
+				count_element_notif = db.getCountElementsSettings();
+				scrollMyListViewToBottom();
 			}
 		});
 
@@ -186,10 +197,22 @@ public class Settings extends FragmentActivity implements
 				SavePreferences("notification", String.valueOf(notification));
 				stateActivity = 0;
 				SavePreferences("state", String.valueOf(stateActivity));
-				startActivityForResult(intent, 1);
+				startActivity(intent);
 			}
 		});
-
+		scrollMyListViewToBottom();
+	}
+	
+	private void scrollMyListViewToBottom() {
+		listNotif.post(new Runnable() {
+			@Override
+			public void run() {
+				Log.d(LOG_TAG, "count_element_notif = " + count_element_notif);
+				listNotif.setAdapter(scAdapter);
+				// Select the last row so it will scroll into view...
+				listNotif.setSelection(count_element_notif);
+			}
+		});
 	}
 
 	private void SavePreferences(String key, String value) {
@@ -261,6 +284,7 @@ public class Settings extends FragmentActivity implements
 						String.valueOf(timeEditPicker.getCurrentMinute()),
 						String.valueOf(idCurrentNotif));
 				getSupportLoaderManager().getLoader(0).forceLoad();
+				scrollMyListViewToBottom();
 				break;
 			// нейтральная кнопка
 			case Dialog.BUTTON_NEUTRAL:
@@ -277,11 +301,13 @@ public class Settings extends FragmentActivity implements
 			db.delRecNotif(acmi.id);
 			// получаем новый курсор с данными
 			getSupportLoaderManager().getLoader(0).forceLoad();
+			scrollMyListViewToBottom();
 			return true;
 		} else if (item.getItemId() == CM_EDIT_NOTIF) {
 			idCurrentNotif = (int) acmi.id;
 			currentNotif = db.getCurrentNotif(acmi.id);
 			showDialog(DIALOG_EDIT);
+			scrollMyListViewToBottom();
 			return true;
 		}
 		return super.onContextItemSelected(item);
@@ -295,7 +321,6 @@ public class Settings extends FragmentActivity implements
 	}
 
 	protected void onDestroy() {
-		db.close();
 		super.onDestroy();
 	}
 

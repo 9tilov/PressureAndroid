@@ -100,6 +100,29 @@ public class MyDB {
 	public Cursor getAllDataNotif() {
 		return mDB.query(DB_TABLE_NOTIF, null, null, null, null, null, null);
 	}
+	
+	public LinkedList<String[]> getAllNotifValues(String id) {
+		Cursor cursor = mDB.query(DB_TABLE_NOTIF, null, null,
+				null, null, null, null);
+		String[] data_notif_fields = new String[] { "", "", "", "" };
+
+		String[] data_notif = new String[] { "", "", "" };
+
+		LinkedList<String[]> list = new LinkedList<String[]>();
+
+		cursor = getAllDataNotif();
+		for (int i = 0; i < getCountElementsSettings(); ++i) {
+			if (cursor != null) {
+				cursor.moveToNext();
+				data_notif_fields[i] = data_notif_fields[i]
+						+ cursor.getString(0);
+			}
+
+			data_notif = getCurrentNotif(Long.valueOf(data_notif_fields[i]));
+			list.add(data_notif);
+		}
+		return list;
+	}
 
 	public String[] getCurrentName(long id) {
 		Cursor cursor = mDB.query(DB_TABLE, null, COLUMN_ID + "='" + id + "'",
@@ -113,9 +136,18 @@ public class MyDB {
 		}
 		return profile;
 	}
+	
+	
 
 	public int getCountElementsStat() {
 		String sql = "SELECT COUNT(*) FROM " + DB_TABLE_STAT;
+		SQLiteStatement statement = mDB.compileStatement(sql);
+		int count = (int) statement.simpleQueryForLong();
+		return count;
+	}
+	
+	public int getCountElementsSettings() {
+		String sql = "SELECT COUNT(*) FROM " + DB_TABLE_NOTIF;
 		SQLiteStatement statement = mDB.compileStatement(sql);
 		int count = (int) statement.simpleQueryForLong();
 		return count;
@@ -183,7 +215,6 @@ public class MyDB {
 				notif[i] = notif[i] + cursor.getString(i + 1);
 			}
 		}
-		// Log.d(LOG_TAG, "name = " + name);
 		return notif;
 	}
 
