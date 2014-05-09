@@ -174,12 +174,12 @@ public class MainActivity extends FragmentActivity implements
 		cal_alarm = Calendar.getInstance();
 		cal_alarm.setTimeInMillis(System.currentTimeMillis());
 		cal_alarm.set(Calendar.HOUR_OF_DAY, 8);
-		cal_alarm.set(Calendar.MINUTE, 13);
+		cal_alarm.set(Calendar.MINUTE, 29);
 		Intent intent = new Intent(this, Receiver.class);
-		Bundle bundle = new Bundle();
-		
-		bundle.putString("message", "aaaa");
-		intent.putExtras(bundle);
+//		Bundle bundle = new Bundle();
+		intent.putExtra("message", "aaaa");
+//		bundle.putString("message", "aaaa");
+//		intent.putExtras(bundle);
 		// intent.putExtra("abc", Boolean.FALSE);
 		// PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0,
 		// intent, PendingIntent.FLAG_CANCEL_CURRENT);

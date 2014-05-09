@@ -31,7 +31,7 @@ public class Receiver extends BroadcastReceiver {
 		db = new MyDB(context);
 		db.open();
 		Bundle bundle = intent.getExtras();
-		String m_message = bundle.getString("message", "dff");
+		String m_message = bundle.getString("message");
 		
 		NotificationManager nm = (NotificationManager) context
 				.getSystemService(Context.NOTIFICATION_SERVICE);
