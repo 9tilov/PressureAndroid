@@ -47,6 +47,8 @@ public class MainActivity extends FragmentActivity implements
 	MyDB db;
 	SimpleCursorAdapter scAdapter;
 
+	Receiver receiver;
+
 	final String SAVED_TEXT = "saved_text";
 	final String SAVED_NAME = "saved_name";
 	final String CHECKED_GRAPH = "isCheckedGraph";
@@ -104,6 +106,9 @@ public class MainActivity extends FragmentActivity implements
 			Intent intent = new Intent(MainActivity.this, MyStatistic.class);
 			startActivity(intent);
 		}
+
+		// receiver = new Receiver("111");
+
 		setRepeatingAlarm();
 
 		// открываем подключение к БД
@@ -168,11 +173,18 @@ public class MainActivity extends FragmentActivity implements
 	public void setRepeatingAlarm() {
 		cal_alarm = Calendar.getInstance();
 		cal_alarm.setTimeInMillis(System.currentTimeMillis());
-		cal_alarm.set(Calendar.HOUR_OF_DAY, time.hour);
-		cal_alarm.set(Calendar.MINUTE, time.minute);
+		cal_alarm.set(Calendar.HOUR_OF_DAY, 8);
+		cal_alarm.set(Calendar.MINUTE, 13);
 		Intent intent = new Intent(this, Receiver.class);
+		Bundle bundle = new Bundle();
+		
+		bundle.putString("message", "aaaa");
+		intent.putExtras(bundle);
+		// intent.putExtra("abc", Boolean.FALSE);
+		// PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0,
+		// intent, PendingIntent.FLAG_CANCEL_CURRENT);
 		PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0,
-				intent, PendingIntent.FLAG_CANCEL_CURRENT);
+				intent, 0);
 		am.setRepeating(AlarmManager.RTC_WAKEUP, cal_alarm.getTimeInMillis(),
 				AlarmManager.INTERVAL_DAY, pendingIntent);
 	}
