@@ -7,6 +7,7 @@
     <string name="add_record">Add record</string>
     <string name="delete_record">Delete record</string>
     <string name="delete_notif">Delete notification</string>
+    <string name="delete_notif_all">Delete all</string>
     <string name="delete_all_records">Delete all records</string>
     <string name="edit_record">Edit profile</string>
     <string name="edit_notif">Edit notification</string>

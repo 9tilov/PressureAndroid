@@ -320,6 +320,10 @@ public class MyDB {
 	public void delRecNotif(long id) {
 		mDB.delete(DB_TABLE_NOTIF, COLUMN_ID + " = " + id, null);
 	}
+	
+	public void delRecAllNotif() {
+		mDB.delete(DB_TABLE_NOTIF, null, null);
+	}
 
 	// редактировать запись в DB_TABLE
 	public void editRec(String name, String e_mail, String id) {

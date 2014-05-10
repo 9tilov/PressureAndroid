@@ -49,7 +49,8 @@ public class Settings extends FragmentActivity implements
 	final String CHECKED_GRAPH = "isCheckedGraph";
 	final String CHECKED_NOTIF = "isCheckedNotif";
 
-	private static final int CM_EDIT_NOTIF = 0, CM_DELETE_NOTIF = 1;
+	private static final int CM_EDIT_NOTIF = 0, CM_DELETE_NOTIF = 1,
+			CM_DELETE_ALL = 2;
 	final int DIALOG_EDIT = 1;
 
 	final String LOG_TAG = "Pressure";
@@ -254,6 +255,7 @@ public class Settings extends FragmentActivity implements
 		super.onCreateContextMenu(menu, v, menuInfo);
 		menu.add(0, CM_EDIT_NOTIF, 0, R.string.edit_notif);
 		menu.add(0, CM_DELETE_NOTIF, 0, R.string.delete_notif);
+		menu.add(0, CM_DELETE_ALL, 0, R.string.delete_notif_all);
 	}
 
 	protected void onPrepareDialog(int id, Dialog dialog) {
@@ -296,12 +298,25 @@ public class Settings extends FragmentActivity implements
 			switch (which) {
 			// положительная кнопка
 			case Dialog.BUTTON_POSITIVE:
-				db.editNotif(String.valueOf(editCurrentNotif.getText()),
-						String.valueOf(timeEditPicker.getCurrentHour()),
-						String.valueOf(timeEditPicker.getCurrentMinute()),
-						String.valueOf(idCurrentNotif));
-				getSupportLoaderManager().getLoader(0).forceLoad();
-				scrollMyListViewToBottom();
+				String hour;
+				String minute;
+				if (timeEditPicker.getCurrentHour() < 10)
+					hour = "0"
+							+ String.valueOf(timeEditPicker.getCurrentHour());
+				else
+					hour = String.valueOf(timeEditPicker.getCurrentHour());
+				if (timeEditPicker.getCurrentMinute() < 10)
+					minute = "0"
+							+ String.valueOf(timeEditPicker.getCurrentMinute());
+				else
+					minute = String.valueOf(timeEditPicker.getCurrentMinute());
+
+				if (0 != editCurrentNotif.getText().toString().length()) {
+					db.editNotif(String.valueOf(editCurrentNotif.getText()),
+							hour, minute, String.valueOf(idCurrentNotif));
+					getSupportLoaderManager().getLoader(0).forceLoad();
+					scrollMyListViewToBottom();
+				}
 				break;
 			// нейтральная кнопка
 			case Dialog.BUTTON_NEUTRAL:
@@ -326,8 +341,38 @@ public class Settings extends FragmentActivity implements
 			showDialog(DIALOG_EDIT);
 			scrollMyListViewToBottom();
 			return true;
+		} else if (item.getItemId() == CM_DELETE_ALL) {
+			showChoice();
+			return true;
 		}
 		return super.onContextItemSelected(item);
+	}
+
+	public void showChoice() {
+		final Dialog dialog = new Dialog(Settings.this);
+		dialog.setContentView(R.layout.dialog_choice);
+		dialog.setTitle("Are you sure?");
+
+		Button btnYes = (Button) dialog.findViewById(R.id.btnYes);
+		Button btnNo = (Button) dialog.findViewById(R.id.btnNo);
+
+		btnYes.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				db.delRecAllNotif();
+				getSupportLoaderManager().getLoader(0).forceLoad();
+				deleteData();
+				dialog.dismiss();
+			}
+		});
+
+		btnNo.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				dialog.dismiss();
+			}
+		});
+		dialog.show();
 	}
 
 	public boolean checkCheckBox(View v) {
@@ -373,5 +418,9 @@ public class Settings extends FragmentActivity implements
 
 	void inCorrectData() {
 		Toast.makeText(this, R.string.correct_notif, Toast.LENGTH_SHORT).show();
+	}
+
+	void deleteData() {
+		Toast.makeText(this, R.string.deleted, Toast.LENGTH_SHORT).show();
 	}
 }
