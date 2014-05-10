@@ -68,8 +68,6 @@ public class MainActivity extends FragmentActivity implements
 
 	TimePicker timePicker;
 
-	Calendar cal_alarm;
-	AlarmManager am;
 	Button btnAddNotif;
 
 	long id_name;
@@ -88,8 +86,6 @@ public class MainActivity extends FragmentActivity implements
 
 	static boolean active = false;
 
-	
-
 	final String LOG_TAG = "Pressure";
 	final int DIALOG_EDIT = 1, DIALOG_ADD = 2, DIALOG_SETTINGS = 3;
 
@@ -97,31 +93,33 @@ public class MainActivity extends FragmentActivity implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
-		
 
-		am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+		// открываем подключение к БД
+		db = new MyDB(this);
+		db.open();
+
+		AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
 		startService(new Intent(this, Receiver.class));
 
 		savedValues = LoadPreferences();
 		rotation = Long.valueOf(savedValues[1]);
 		stateActivity = Integer.valueOf(savedValues[3]);
+		notification = Integer.valueOf(savedValues[2]);
 
 		if (stateActivity == 0) {
 			setContentView(R.layout.activity_main);
 		} else {
 			setContentView(R.layout.activity_main);
+
 			Intent intent = new Intent(MainActivity.this, MyStatistic.class);
 			startActivity(intent);
 		}
 
-		// открываем подключение к БД
-		db = new MyDB(this);
-		db.open();
+		// тут жесть
 
 		int count_element_notif = db.getCountElementsSettings();
-		
+
 		String[] data_notif_fields = new String[count_element_notif];
 		for (int i = 0; i < count_element_notif; ++i) {
 			data_notif_fields[i] = "";
@@ -131,11 +129,6 @@ public class MainActivity extends FragmentActivity implements
 
 		LinkedList<String[]> list = new LinkedList<String[]>();
 
-		Log.d(LOG_TAG,
-				"count_element_notif = " + String.valueOf(count_element_notif));
-		
-		notification = Integer.valueOf(savedValues[2]);
-
 		Cursor cursor = db.getAllDataNotif();
 		for (int i = 0; i < count_element_notif; ++i) {
 
@@ -143,34 +136,18 @@ public class MainActivity extends FragmentActivity implements
 				cursor.moveToNext();
 				data_notif_fields[i] = data_notif_fields[i]
 						+ cursor.getString(0);
-
-				Log.d(LOG_TAG, "data_notif = " + data_notif_fields[i]);
 			}
 
 			data_notif = db.getCurrentNotif(Long.valueOf(data_notif_fields[i]));
 			list.add(data_notif);
-			
-			
-//			Calendar c = Calendar.getInstance();
-//			Date dt = new Date();
 
-			Time dtNow = new Time();
-			dtNow.setToNow();
-			int hours = dtNow.hour;
-			int minutes = dtNow.minute;
-			
-//			String currentDateTimeString = DateFormat.getDateTimeInstance().format(new Date());
-			
-			Log.d(LOG_TAG, "time_h = " + hours);
-			Log.d(LOG_TAG, "time_m = " + minutes);
-
-			if ((notification == 0) && (Integer.valueOf(list.get(i)[1]) >= hours) && (Integer.valueOf(list.get(i)[2]) >= minutes))
-				setRepeatingAlarm(Integer.valueOf(data_notif_fields[i]),
-					list.get(i)[0], Integer.valueOf(list.get(i)[1]), Integer.valueOf(list.get(i)[2]), notification);
-			
-//			Log.d(LOG_TAG, "time_h = " + list.get(i)[1]);
-//			Log.d(LOG_TAG, "time_m = " + list.get(i)[2]);
+			if ((notification == 0))
+				setRepeatingAlarm(am, Integer.valueOf(data_notif_fields[i]),
+						list.get(i)[0], Integer.valueOf(list.get(i)[1]),
+						Integer.valueOf(list.get(i)[2]), notification);
 		}
+
+		// жесть кончилась
 
 		// формируем столбцы сопоставления
 		String[] from = new String[] { MyDB.COLUMN_NAME };
@@ -181,6 +158,7 @@ public class MainActivity extends FragmentActivity implements
 		addProfile.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+
 				idCurrentName = 0;
 				currentProfile[0] = "";
 				currentProfile[1] = "";
@@ -192,7 +170,6 @@ public class MainActivity extends FragmentActivity implements
 		scAdapter = new SimpleCursorAdapter(this, R.layout.item, null, from,
 				to, 0);
 		final ListView lvData = (ListView) findViewById(R.id.lvData);
-
 		// добавляем контекстное меню к списку
 		registerForContextMenu(lvData);
 
@@ -203,8 +180,9 @@ public class MainActivity extends FragmentActivity implements
 			db.addRec("Guest");
 			lvData.setAdapter(scAdapter);
 			getSupportLoaderManager().getLoader(0).forceLoad();
-		} else
+		} else {
 			lvData.setAdapter(scAdapter);
+		}
 
 		lvData.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,
@@ -226,29 +204,32 @@ public class MainActivity extends FragmentActivity implements
 		return true;
 	}
 
-	public void setRepeatingAlarm(int id, String message, int hour, int minute, int notif) {
+	public void setRepeatingAlarm(AlarmManager am, int id, String message,
+			int hour, int minute, int notif) {
+		Calendar cal_alarm;
+		Calendar now = Calendar.getInstance();
 		cal_alarm = Calendar.getInstance();
 		cal_alarm.setTimeInMillis(System.currentTimeMillis());
 		cal_alarm.set(Calendar.HOUR_OF_DAY, hour);
 		cal_alarm.set(Calendar.MINUTE, minute);
-		
+
+		long alarm = 0;
+
+		if (cal_alarm.getTimeInMillis() <= now.getTimeInMillis())
+			alarm = cal_alarm.getTimeInMillis()
+					+ (AlarmManager.INTERVAL_DAY + 1);
+		else
+			alarm = cal_alarm.getTimeInMillis();
+
 		Intent intent = new Intent(this, Receiver.class);
 		intent.putExtra("message", message);
-		
+
 		PendingIntent pendingIntent = PendingIntent.getBroadcast(this, id,
 				intent, PendingIntent.FLAG_UPDATE_CURRENT);
-		am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(),
+		am.setRepeating(AlarmManager.RTC_WAKEUP, alarm,
 				AlarmManager.INTERVAL_DAY, pendingIntent);
-		if (notif == 1) 
+		if (notif == 1)
 			am.cancel(pendingIntent);
-	}
-	
-	public void setRepeatingAlarmCancel(int id, String message) {
-		Intent intent = new Intent(this, Receiver.class);
-		intent.putExtra("message", message);
-		PendingIntent pendingIntent = PendingIntent.getBroadcast(this, id,
-				intent, PendingIntent.FLAG_UPDATE_CURRENT);
-		am.cancel(pendingIntent);
 	}
 
 	private void SavePreferences(String key, String value) {
@@ -412,11 +393,11 @@ public class MainActivity extends FragmentActivity implements
 	}
 
 	void inCorrectData() {
-		Toast.makeText(this, R.string.correct, Toast.LENGTH_SHORT).show();
+		Toast.makeText(this, R.string.correct_name, Toast.LENGTH_SHORT).show();
 	}
 
 	protected void onDestroy() {
-		db.close();
+		// db.close();
 		super.onDestroy();
 	}
 
@@ -449,5 +430,4 @@ public class MainActivity extends FragmentActivity implements
 			return cursor;
 		}
 	}
-
 }

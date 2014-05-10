@@ -8,39 +8,51 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.util.Log;
 
 public class Receiver extends BroadcastReceiver {
-
-//	private static String m_message = "asas";
-
-//	public Receiver() {
-//
-//	}
-//
-//	public Receiver(String m) {
-//		super();
-//		m_message = m;
-//	}
 	
+	final String LOG_TAG = "Pressure";
+	
+//	@Override
+//	public void onReceive(Context context, Intent intent) {
+//		Bundle bundle = intent.getExtras();
+//		String m_message = bundle.getString("message");
+//		
+//		NotificationManager nm = (NotificationManager) context
+//				.getSystemService(Context.NOTIFICATION_SERVICE);
+//		Notification notif = new Notification(R.drawable.ic_pressure,
+//				m_message, System.currentTimeMillis());
+//
+//		intent = new Intent(context, MainActivity.class);
+//		
+//		notif.setLatestEventInfo(context, "Pressure", m_message, PendingIntent
+//				.getActivity(context, 0, intent,
+//						PendingIntent.FLAG_UPDATE_CURRENT));
+//		notif.flags = Notification.DEFAULT_LIGHTS
+//				| Notification.FLAG_AUTO_CANCEL;
+//		notif.defaults = Notification.DEFAULT_ALL;
+//		nm.notify(1, notif);
+//	}
 	
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		Bundle bundle = intent.getExtras();
 		String m_message = bundle.getString("message");
-		
+
 		NotificationManager nm = (NotificationManager) context
 				.getSystemService(Context.NOTIFICATION_SERVICE);
 		Notification notif = new Notification(R.drawable.ic_pressure,
 				m_message, System.currentTimeMillis());
 
 		intent = new Intent(context, MainActivity.class);
-		
+
 		notif.setLatestEventInfo(context, "Pressure", m_message, PendingIntent
 				.getActivity(context, 0, intent,
-						PendingIntent.FLAG_UPDATE_CURRENT));
-		notif.flags = Notification.DEFAULT_LIGHTS
-				| Notification.FLAG_AUTO_CANCEL;
-		notif.defaults = Notification.DEFAULT_ALL;
+						PendingIntent.FLAG_CANCEL_CURRENT));
+//		notif.flags = Notification.DEFAULT_LIGHTS
+//				| Notification.FLAG_AUTO_CANCEL;
+//		notif.defaults = Notification.DEFAULT_ALL;
 		nm.notify(1, notif);
 	}
 

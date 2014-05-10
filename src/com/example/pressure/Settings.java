@@ -2,14 +2,12 @@ package com.example.pressure;
 
 import java.util.Calendar;
 
-import android.R.integer;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -22,19 +20,18 @@ import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 import android.widget.AdapterView.AdapterContextMenuInfo;
-import android.widget.AdapterView.OnItemClickListener;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
 
 public class Settings extends FragmentActivity implements
 		LoaderCallbacks<Cursor> {
@@ -66,13 +63,13 @@ public class Settings extends FragmentActivity implements
 	int rotation = 0;
 	int notification = 1;
 	int stateActivity;
-	
+
 	ListView listNotif;
 
 	Button btnAddNotif;
 
 	String[] savedValues = new String[3];
-	
+
 	int count_element_notif;
 
 	static class time {
@@ -98,7 +95,7 @@ public class Settings extends FragmentActivity implements
 		btnAddNotif = (Button) findViewById(R.id.btnAddNotif);
 
 		editNotif = (EditText) findViewById(R.id.editNotif);
-
+		
 		listNotif = (ListView) findViewById(R.id.listNotif);
 
 		cal_alarm = Calendar.getInstance();
@@ -119,14 +116,14 @@ public class Settings extends FragmentActivity implements
 
 		if (notification == 0) {
 			checkBoxNotif.setChecked(true);
-			
+
 			timePicker.setEnabled(true);
 			btnAddNotif.setEnabled(true);
 			editNotif.setEnabled(true);
 			listNotif.setEnabled(true);
 		} else {
 			checkBoxNotif.setChecked(false);
-			
+
 			timePicker.setEnabled(false);
 			btnAddNotif.setEnabled(false);
 			editNotif.setEnabled(false);
@@ -139,12 +136,15 @@ public class Settings extends FragmentActivity implements
 					@Override
 					public void onCheckedChanged(CompoundButton checkView,
 							boolean isChecked) {
+						InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 						if (checkView.isChecked()) {
+							imm.showSoftInput(editNotif, InputMethodManager.SHOW_IMPLICIT);
 							timePicker.setEnabled(true);
 							btnAddNotif.setEnabled(true);
 							editNotif.setEnabled(true);
 							listNotif.setEnabled(true);
 						} else {
+							imm.hideSoftInputFromWindow(editNotif.getWindowToken(), 0);
 							timePicker.setEnabled(false);
 							btnAddNotif.setEnabled(false);
 							editNotif.setEnabled(false);
@@ -168,7 +168,7 @@ public class Settings extends FragmentActivity implements
 		getSupportLoaderManager().initLoader(0, null, this);
 
 		listNotif.setAdapter(scAdapter);
-		
+
 		count_element_notif = db.getCountElementsSettings();
 
 		Button btnSaveSettings = (Button) findViewById(R.id.btnSaveSettings);
@@ -176,14 +176,30 @@ public class Settings extends FragmentActivity implements
 		btnAddNotif.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				timePicker.clearFocus();
 				time.hour = timePicker.getCurrentHour();
 				time.minute = timePicker.getCurrentMinute();
-				db.addNotif(String.valueOf(editNotif.getText()),
-						String.valueOf(time.hour), String.valueOf(time.minute));
-				editNotif.setText("");
-				getSupportLoaderManager().getLoader(0).forceLoad();
-				count_element_notif = db.getCountElementsSettings();
-				scrollMyListViewToBottom();
+				String hour;
+				String minute;
+				if (time.hour < 10) 
+					hour = "0" + String.valueOf(time.hour);
+				else 
+					hour = String.valueOf(time.hour);
+				if (time.minute < 10) 
+					minute = "0" + String.valueOf(time.minute);
+				else 
+					minute = String.valueOf(time.minute);
+				
+				if (0 != editNotif.getText().toString().length()) {
+					db.addNotif(String.valueOf(editNotif.getText()),
+							hour, minute);
+					editNotif.setText("");
+					getSupportLoaderManager().getLoader(0).forceLoad();
+					count_element_notif = db.getCountElementsSettings();
+					scrollMyListViewToBottom();
+				} else {
+					inCorrectData();
+				}
 			}
 		});
 
@@ -202,12 +218,12 @@ public class Settings extends FragmentActivity implements
 		});
 		scrollMyListViewToBottom();
 	}
-	
+
 	private void scrollMyListViewToBottom() {
 		listNotif.post(new Runnable() {
 			@Override
 			public void run() {
-				Log.d(LOG_TAG, "count_element_notif = " + count_element_notif);
+//				Log.d(LOG_TAG, "count_element_notif = " + count_element_notif);
 				listNotif.setAdapter(scAdapter);
 				// Select the last row so it will scroll into view...
 				listNotif.setSelection(count_element_notif);
@@ -352,5 +368,9 @@ public class Settings extends FragmentActivity implements
 			Cursor cursor = db.getAllDataNotif();
 			return cursor;
 		}
+	}
+	
+	void inCorrectData() {
+		Toast.makeText(this, R.string.correct_notif, Toast.LENGTH_SHORT).show();
 	}
 }

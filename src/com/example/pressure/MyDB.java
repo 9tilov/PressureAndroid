@@ -3,6 +3,7 @@ package com.example.pressure;
 import java.util.LinkedList;
 
 import android.R.string;
+import android.app.AlarmManager;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -57,6 +58,8 @@ public class MyDB {
 	private DBHelper mDBHelper;
 	private SQLiteDatabase mDB;
 	final String LOG_TAG = "myLogs";
+	
+	MainActivity mainActivity;
 
 	public MyDB(Context ctx) {
 		mCtx = ctx;
@@ -100,29 +103,37 @@ public class MyDB {
 	public Cursor getAllDataNotif() {
 		return mDB.query(DB_TABLE_NOTIF, null, null, null, null, null, null);
 	}
-	
-	public LinkedList<String[]> getAllNotifValues(String id) {
-		Cursor cursor = mDB.query(DB_TABLE_NOTIF, null, null,
-				null, null, null, null);
-		String[] data_notif_fields = new String[] { "", "", "", "" };
 
-		String[] data_notif = new String[] { "", "", "" };
-
-		LinkedList<String[]> list = new LinkedList<String[]>();
-
-		cursor = getAllDataNotif();
-		for (int i = 0; i < getCountElementsSettings(); ++i) {
-			if (cursor != null) {
-				cursor.moveToNext();
-				data_notif_fields[i] = data_notif_fields[i]
-						+ cursor.getString(0);
-			}
-
-			data_notif = getCurrentNotif(Long.valueOf(data_notif_fields[i]));
-			list.add(data_notif);
-		}
-		return list;
-	}
+//	public void getAllNotifValues(int notification, AlarmManager am) {
+//		mainActivity = new MainActivity();
+//		Cursor cursor = mDB.query(DB_TABLE_NOTIF, null, null, null, null, null,
+//				null);
+//		String[] data_notif_fields = new String[] { "", "", "", "" };
+//		for (int i = 0; i < getCountElementsSettings(); ++i) {
+//			data_notif_fields[i] = "";
+//		}
+//
+//		String[] data_notif = new String[] { "", "", "" };
+//
+//		LinkedList<String[]> list = new LinkedList<String[]>();
+//
+//		cursor = getAllDataNotif();
+//		for (int i = 0; i < getCountElementsSettings(); ++i) {
+//			if (cursor != null) {
+//				cursor.moveToNext();
+//				data_notif_fields[i] = data_notif_fields[i]
+//						+ cursor.getString(0);
+//			}
+//
+//			data_notif = getCurrentNotif(Long.valueOf(data_notif_fields[i]));
+//			list.add(data_notif);
+//			
+//			if ((notification == 0))
+//				mainActivity.setRepeatingAlarm(am, Integer.valueOf(data_notif_fields[i]),
+//						list.get(i)[0], Integer.valueOf(list.get(i)[1]),
+//						Integer.valueOf(list.get(i)[2]), notification);
+//		}
+//	}
 
 	public String[] getCurrentName(long id) {
 		Cursor cursor = mDB.query(DB_TABLE, null, COLUMN_ID + "='" + id + "'",
@@ -136,8 +147,6 @@ public class MyDB {
 		}
 		return profile;
 	}
-	
-	
 
 	public int getCountElementsStat() {
 		String sql = "SELECT COUNT(*) FROM " + DB_TABLE_STAT;
@@ -145,7 +154,7 @@ public class MyDB {
 		int count = (int) statement.simpleQueryForLong();
 		return count;
 	}
-	
+
 	public int getCountElementsSettings() {
 		String sql = "SELECT COUNT(*) FROM " + DB_TABLE_NOTIF;
 		SQLiteStatement statement = mDB.compileStatement(sql);
@@ -246,7 +255,6 @@ public class MyDB {
 		cv.put(COLUMN_NOTIF_HOUR, hour);
 		cv.put(COLUMN_NOTIF_MINUTE, minute);
 		long rowID = mDB.insert(DB_TABLE_NOTIF, null, cv);
-		Log.d(LOG_TAG, "notif = " + rowID);
 	}
 
 	// удалить запись из DB_TABLE
