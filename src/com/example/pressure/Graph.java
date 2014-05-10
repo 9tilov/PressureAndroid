@@ -10,11 +10,9 @@ import com.jjoe64.graphview.GraphView.LegendAlign;
 import com.jjoe64.graphview.GraphViewSeries.GraphViewSeriesStyle;
 
 import android.app.Activity;
-import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.widget.LinearLayout;
 import android.widget.TabHost;
 
@@ -24,7 +22,8 @@ import android.widget.Button;
 
 public class Graph extends Activity {
 
-	String stat_id, rotation;
+	int stat_id;
+	boolean rotation;
 	String count_data_string;
 
 	MyDB db;
@@ -32,8 +31,6 @@ public class Graph extends Activity {
 	int period = 0;
 
 	Button btnWeek, btnMonth, btn3Month, btnAll;
-
-	String[] savedValues = new String[2];
 
 	final String LOG_TAG = "myLogs";
 
@@ -47,17 +44,17 @@ public class Graph extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.graph);
 
-		savedValues = LoadPreferences();
+		db = new MyDB(this);
 
-		stat_id = savedValues[0];
-		rotation = savedValues[1];
+		stat_id = db.LoadID();
+		rotation = db.LoadRotation();
 
-		if (Integer.valueOf(rotation) == 1) {
+		if (!rotation) {
 			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 		}
 
 		if ((getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
-				&& (Integer.valueOf(rotation) == 0)) {
+				&& (rotation)) {
 			finish();
 		}
 
@@ -92,15 +89,6 @@ public class Graph extends Activity {
 		createGraph(30, layoutMonth, graphViewMonth);
 		createGraph(90, layout3Month, graphView3Month);
 		createGraph(number_of_elements, layoutAllPeriod, graphViewAllPeriod);
-	}
-
-	private String[] LoadPreferences() {
-		SharedPreferences sharedPreferences = PreferenceManager
-				.getDefaultSharedPreferences(getApplicationContext());
-		String[] data = new String[2];
-		data[0] = sharedPreferences.getString("idName", "");
-		data[1] = sharedPreferences.getString("rotation", "0");
-		return data;
 	}
 
 	protected void onDestroy() {

@@ -10,15 +10,12 @@ import java.util.Calendar;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.KeyEvent;
@@ -53,7 +50,7 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 	String formattedDate, formattedTime;
 
 	MyDB db;
-	static String profile_id;
+	static int profile_id;
 	SimpleCursorAdapter scAdapter;
 
 	String[] profile_name;
@@ -74,22 +71,19 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 
 	TextView tv;
 
-	String rotation;
-	
+	boolean rotation;
+
 	int number_of_elements;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.statistic);
-		
 		db = new MyDB(this);
 		db.open();
 
-		savedValues = LoadPreferences();
-
-		profile_id = savedValues[0];
-		rotation = savedValues[1];
+		profile_id = db.LoadID();
+		rotation = db.LoadRotation();
 
 		btnAddStat = (ImageView) findViewById(R.id.btnAddStat);
 		btnAddStat.setOnClickListener(this);
@@ -100,8 +94,7 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		number_of_elements = db.getCountElementsStat();
 
 		if ((getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
-				&& (Integer.valueOf(rotation) == 0)
-				&& (number_of_elements >= 7)) {
+				&& (rotation) && (number_of_elements >= 7)) {
 			Intent intent = new Intent(MyStatistic.this, Graph.class);
 			startActivity(intent);
 		}
@@ -110,7 +103,7 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		btnProfile.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				SavePreferences("state", "0");
+				db.SavePreferences("state", true);
 				finish();
 			}
 		});
@@ -121,7 +114,7 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		int[] to = new int[] { R.id.tvTextPulse, R.id.tvTextSys,
 				R.id.tvTextDias, R.id.tvTextDate, R.id.tvTextTime };
 
-		profile_name = db.getCurrentName(Long.parseLong(profile_id));
+		profile_name = db.getCurrentName(profile_id);
 
 		btnProfile.setText(profile_name[0]);
 
@@ -169,30 +162,12 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 
 	@Override
 	public void onClick(View v) {
-		Log.d(LOG_TAG, "row inserted, id= " + idCurrentName);
 		switch (v.getId()) {
 		case R.id.btnAddStat:
 			flag = SAVE_DATA_FLAG;
 			show();
 			break;
 		}
-	}
-	
-	private void SavePreferences(String key, String value) {
-		SharedPreferences sharedPreferences = PreferenceManager
-				.getDefaultSharedPreferences(getApplicationContext());
-		SharedPreferences.Editor editor = sharedPreferences.edit();
-		editor.putString(key, value);
-		editor.commit();
-	}
-
-	private String[] LoadPreferences() {
-		SharedPreferences sharedPreferences = PreferenceManager
-				.getDefaultSharedPreferences(getApplicationContext());
-		String[] data = new String[2];
-		data[0] = sharedPreferences.getString("idName", "1");
-		data[1] = sharedPreferences.getString("rotation", "0");
-		return data;
 	}
 
 	public void setColor(int redLower, int fromYellowLower, int toYellowLower,
@@ -326,7 +301,7 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 
 		Button btnGraph = (Button) dialog.findViewById(R.id.btnGraph);
 
-		if (Integer.valueOf(rotation) == 1)
+		if (!rotation)
 			btnGraph.setEnabled(true);
 		else
 			btnGraph.setEnabled(false);
@@ -339,8 +314,6 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 					dialog.dismiss();
 				} else {
 					Intent intent = new Intent(MyStatistic.this, Graph.class);
-					intent.putExtra("id_stat_key", profile_id);
-					intent.putExtra("rotation", String.valueOf(rotation));
 					startActivityForResult(intent, 1);
 					dialog.dismiss();
 				}
@@ -388,7 +361,6 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 				dialog.dismiss();
 			}
 		});
-
 		dialog.show();
 	}
 

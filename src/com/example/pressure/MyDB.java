@@ -2,15 +2,15 @@ package com.example.pressure;
 
 import java.util.LinkedList;
 
-import android.R.string;
-import android.app.AlarmManager;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 public class MyDB {
@@ -92,7 +92,7 @@ public class MyDB {
 		return mDB.query(DB_TABLE, null, null, null, null, null, null);
 	}
 
-	public Cursor getAllDataStat(String id) {
+	public Cursor getAllDataStat(int id) {
 		if (!mDB.isOpen()) {
 			return null;
 		}
@@ -103,6 +103,8 @@ public class MyDB {
 	public Cursor getAllDataNotif() {
 		return mDB.query(DB_TABLE_NOTIF, null, null, null, null, null, null);
 	}
+	
+	
 
 //	public void getAllNotifValues(int notification, AlarmManager am) {
 //		mainActivity = new MainActivity();
@@ -135,7 +137,7 @@ public class MyDB {
 //		}
 //	}
 
-	public String[] getCurrentName(long id) {
+	public String[] getCurrentName(int id) {
 		Cursor cursor = mDB.query(DB_TABLE, null, COLUMN_ID + "='" + id + "'",
 				null, null, null, null);
 		String[] profile = new String[] { "", "" };
@@ -146,6 +148,50 @@ public class MyDB {
 			}
 		}
 		return profile;
+	}
+
+	public void SavePreferences(String key, Boolean value) {
+		SharedPreferences sharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(mCtx);
+		SharedPreferences.Editor editor = sharedPreferences.edit();
+		editor.putBoolean(key, value);
+		editor.commit();
+	}
+	
+	public void saveID(String key, int value) {
+		SharedPreferences sharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(mCtx);
+		SharedPreferences.Editor editor = sharedPreferences.edit();
+		editor.putInt(key, value);
+		editor.commit();
+	}
+	
+	public int LoadID() {
+		SharedPreferences sharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(mCtx);
+		int id = sharedPreferences.getInt("idName", 1);
+		return id;
+	}
+	
+	public boolean LoadRotation() {
+		SharedPreferences sharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(mCtx);
+		boolean rotation = sharedPreferences.getBoolean("rotation", true);
+		return rotation;
+	}
+	
+	public boolean LoadNotification() {
+		SharedPreferences sharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(mCtx);
+		boolean notification = sharedPreferences.getBoolean("rotation", false);
+		return notification;
+	}
+	
+	public boolean LoadState() {
+		SharedPreferences sharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(mCtx);
+		boolean state = sharedPreferences.getBoolean("state", true);
+		return state;
 	}
 
 	public int getCountElementsStat() {
@@ -236,7 +282,7 @@ public class MyDB {
 		Log.d(LOG_TAG, "row inserted, ID = " + rowID);
 	}
 
-	public void addStat(String pulse, String sys, String dias, String uid,
+	public void addStat(String pulse, String sys, String dias, int uid,
 			String date, String time) {
 		ContentValues cv = new ContentValues();
 		cv.put(COLUMN_PULSE, pulse);
@@ -254,7 +300,7 @@ public class MyDB {
 		cv.put(COLUMN_NOTIF_MESSAGE, message);
 		cv.put(COLUMN_NOTIF_HOUR, hour);
 		cv.put(COLUMN_NOTIF_MINUTE, minute);
-		long rowID = mDB.insert(DB_TABLE_NOTIF, null, cv);
+		mDB.insert(DB_TABLE_NOTIF, null, cv);
 	}
 
 	// удалить запись из DB_TABLE

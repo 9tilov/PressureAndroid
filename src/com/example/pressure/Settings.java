@@ -60,15 +60,15 @@ public class Settings extends FragmentActivity implements
 
 	MyDB db;
 
-	int rotation = 0;
-	int notification = 1;
-	int stateActivity;
+	boolean rotation;
+	boolean notification;
+	boolean stateActivity;
 
 	ListView listNotif;
 
 	Button btnAddNotif;
 
-	String[] savedValues = new String[3];
+	boolean[] savedValues = new boolean[2];
 
 	int count_element_notif;
 
@@ -95,7 +95,7 @@ public class Settings extends FragmentActivity implements
 		btnAddNotif = (Button) findViewById(R.id.btnAddNotif);
 
 		editNotif = (EditText) findViewById(R.id.editNotif);
-		
+
 		listNotif = (ListView) findViewById(R.id.listNotif);
 
 		cal_alarm = Calendar.getInstance();
@@ -105,16 +105,16 @@ public class Settings extends FragmentActivity implements
 		timePicker.setCurrentHour(cal_alarm.get(Calendar.HOUR_OF_DAY));
 		timePicker.setCurrentMinute(cal_alarm.get(Calendar.MINUTE));
 
-		rotation = Integer.valueOf(savedValues[0]);
-		notification = Integer.valueOf(savedValues[1]);
+		rotation = savedValues[0];
+		notification = savedValues[1];
 
-		if (rotation == 0) {
+		if (rotation) {
 			checkBoxGraph.setChecked(true);
 		} else {
 			checkBoxGraph.setChecked(false);
 		}
 
-		if (notification == 0) {
+		if (notification) {
 			checkBoxNotif.setChecked(true);
 
 			timePicker.setEnabled(true);
@@ -138,13 +138,15 @@ public class Settings extends FragmentActivity implements
 							boolean isChecked) {
 						InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 						if (checkView.isChecked()) {
-							imm.showSoftInput(editNotif, InputMethodManager.SHOW_IMPLICIT);
+							imm.showSoftInput(editNotif,
+									InputMethodManager.SHOW_IMPLICIT);
 							timePicker.setEnabled(true);
 							btnAddNotif.setEnabled(true);
 							editNotif.setEnabled(true);
 							listNotif.setEnabled(true);
 						} else {
-							imm.hideSoftInputFromWindow(editNotif.getWindowToken(), 0);
+							imm.hideSoftInputFromWindow(
+									editNotif.getWindowToken(), 0);
 							timePicker.setEnabled(false);
 							btnAddNotif.setEnabled(false);
 							editNotif.setEnabled(false);
@@ -181,18 +183,18 @@ public class Settings extends FragmentActivity implements
 				time.minute = timePicker.getCurrentMinute();
 				String hour;
 				String minute;
-				if (time.hour < 10) 
+				if (time.hour < 10)
 					hour = "0" + String.valueOf(time.hour);
-				else 
+				else
 					hour = String.valueOf(time.hour);
-				if (time.minute < 10) 
+				if (time.minute < 10)
 					minute = "0" + String.valueOf(time.minute);
-				else 
+				else
 					minute = String.valueOf(time.minute);
-				
+
 				if (0 != editNotif.getText().toString().length()) {
-					db.addNotif(String.valueOf(editNotif.getText()),
-							hour, minute);
+					db.addNotif(String.valueOf(editNotif.getText()), hour,
+							minute);
 					editNotif.setText("");
 					getSupportLoaderManager().getLoader(0).forceLoad();
 					count_element_notif = db.getCountElementsSettings();
@@ -206,13 +208,13 @@ public class Settings extends FragmentActivity implements
 		btnSaveSettings.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				rotation = Integer.valueOf(checkCheckBox(checkBoxGraph));
+				rotation = checkCheckBox(checkBoxGraph);
 				notification = checkCheckBox(checkBoxNotif);
 				Intent intent = new Intent(Settings.this, MainActivity.class);
-				SavePreferences("rotation", String.valueOf(rotation));
-				SavePreferences("notification", String.valueOf(notification));
-				stateActivity = 0;
-				SavePreferences("state", String.valueOf(stateActivity));
+				SavePreferences("rotation", rotation);
+				SavePreferences("notification", notification);
+				stateActivity = true;
+				SavePreferences("state", stateActivity);
 				startActivity(intent);
 			}
 		});
@@ -223,7 +225,6 @@ public class Settings extends FragmentActivity implements
 		listNotif.post(new Runnable() {
 			@Override
 			public void run() {
-//				Log.d(LOG_TAG, "count_element_notif = " + count_element_notif);
 				listNotif.setAdapter(scAdapter);
 				// Select the last row so it will scroll into view...
 				listNotif.setSelection(count_element_notif);
@@ -231,20 +232,20 @@ public class Settings extends FragmentActivity implements
 		});
 	}
 
-	private void SavePreferences(String key, String value) {
+	private void SavePreferences(String key, Boolean value) {
 		SharedPreferences sharedPreferences = PreferenceManager
 				.getDefaultSharedPreferences(getApplicationContext());
 		SharedPreferences.Editor editor = sharedPreferences.edit();
-		editor.putString(key, value);
+		editor.putBoolean(key, value);
 		editor.commit();
 	}
 
-	private String[] LoadPreferences() {
+	private boolean[] LoadPreferences() {
 		SharedPreferences sharedPreferences = PreferenceManager
 				.getDefaultSharedPreferences(getApplicationContext());
-		String[] data = new String[2];
-		data[0] = sharedPreferences.getString("rotation", "0");
-		data[1] = sharedPreferences.getString("notification", "1");
+		boolean[] data = new boolean[2];
+		data[0] = sharedPreferences.getBoolean("rotation", true);
+		data[1] = sharedPreferences.getBoolean("notification", false);
 		return data;
 	}
 
@@ -329,11 +330,11 @@ public class Settings extends FragmentActivity implements
 		return super.onContextItemSelected(item);
 	}
 
-	public int checkCheckBox(View v) {
+	public boolean checkCheckBox(View v) {
 		CheckBox checkBoxGraph = (CheckBox) v;
 		if (!checkBoxGraph.isChecked())
-			return 1;
-		return 0;
+			return false;
+		return true;
 	}
 
 	protected void onDestroy() {
@@ -369,7 +370,7 @@ public class Settings extends FragmentActivity implements
 			return cursor;
 		}
 	}
-	
+
 	void inCorrectData() {
 		Toast.makeText(this, R.string.correct_notif, Toast.LENGTH_SHORT).show();
 	}

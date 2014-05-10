@@ -1,11 +1,8 @@
 package com.example.pressure;
 
-import java.sql.Date;
-import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.LinkedList;
 
-import android.R.integer;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -16,14 +13,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.os.SystemClock;
-import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
-import android.text.format.Time;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -70,19 +64,17 @@ public class MainActivity extends FragmentActivity implements
 
 	Button btnAddNotif;
 
-	long id_name;
+	int id_name;
 
 	static class time {
 		public static int hour = 0;
 		public static int minute = 0;
 	}
 
-	String[] savedValues = new String[4];
-
 	CheckBox checkBoxGraph, checkBoxNotif;
-	long rotation = 0;
-	int notification = 1;
-	int stateActivity;
+	boolean rotation;
+	boolean notification;
+	boolean stateActivity;
 
 	static boolean active = false;
 
@@ -102,12 +94,11 @@ public class MainActivity extends FragmentActivity implements
 
 		startService(new Intent(this, Receiver.class));
 
-		savedValues = LoadPreferences();
-		rotation = Long.valueOf(savedValues[1]);
-		stateActivity = Integer.valueOf(savedValues[3]);
-		notification = Integer.valueOf(savedValues[2]);
+		rotation = db.LoadRotation();
+		notification = db.LoadRotation();
+		stateActivity = db.LoadState();
 
-		if (stateActivity == 0) {
+		if (stateActivity) {
 			setContentView(R.layout.activity_main);
 		} else {
 			setContentView(R.layout.activity_main);
@@ -141,7 +132,7 @@ public class MainActivity extends FragmentActivity implements
 			data_notif = db.getCurrentNotif(Long.valueOf(data_notif_fields[i]));
 			list.add(data_notif);
 
-			if ((notification == 0))
+			if ((notification))
 				setRepeatingAlarm(am, Integer.valueOf(data_notif_fields[i]),
 						list.get(i)[0], Integer.valueOf(list.get(i)[1]),
 						Integer.valueOf(list.get(i)[2]), notification);
@@ -189,10 +180,10 @@ public class MainActivity extends FragmentActivity implements
 					int position, long id) {
 				Intent intent = new Intent(MainActivity.this, MyStatistic.class);
 				Cursor cur = (Cursor) lvData.getAdapter().getItem(position);
-				id_name = cur.getLong(cur.getColumnIndex("_id"));
-				SavePreferences("idName", String.valueOf(id_name));
-				stateActivity = 1;
-				SavePreferences("state", String.valueOf(stateActivity));
+				id_name = cur.getInt(cur.getColumnIndex("_id"));
+				db.saveID("idName", id_name);
+				stateActivity = false;
+				db.SavePreferences("state", stateActivity);
 				startActivity(intent);
 			}
 		});
@@ -205,7 +196,7 @@ public class MainActivity extends FragmentActivity implements
 	}
 
 	public void setRepeatingAlarm(AlarmManager am, int id, String message,
-			int hour, int minute, int notif) {
+			int hour, int minute, Boolean notif) {
 		Calendar cal_alarm;
 		Calendar now = Calendar.getInstance();
 		cal_alarm = Calendar.getInstance();
@@ -228,27 +219,8 @@ public class MainActivity extends FragmentActivity implements
 				intent, PendingIntent.FLAG_UPDATE_CURRENT);
 		am.setRepeating(AlarmManager.RTC_WAKEUP, alarm,
 				AlarmManager.INTERVAL_DAY, pendingIntent);
-		if (notif == 1)
+		if (!notif)
 			am.cancel(pendingIntent);
-	}
-
-	private void SavePreferences(String key, String value) {
-		SharedPreferences sharedPreferences = PreferenceManager
-				.getDefaultSharedPreferences(getApplicationContext());
-		SharedPreferences.Editor editor = sharedPreferences.edit();
-		editor.putString(key, value);
-		editor.commit();
-	}
-
-	private String[] LoadPreferences() {
-		SharedPreferences sharedPreferences = PreferenceManager
-				.getDefaultSharedPreferences(getApplicationContext());
-		String[] data = new String[4];
-		data[0] = sharedPreferences.getString("idName", "");
-		data[1] = sharedPreferences.getString("rotation", "0");
-		data[2] = sharedPreferences.getString("notification", "1");
-		data[3] = sharedPreferences.getString("state", "0");
-		return data;
 	}
 
 	protected void onPrepareDialog(int id, Dialog dialog) {
@@ -363,7 +335,7 @@ public class MainActivity extends FragmentActivity implements
 			deleteData();
 			return true;
 		} else if (item.getItemId() == CM_EDIT_ID) {
-			currentProfile = db.getCurrentName(acmi.id);
+			currentProfile = db.getCurrentName((int) acmi.id);
 			idCurrentName = acmi.id;
 			showDialog(DIALOG_EDIT);
 			return true;
