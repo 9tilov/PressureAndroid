@@ -18,6 +18,7 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.util.Log;
 import android.view.ContextMenu;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -345,6 +346,14 @@ public class Settings extends FragmentActivity implements
 			}
 		});
 		dialog.show();
+	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		 if (keyCode == KeyEvent.KEYCODE_MENU) {
+		     return true;
+		     }
+		     return super.onKeyDown(keyCode, event);    
 	}
 
 	public boolean checkCheckBox(View v) {
