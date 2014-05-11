@@ -37,7 +37,7 @@ public class Settings extends FragmentActivity implements
 		LoaderCallbacks<Cursor> {
 
 	CheckBox checkBoxGraph, checkBoxNotif;
-	
+
 	TimePicker timePicker, timeEditPicker;
 
 	int idCurrentNotif;
@@ -46,7 +46,7 @@ public class Settings extends FragmentActivity implements
 
 	private static final int CM_EDIT_NOTIF = 0, CM_DELETE_NOTIF = 1,
 			CM_DELETE_ALL = 2;
-	
+
 	final int DIALOG_EDIT = 1;
 
 	final String LOG_TAG = "Pressure";
@@ -185,8 +185,7 @@ public class Settings extends FragmentActivity implements
 					minute = String.valueOf(time.minute);
 
 				if (0 != editNotif.getText().toString().length()) {
-					db.addNotif(editNotif.getText().toString(), hour,
-							minute);
+					db.addNotif(editNotif.getText().toString(), hour, minute);
 					editNotif.setText("");
 					getSupportLoaderManager().getLoader(0).forceLoad();
 					count_element_notif = db.getCountElementsSettings();

@@ -150,7 +150,7 @@ public class MyDB {
 	public boolean LoadNotification() {
 		SharedPreferences sharedPreferences = PreferenceManager
 				.getDefaultSharedPreferences(mCtx);
-		boolean notification = sharedPreferences.getBoolean("rotation", false);
+		boolean notification = sharedPreferences.getBoolean("notification", false);
 		return notification;
 	}
 	
