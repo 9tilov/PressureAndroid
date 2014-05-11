@@ -10,7 +10,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -29,13 +28,10 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 public class MainActivity extends FragmentActivity implements
@@ -43,43 +39,16 @@ public class MainActivity extends FragmentActivity implements
 
 	private static final int CM_EDIT_ID = 0, CM_DELETE_ID = 1;
 
-	static SharedPreferences sPref;
-
 	MyDB db;
 	SimpleCursorAdapter scAdapter;
 
-	Receiver receiver;
-
-	final String SAVED_TEXT = "saved_text";
-	final String SAVED_NAME = "saved_name";
-	final String CHECKED_GRAPH = "isCheckedGraph";
-	final String CHECKED_NOTIF = "isCheckedNotif";
-
 	long idCurrentName;
-	EditText editName, editMail, addName, editNotif;
+	EditText editName, editMail, addName;
 
 	String[] currentProfile = new String[] { "", "" };
 
-	TimePicker timePicker;
-
-	Button btnAddNotif;
-
-	int id_name;
-
-	static class time {
-		public static int hour = 0;
-		public static int minute = 0;
-	}
-
-	CheckBox checkBoxGraph, checkBoxNotif;
-	boolean rotation;
-	boolean notification;
-	boolean stateActivity;
-
-	static boolean active = false;
-
 	final String LOG_TAG = "Pressure";
-	final int DIALOG_EDIT = 1, DIALOG_ADD = 2, DIALOG_SETTINGS = 3;
+	final int DIALOG_EDIT = 1, DIALOG_ADD = 2;
 
 	/** Called when the activity is first created. */
 	public void onCreate(Bundle savedInstanceState) {
@@ -94,9 +63,8 @@ public class MainActivity extends FragmentActivity implements
 
 		startService(new Intent(this, Receiver.class));
 
-		rotation = db.LoadRotation();
-		notification = db.LoadRotation();
-		stateActivity = db.LoadState();
+		boolean notification = db.LoadRotation();
+		boolean stateActivity = db.LoadState();
 
 		if (stateActivity) {
 			setContentView(R.layout.activity_main);
@@ -180,10 +148,9 @@ public class MainActivity extends FragmentActivity implements
 					int position, long id) {
 				Intent intent = new Intent(MainActivity.this, MyStatistic.class);
 				Cursor cur = (Cursor) lvData.getAdapter().getItem(position);
-				id_name = cur.getInt(cur.getColumnIndex("_id"));
+				int id_name = cur.getInt(cur.getColumnIndex("_id"));
 				db.saveID("idName", id_name);
-				stateActivity = false;
-				db.SavePreferences("state", stateActivity);
+				db.SavePreferences("state", false);
 				startActivity(intent);
 			}
 		});
@@ -401,5 +368,10 @@ public class MainActivity extends FragmentActivity implements
 			Cursor cursor = db.getAllData();
 			return cursor;
 		}
+	}
+
+	// Запрещаем использование кнопки "Назад"
+	@Override
+	public void onBackPressed() {
 	}
 }

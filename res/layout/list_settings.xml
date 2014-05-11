@@ -16,7 +16,8 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="notif" />
+            android:text="notif" 
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/hourSettings"
@@ -26,7 +27,8 @@
             android:layout_alignBottom="@+id/minuteSettings"
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="14dp"
-            android:text="hour" />
+            android:text="hour"
+            android:textSize="20sp"  />
 
         <TextView
             android:id="@+id/textViewSeparator"
@@ -35,7 +37,8 @@
             android:layout_alignBaseline="@+id/minuteSettings"
             android:layout_alignBottom="@+id/minuteSettings"
             android:layout_toRightOf="@+id/hourSettings"
-            android:text=":" />
+            android:text=":" 
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/minuteSettings"
@@ -44,7 +47,8 @@
             android:layout_alignBaseline="@+id/notifSettings"
             android:layout_alignBottom="@+id/notifSettings"
             android:layout_toRightOf="@+id/textViewSeparator"
-            android:text="minute" />
+            android:text="minute"
+            android:textSize="20sp"  />
 
     </RelativeLayout>
 

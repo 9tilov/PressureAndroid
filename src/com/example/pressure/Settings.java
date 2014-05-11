@@ -37,20 +37,16 @@ public class Settings extends FragmentActivity implements
 		LoaderCallbacks<Cursor> {
 
 	CheckBox checkBoxGraph, checkBoxNotif;
-	Calendar cal_alarm;
+	
 	TimePicker timePicker, timeEditPicker;
 
 	int idCurrentNotif;
 
 	EditText editNotif;
 
-	static SharedPreferences sPref;
-
-	final String CHECKED_GRAPH = "isCheckedGraph";
-	final String CHECKED_NOTIF = "isCheckedNotif";
-
 	private static final int CM_EDIT_NOTIF = 0, CM_DELETE_NOTIF = 1,
 			CM_DELETE_ALL = 2;
+	
 	final int DIALOG_EDIT = 1;
 
 	final String LOG_TAG = "Pressure";
@@ -63,13 +59,10 @@ public class Settings extends FragmentActivity implements
 
 	boolean rotation;
 	boolean notification;
-	boolean stateActivity;
 
 	ListView listNotif;
 
 	Button btnAddNotif;
-
-	boolean[] savedValues = new boolean[2];
 
 	int count_element_notif;
 
@@ -88,8 +81,6 @@ public class Settings extends FragmentActivity implements
 		db = new MyDB(this);
 		db.open();
 
-		savedValues = LoadPreferences();
-
 		checkBoxGraph = (CheckBox) findViewById(R.id.checkBoxRotation);
 		checkBoxNotif = (CheckBox) findViewById(R.id.checkBoxTimePicker);
 
@@ -99,15 +90,15 @@ public class Settings extends FragmentActivity implements
 
 		listNotif = (ListView) findViewById(R.id.listNotif);
 
-		cal_alarm = Calendar.getInstance();
+		Calendar cal_alarm = Calendar.getInstance();
 
 		timePicker = (TimePicker) findViewById(R.id.timePicker);
 		timePicker.setIs24HourView(true);
 		timePicker.setCurrentHour(cal_alarm.get(Calendar.HOUR_OF_DAY));
 		timePicker.setCurrentMinute(cal_alarm.get(Calendar.MINUTE));
 
-		rotation = savedValues[0];
-		notification = savedValues[1];
+		rotation = db.LoadRotation();
+		notification = db.LoadNotification();
 
 		if (rotation) {
 			checkBoxGraph.setChecked(true);
@@ -194,7 +185,7 @@ public class Settings extends FragmentActivity implements
 					minute = String.valueOf(time.minute);
 
 				if (0 != editNotif.getText().toString().length()) {
-					db.addNotif(String.valueOf(editNotif.getText()), hour,
+					db.addNotif(editNotif.getText().toString(), hour,
 							minute);
 					editNotif.setText("");
 					getSupportLoaderManager().getLoader(0).forceLoad();
@@ -212,10 +203,9 @@ public class Settings extends FragmentActivity implements
 				rotation = checkCheckBox(checkBoxGraph);
 				notification = checkCheckBox(checkBoxNotif);
 				Intent intent = new Intent(Settings.this, MainActivity.class);
-				SavePreferences("rotation", rotation);
-				SavePreferences("notification", notification);
-				stateActivity = true;
-				SavePreferences("state", stateActivity);
+				db.SavePreferences("rotation", rotation);
+				db.SavePreferences("notification", notification);
+				db.SavePreferences("state", true);
 				startActivity(intent);
 			}
 		});
@@ -231,23 +221,6 @@ public class Settings extends FragmentActivity implements
 				listNotif.setSelection(count_element_notif);
 			}
 		});
-	}
-
-	private void SavePreferences(String key, Boolean value) {
-		SharedPreferences sharedPreferences = PreferenceManager
-				.getDefaultSharedPreferences(getApplicationContext());
-		SharedPreferences.Editor editor = sharedPreferences.edit();
-		editor.putBoolean(key, value);
-		editor.commit();
-	}
-
-	private boolean[] LoadPreferences() {
-		SharedPreferences sharedPreferences = PreferenceManager
-				.getDefaultSharedPreferences(getApplicationContext());
-		boolean[] data = new boolean[2];
-		data[0] = sharedPreferences.getBoolean("rotation", true);
-		data[1] = sharedPreferences.getBoolean("notification", false);
-		return data;
 	}
 
 	public void onCreateContextMenu(ContextMenu menu, View v,

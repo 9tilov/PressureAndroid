@@ -103,39 +103,6 @@ public class MyDB {
 	public Cursor getAllDataNotif() {
 		return mDB.query(DB_TABLE_NOTIF, null, null, null, null, null, null);
 	}
-	
-	
-
-//	public void getAllNotifValues(int notification, AlarmManager am) {
-//		mainActivity = new MainActivity();
-//		Cursor cursor = mDB.query(DB_TABLE_NOTIF, null, null, null, null, null,
-//				null);
-//		String[] data_notif_fields = new String[] { "", "", "", "" };
-//		for (int i = 0; i < getCountElementsSettings(); ++i) {
-//			data_notif_fields[i] = "";
-//		}
-//
-//		String[] data_notif = new String[] { "", "", "" };
-//
-//		LinkedList<String[]> list = new LinkedList<String[]>();
-//
-//		cursor = getAllDataNotif();
-//		for (int i = 0; i < getCountElementsSettings(); ++i) {
-//			if (cursor != null) {
-//				cursor.moveToNext();
-//				data_notif_fields[i] = data_notif_fields[i]
-//						+ cursor.getString(0);
-//			}
-//
-//			data_notif = getCurrentNotif(Long.valueOf(data_notif_fields[i]));
-//			list.add(data_notif);
-//			
-//			if ((notification == 0))
-//				mainActivity.setRepeatingAlarm(am, Integer.valueOf(data_notif_fields[i]),
-//						list.get(i)[0], Integer.valueOf(list.get(i)[1]),
-//						Integer.valueOf(list.get(i)[2]), notification);
-//		}
-//	}
 
 	public String[] getCurrentName(int id) {
 		Cursor cursor = mDB.query(DB_TABLE, null, COLUMN_ID + "='" + id + "'",
@@ -208,7 +175,7 @@ public class MyDB {
 		return count;
 	}
 
-	public LinkedList<String[]> getStat(long id, int period) {
+	public LinkedList<String[]> getStat(int id, int period) {
 
 		LinkedList<String[]> list = new LinkedList<String[]>();
 

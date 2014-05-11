@@ -15,30 +15,18 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.widget.LinearLayout;
 import android.widget.TabHost;
+import android.view.KeyEvent;
 
 import android.graphics.Color;
 import android.util.Log;
-import android.widget.Button;
 
 public class Graph extends Activity {
 
-	int stat_id;
-	boolean rotation;
-	String count_data_string;
-
 	MyDB db;
 
-	int period = 0;
-
-	Button btnWeek, btnMonth, btn3Month, btnAll;
-
 	final String LOG_TAG = "myLogs";
-
-	int number_of_elements;
-
-	TabHost tabs;
-
-	TabHost.TabSpec spec;
+	
+	boolean rotation;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -46,32 +34,32 @@ public class Graph extends Activity {
 
 		db = new MyDB(this);
 
-		stat_id = db.LoadID();
+		TabHost tabs = (TabHost) findViewById(R.id.tabhost);
+		tabs.setup();
+		
+		LinearLayout layoutWeek = (LinearLayout) findViewById(R.id.graphWeek);
+		LinearLayout layoutMonth = (LinearLayout) findViewById(R.id.graphMonth);
+		LinearLayout layout3Month = (LinearLayout) findViewById(R.id.graph3Month);
+		LinearLayout layoutAllPeriod = (LinearLayout) findViewById(R.id.graphAllPeriod);
+
+		int stat_id = db.LoadID();
 		rotation = db.LoadRotation();
 
 		if (!rotation) {
 			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-		}
+		}  
 
 		if ((getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
 				&& (rotation)) {
 			finish();
 		}
 
-		tabs = (TabHost) findViewById(R.id.tabhost);
-
-		tabs.setup();
-
-		setTab("tag1", R.id.graphWeek, "week");
-		setTab("tag2", R.id.graphMonth, "month");
-		setTab("tag3", R.id.graph3Month, "3 month");
-		setTab("tag4", R.id.graphAllPeriod, "all period");
+		setTab("tag1", R.id.graphWeek, "week", tabs);
+		setTab("tag2", R.id.graphMonth, "month", tabs);
+		setTab("tag3", R.id.graph3Month, "3 month", tabs);
+		setTab("tag4", R.id.graphAllPeriod, "all period", tabs);
 
 		Log.d(LOG_TAG, "stat_idssss = " + stat_id);
-		LinearLayout layoutWeek = (LinearLayout) findViewById(R.id.graphWeek);
-		LinearLayout layoutMonth = (LinearLayout) findViewById(R.id.graphMonth);
-		LinearLayout layout3Month = (LinearLayout) findViewById(R.id.graph3Month);
-		LinearLayout layoutAllPeriod = (LinearLayout) findViewById(R.id.graphAllPeriod);
 
 		GraphView graphViewWeek = new LineGraphView(this, "Pressure statistics");
 		GraphView graphViewMonth = new LineGraphView(this,
@@ -84,30 +72,42 @@ public class Graph extends Activity {
 		db = new MyDB(this);
 		db.open();
 
-		number_of_elements = db.getCountElementsStat();
-		createGraph(7, layoutWeek, graphViewWeek);
-		createGraph(30, layoutMonth, graphViewMonth);
-		createGraph(90, layout3Month, graphView3Month);
-		createGraph(number_of_elements, layoutAllPeriod, graphViewAllPeriod);
+		int all_stat_records = db.getCountElementsStat();
+		createGraph(7, all_stat_records, layoutWeek, graphViewWeek, stat_id);
+		createGraph(30, all_stat_records, layoutMonth, graphViewMonth, stat_id);
+		createGraph(90, all_stat_records, layout3Month, graphView3Month,
+				stat_id);
+		createGraph(all_stat_records, all_stat_records, layoutAllPeriod,
+				graphViewAllPeriod, stat_id);
+	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+	     if ((rotation) && (keyCode == KeyEvent.KEYCODE_BACK)) {
+	     //preventing default implementation previous to android.os.Build.VERSION_CODES.ECLAIR
+	     return true;
+	     }
+	     return super.onKeyDown(keyCode, event);    
 	}
 
 	protected void onDestroy() {
 		// закрываем подключение при выходе
-		db.close();
 		super.onDestroy();
 	}
 
-	void setTab(String tag, int id, String periodName) {
+	void setTab(String tag, int id, String periodName, TabHost tabs) {
+		TabHost.TabSpec spec;
 		spec = tabs.newTabSpec(tag);
 		spec.setContent(id);
 		spec.setIndicator(periodName);
 		tabs.addTab(spec);
 	}
 
-	public void createGraph(int period, LinearLayout layout, GraphView graphView) {
-		if (period <= number_of_elements) {
+	private void createGraph(int period, int all_stat_records,
+			LinearLayout layout, GraphView graphView, int id) {
+		if (period <= all_stat_records) {
 			LinkedList<String[]> list = new LinkedList<String[]>();
-			list = db.getStat(Long.valueOf(stat_id), period);
+			list = db.getStat(id, period);
 			int count = Integer.valueOf(period);
 			GraphViewData[] dataPulse = new GraphViewData[count];
 			GraphViewData[] dataSys = new GraphViewData[count];

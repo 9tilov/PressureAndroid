@@ -29,6 +29,8 @@ public class Receiver extends BroadcastReceiver {
 		notif.setLatestEventInfo(context, "Pressure", m_message, PendingIntent
 				.getActivity(context, 0, intent,
 						PendingIntent.FLAG_CANCEL_CURRENT));
+		notif.flags = Notification.DEFAULT_LIGHTS
+				| Notification.FLAG_AUTO_CANCEL | Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE;
 		nm.notify(1, notif);
 	}
 

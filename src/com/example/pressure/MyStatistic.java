@@ -10,6 +10,7 @@ import java.util.Calendar;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -38,7 +39,7 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
 
-public class MyStatistic extends FragmentActivity implements OnClickListener,
+public class MyStatistic extends FragmentActivity implements
 		LoaderCallbacks<Cursor>, NumberPicker.OnValueChangeListener {
 
 	private static final int CM_DELETE_ID = 0, CM_EDIT_ID = 1,
@@ -55,8 +56,6 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 
 	String[] profile_name;
 
-	String[] savedValues = new String[2];
-
 	ListView listStat;
 
 	final String DIR_SD = "Pressure";
@@ -65,15 +64,9 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 	String[] currentStat = new String[] { "", "", "" };
 	final String LOG_TAG = "myLogs";
 
-	String s;
-
-	ImageView btnAddStat;
-
-	TextView tv;
-
 	boolean rotation;
 
-	int number_of_elements;
+	int all_records_stat;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -82,24 +75,31 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		db = new MyDB(this);
 		db.open();
 
+		ImageView btnAddStat = (ImageView) findViewById(R.id.btnAddStat);
+		TextView btnProfile = (TextView) findViewById(R.id.btnProfile);
+		listStat = (ListView) findViewById(R.id.listStat);
+
 		profile_id = db.LoadID();
 		rotation = db.LoadRotation();
 
-		btnAddStat = (ImageView) findViewById(R.id.btnAddStat);
-		btnAddStat.setOnClickListener(this);
+		if (!rotation) {
+			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		}
+
 		Animation animRotateIn_icon = AnimationUtils.loadAnimation(this,
 				R.anim.rotate);
 		btnAddStat.startAnimation(animRotateIn_icon);
 
-		number_of_elements = db.getCountElementsStat();
+		all_records_stat = db.getCountElementsStat();
 
 		if ((getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
-				&& (rotation) && (number_of_elements >= 7)) {
+				&& (rotation) && (all_records_stat >= 7)) {
 			Intent intent = new Intent(MyStatistic.this, Graph.class);
 			startActivity(intent);
-		}
+		} else if ((getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
+				&& (all_records_stat < 7))
+			graphShow();
 
-		TextView btnProfile = (TextView) findViewById(R.id.btnProfile);
 		btnProfile.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -121,15 +121,14 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		// создааем адаптер и настраиваем список
 		scAdapter = new SimpleCursorAdapter(this, R.layout.list, null, from,
 				to, 0);
-		listStat = (ListView) findViewById(R.id.listStat);
+
 		registerForContextMenu(listStat);
 
 		scAdapter.setViewBinder(new SimpleCursorAdapter.ViewBinder() {
 
 			public boolean setViewValue(View view, Cursor cursor,
 					int columnIndex) {
-				String s;
-				s = String.valueOf(cursor.getInt(columnIndex));
+				String s = cursor.getString(columnIndex);
 				TextView tv = (TextView) view;
 				switch (view.getId()) {
 				case R.id.tvTextPulse:
@@ -158,16 +157,14 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		SimpleDateFormat time = new SimpleDateFormat("HH:mm");
 		formattedDate = date.format(c.getTime());
 		formattedTime = time.format(c.getTime());
-	}
 
-	@Override
-	public void onClick(View v) {
-		switch (v.getId()) {
-		case R.id.btnAddStat:
-			flag = SAVE_DATA_FLAG;
-			show();
-			break;
-		}
+		btnAddStat.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				flag = SAVE_DATA_FLAG;
+				show();
+			}
+		});
 	}
 
 	public void setColor(int redLower, int fromYellowLower, int toYellowLower,
@@ -192,7 +189,7 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 			@Override
 			public void run() {
 				// Select the last row so it will scroll into view...
-				listStat.setSelection(number_of_elements);
+				listStat.setSelection(all_records_stat);
 			}
 		});
 	}
@@ -296,9 +293,7 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 		dialog.setTitle("Settings");
 
 		Button btnSave = (Button) dialog.findViewById(R.id.btnSave);
-
 		Button btnEmail = (Button) dialog.findViewById(R.id.btnEmail);
-
 		Button btnGraph = (Button) dialog.findViewById(R.id.btnGraph);
 
 		if (!rotation)
@@ -496,10 +491,4 @@ public class MyStatistic extends FragmentActivity implements OnClickListener,
 	public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
 		// TODO Auto-generated method stub
 	}
-
-	// Запрещаем использование кнопки "Назад"
-	@Override
-	public void onBackPressed() {
-	}
-
 }

@@ -6,7 +6,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="44dp"
+        android:layout_height="50dp"
         android:orientation="horizontal" >
 
         <RelativeLayout
@@ -22,7 +22,8 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
                 android:layout_marginLeft="22dp"
-                android:text="date" />
+                android:text="date"
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/tvTextTime"
@@ -30,7 +31,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignLeft="@+id/tvTextDate"
                 android:layout_alignParentBottom="true"
-                android:text="time" />
+                android:text="time"
+                android:textSize="20sp" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -46,7 +48,8 @@
                 android:layout_centerVertical="true"
                 android:layout_marginRight="17dp"
                 android:layout_toLeftOf="@+id/textView3"
-                android:text="dias" />
+                android:text="dias"
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/tvTextSys"
@@ -55,7 +58,8 @@
                 android:layout_alignBaseline="@+id/tvTextDias"
                 android:layout_alignBottom="@+id/tvTextDias"
                 android:layout_toLeftOf="@+id/textView1"
-                android:text="sys" />
+                android:text="sys"
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/textView1"
@@ -64,7 +68,7 @@
                 android:layout_alignBottom="@+id/tvTextDias"
                 android:layout_toLeftOf="@+id/tvTextDias"
                 android:text=" / "
-                android:textSize="18sp" />
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/textView3"
@@ -74,7 +78,8 @@
                 android:layout_alignBottom="@+id/tvTextDias"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="114dp"
-                android:text="mmhg" />
+                android:text="mmhg"
+                android:textSize="20sp" />
 
             <!-- <ImageView
                 android:id="@+id/imageView1"
@@ -98,16 +103,19 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="14dp"
-                android:text="b/m" />
+                android:text="b/m"
+                android:textSize="20sp" />
 
-           <!--  <ImageView
+            <!--
+                 <ImageView
                 android:id="@+id/imagePulse"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_alignTop="@+id/tvTextPulse"
                 android:layout_marginRight="5dp"
                 android:layout_toLeftOf="@+id/tvTextPulse"
-                android:src="@drawable/heart_icon" /> -->
+                android:src="@drawable/heart_icon" />
+            -->
 
             <TextView
                 android:id="@+id/tvTextPulse"
@@ -117,7 +125,8 @@
                 android:layout_alignBottom="@+id/textView2"
                 android:layout_marginRight="14dp"
                 android:layout_toLeftOf="@+id/textView2"
-                android:text="pulse" />
+                android:text="pulse"
+                android:textSize="20sp" />
         </RelativeLayout>
     </RelativeLayout>
 
