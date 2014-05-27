@@ -10,7 +10,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="16dp"
-        android:text="Sys"
+        android:text="@string/sys"
         android:textColor="#00BFFF"
         android:textSize="18sp" />
 
@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/npSysPressure"
         android:layout_centerHorizontal="true"
-        android:text="Dias"
+        android:text="@string/dias"
         android:textColor="#00BFFF"
         android:textSize="18sp" />
 
@@ -31,7 +31,7 @@
         android:layout_above="@+id/npSysPressure"
         android:layout_alignRight="@+id/npPulse"
         android:layout_marginRight="14dp"
-        android:text="Pulse"
+        android:text="@string/pulse"
         android:textColor="#00BFFF"
         android:textSize="18sp" />
 

@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
-        android:text="New name" >
+        android:text="@string/new_name" >
     </TextView>
 
     <EditText
@@ -17,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="Your name" >
+        android:hint="@string/your_name" >
     </EditText>
 
     <TextView
@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
-        android:text="e-mail" >
+        android:text="@string/e_mail" >
     </TextView>
 
     <EditText
@@ -33,7 +33,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="Doctor&apos;s e-mail" >
+        android:hint="@string/doctor_e_mail" >
     </EditText>
 
     <!--

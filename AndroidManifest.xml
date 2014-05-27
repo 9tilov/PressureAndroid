@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.pressure"
+    package="com.mobsoftmaster.bloodpressurediary"
     android:versionCode="1"
     android:versionName="1.0" >
 
     <uses-sdk
         android:minSdkVersion="11"
-        android:targetSdkVersion="18" />
+        android:targetSdkVersion="19" />
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/ic_pressure"
+        android:icon="@drawable/ic_launcher"
         android:label="@string/app_name" >
         <activity
-            android:name="com.example.pressure.MainActivity"
+            android:name="com.mobsoftmaster.bloodpressurediary.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,11 +23,17 @@
         </activity>
         <activity
             android:name=".MyStatistic"
-            android:label="@string/statistics" >
+            android:label="@string/statistics"
+            android:windowSoftInputMode="stateHidden" >
+        </activity>
+        <activity
+            android:name=".ProgrammInfo"
+            android:label="@string/programm_info" >
         </activity>
         <activity
             android:name=".Graph"
-            android:label="@string/graph" >
+            android:label="@string/graph"
+            android:windowSoftInputMode="stateHidden" >
 
             <!-- android:screenOrientation="landscape" -->
         </activity>

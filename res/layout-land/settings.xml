@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <RelativeLayout
+        android:id="@+id/check_boxes"
+        android:layout_width="245dp"
+        android:layout_height="50dp"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="10dp"
+        android:gravity="top"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/profileGraph1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_toLeftOf="@+id/checkBoxRotation"
+            android:text="@string/show_graph_after_rotation" />
+
+        <CheckBox
+            android:id="@+id/checkBoxRotation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/profileGraph1"
+            android:layout_alignBottom="@+id/profileGraph1"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="30dp"
+            android:checked="true" />
+
+    </RelativeLayout>
+
+     <RelativeLayout
+        android:id="@+id/add_notify"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@id/check_boxes"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <RelativeLayout
+            android:id="@+id/RelativeLayout01"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="20dp"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/btnSaveSettings"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="50dp"
+                android:layout_marginRight="5dp"
+                android:layout_toRightOf="@+id/btnAddNotif"
+                android:background="@drawable/button"
+                android:text="@string/save" />
+
+            <Button
+                android:id="@+id/btnAddNotif"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/button"
+                android:text="@string/add" />
+        </RelativeLayout>
+
+        <TimePicker
+            android:id="@+id/timePicker"
+            android:layout_width="192dp"
+            android:layout_height="116dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp" />
+
+    </RelativeLayout>
+    
+    <RelativeLayout
+        android:id="@+id/notify_list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/check_boxes"
+        android:layout_toLeftOf="@id/add_notify"
+        android:orientation="horizontal" >
+
+        <EditText
+            android:id="@+id/editNotif"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:focusableInTouchMode="true"
+            android:hint="@string/your_notification" >
+
+            <requestFocus />
+        </EditText>
+
+        <ListView
+            android:id="@+id/listNotif"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_below="@id/editNotif"
+            android:textSize="12sp" >
+
+        </ListView>
+
+    </RelativeLayout>
+
+   
+
+</RelativeLayout>

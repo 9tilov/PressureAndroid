@@ -25,7 +25,7 @@
              android:layout_alignParentLeft="true"
              android:layout_centerVertical="true"
              android:layout_marginLeft="22dp"
-             android:text="Date" />
+             android:text="@string/date"/>
 
          <TextView
              android:id="@+id/textView2"
@@ -34,7 +34,7 @@
              android:layout_alignBaseline="@+id/textView1"
              android:layout_alignBottom="@+id/textView1"
              android:layout_centerHorizontal="true"
-             android:text="Pressure" />
+             android:text="@string/pressure" />
 
          <TextView
              android:id="@+id/textView3"
@@ -44,7 +44,7 @@
              android:layout_alignBottom="@+id/textView2"
              android:layout_alignParentRight="true"
              android:layout_marginRight="33dp"
-             android:text="Pulse" />
+             android:text="@string/pulse" />
 
     </RelativeLayout>
 
