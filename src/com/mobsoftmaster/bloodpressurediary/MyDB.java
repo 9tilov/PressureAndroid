@@ -199,7 +199,7 @@ public class MyDB {
 	public void addRec(String name) {
 		ContentValues cv = new ContentValues();
 		cv.put(COLUMN_NAME, name);
-		cv.put(COLUMN_EMAIL, "");
+		cv.put(COLUMN_EMAIL, "user@mail");
 		long rowID = mDB.insert(DB_TABLE, null, cv);
 		Log.d(LOG_TAG, "row inserted, ID = " + rowID);
 	}

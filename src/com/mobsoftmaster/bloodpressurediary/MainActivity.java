@@ -2,6 +2,7 @@ package com.mobsoftmaster.bloodpressurediary;
 
 import java.util.Calendar;
 import java.util.LinkedList;
+import java.util.Locale;
 
 import android.app.AlarmManager;
 import android.app.AlertDialog;
@@ -10,6 +11,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -62,7 +64,28 @@ public class MainActivity extends FragmentActivity implements
 		db = new MyDB(this);
 		db.open();
 
+		Configuration c = new Configuration(getResources().getConfiguration());
+
 		sharedPref = new SharedPreference(this);
+		
+		int language = sharedPref.LoadLanguage();
+		
+		Log.d(LOG_TAG, "language = " + language);
+		
+		switch (language) {
+		case 0:
+			c.locale = Locale.ENGLISH;
+			Log.d(LOG_TAG, "language1111 = ");
+			break;
+		case 1:
+			Locale myLocale = new Locale("ru", "RU");
+			c.locale = myLocale;
+			Log.d(LOG_TAG, "language2222 = ");
+			break;
+		}
+		
+		getResources().updateConfiguration(c,
+				getResources().getDisplayMetrics());
 
 		AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
@@ -117,15 +140,23 @@ public class MainActivity extends FragmentActivity implements
 		int[] to = new int[] { R.id.tvName };
 
 		ImageButton addProfile = (ImageButton) findViewById(R.id.addProfile);
-
+		ImageButton btnSettings = (ImageButton) findViewById(R.id.imageButtonSettings);
+		
 		addProfile.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-
 				idCurrentName = 0;
 				currentProfile[0] = "";
 				currentProfile[1] = "";
 				showDialog(DIALOG_ADD);
+			}
+		});
+		
+		btnSettings.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(MainActivity.this, Settings.class);
+				startActivity(intent);
 			}
 		});
 
@@ -140,7 +171,8 @@ public class MainActivity extends FragmentActivity implements
 		getSupportLoaderManager().initLoader(0, null, this);
 
 		if (db.emptyDataBase() == false) {
-			db.addRec("Guest");
+			Resources res = getResources();
+			db.addRec(res.getString(R.string.guest));
 			lvData.setAdapter(scAdapter);
 			getSupportLoaderManager().getLoader(0).forceLoad();
 		} else {
@@ -257,7 +289,7 @@ public class MainActivity extends FragmentActivity implements
 			adb.setView(view);
 
 			// кнопка положительного ответа
-			adb.setPositiveButton(R.string.yes, myClickListener);
+			adb.setPositiveButton(R.string.save, myClickListener);
 			// кнопка нейтрального ответа
 			adb.setNeutralButton(R.string.cancel, myClickListener);
 
@@ -270,7 +302,7 @@ public class MainActivity extends FragmentActivity implements
 			adb.setView(view);
 
 			// кнопка положительного ответа
-			adb.setPositiveButton(R.string.yes, myClickListener);
+			adb.setPositiveButton(R.string.save, myClickListener);
 			// кнопка нейтрального ответа
 			adb.setNeutralButton(R.string.cancel, myClickListener);
 
@@ -331,11 +363,12 @@ public class MainActivity extends FragmentActivity implements
 	}
 
 	void deleteData() {
-		Toast.makeText(this, R.string.deleted, Toast.LENGTH_SHORT).show();
+		Toast.makeText(this, R.string.profile_deleted, Toast.LENGTH_SHORT)
+				.show();
 	}
 
 	void addData() {
-		Toast.makeText(this, R.string.add, Toast.LENGTH_SHORT).show();
+		Toast.makeText(this, R.string.profile_added, Toast.LENGTH_SHORT).show();
 	}
 
 	void inCorrectData() {

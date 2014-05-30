@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Дневник артериального давления</string>
+    <string name="action_settings">Настройки</string>
+    <string name="add_record">Все записи</string>
+    <string name="delete_profile">Удалить профиль</string>
+    <string name="delete_notif">Удалить уведомление</string>
+    <string name="delete_notif_all">Удалить все</string>
+    <string name="edit_profile">Редактировать профиль</string>
+    <string name="edit_notif">Редактировать уведомление</string>
+    <string name="edit_record">Редактировать запись</string>
+    <string name="delete_record">Удалить запись</string>
+    <string name="delete_all_records">Удалить все записи</string>
+    <string name="btnSave">Сохранить</string>
+    <string name="exit">Выход</string>
+    <string name="save_data">Сохранить?</string>
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
+    <string name="cancel">Выйти</string>
+    <string name="saved">Сохранено</string>
+    <string name="save">Сохранить</string>
+    <string name="deleted">Удалено</string>
+    <string name="profile_deleted">Профиль удален</string>
+    <string name="new_name">Новое имя</string>
+    <string name="current_name">Ваше имя</string>
+    <string name="add_name">Добавить имя</string>
+    <string name="added">Добавлено</string>
+    <string name="add">Добавить</string>
+    <string name="profile_added">Профиль добавлен</string>
+    <string name="profile_list">Профили</string>
+    <string name="high_pressure">Сис. давление</string>
+    <string name="low_pressure">Диас. давление</string>
+    <string name="pulse">Пульс</string>
+    <string name="statistics">Статистика</string>
+    <string name="programm_info">О программе</string>
+    <string name="addStat">Добавить</string>
+    <string name="correct_name">Введите Ваше имя</string>
+    <string name="correct_notif">Введите Ваше уведомление</string>
+    <string name="save_on_email">Отправить по e-mail</string>
+    <string name="save_on_SD">Статистика сохранена в папке \"Pressure\"</string>
+    <string name="add_profile">Добавить профиль</string>
+    <string name="notif_added">Уведомление добавлено</string>
+    <string name="notif_saved">Уведомление изменено</string>
+    <string name="notif_deleted">Уведомление удалено</string>
+    <string name="notif_all_deleted">Все уведомления удалены</string>
+    <string name="record_added">Запись добавлена</string>
+    <string name="record_changed">Запись изменена</string>
+    <string name="record_deleted">Запись удалена</string>
+    <string name="record_all_deleted">Все записи удалены</string>
+    <string name="start">Start</string>
+    <string name="stop">Stop</string>
+    <string name="graph">График</string>
+    <string name="guest">Гость</string>
+    <string name="locale">Языки</string>
+    <string name="language">Выберите язык</string>
+    <string name="graphShow">Сначала добавьте не менее 7 записей</string>
+    <string name="graphWeek">неделя</string>
+    <string name="graphMonth">месяц</string>
+    <string name="graph3Month">3 месяца</string>
+    <string name="graphAllPeriod">весь период</string>
+    <string name="not_enough_records">Недостаточно записей</string>
+    <string name="receiver">Receiver</string>
+    <string name="pressure_stat">Статистика измерений</string>
+    <string name="profile">Профиль</string>
+    <string name="service">Service</string>
+    <string name="settings">Настройки</string>
+    <string name="date">Дата</string>
+    <string name="pressure">Давление</string>
+    <string name="mmhg">мм.рт.ст</string>
+    <string name="bitpersec">у/мин</string>
+    <string name="sys">Сис.</string>
+    <string name="dias">Диас.</string>
+    <string name="show_graph_after_rotation">Показать график после поворота экрана </string>
+    <string name="show_notifications">Показать уведомления</string>
+    <string name="your_notification">Ваше уведомление</string>
+    <string name="edit_notification">Редактирвоать уведомление</string>
+    <string name="your_name">Ваше имя</string>
+    <string name="are_you_sure">Вы уверены?</string>
+    <string name="mail_sanding">Отправка сообщения...</string>
+    <string name="statictics">Статистика</string>
+    <string name="cannt_save">Извините, но статистика не будет сохранена или отправлена, так как недоступна SD-карта</string>
+    <string name="e_mail">e-mail</string>
+    <string name="doctor_e_mail">Почта лечащего врача</string>
+    <string name="sharedPrefLoadState">state</string>
+    <string name="app_email">bloodPressureDiaryApp@gmail.com</string>
+    <string name="contact_us">Пишите нам!</string>
+    <string name="programm_description">© 2014 by Ser and moggot.\n
+										Все права защищены.\n
+										\n
+										Версия 1.0\n
+										\n
+										Благодаря этой программе Вы сможете \n
+										контролировать свое кровяное давление.\n
+										\n
+										Возможности:\n
+										-запись давления и пульса в дневник\n
+										-построение графиков\n
+										-настройка и отправка уведомлений\n
+										-добавление новых пользователей\n
+										-отправка результатов измерений \n
+										 Вашему лечащему врачу на почту\n
+										-сохранение результатов измерений в файл\n
+										\n
+										В соответствии с законом о неразглашении\n
+										врачебной тайны, данные Ваших давлений и пульса \n
+										сохраняются только в базе данных приложения.\n
+										\n
+										Разработчики не несут ответственности за утечку\n
+										Ваших персональных данных\n
+										\n</string>
+
+</resources>

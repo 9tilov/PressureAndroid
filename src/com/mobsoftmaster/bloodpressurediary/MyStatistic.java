@@ -6,6 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -54,7 +55,7 @@ public class MyStatistic extends FragmentActivity implements
 
 	MyDB db;
 	SharedPreference sharedPref;
-	
+
 	static int profile_id;
 	SimpleCursorAdapter scAdapter;
 
@@ -72,17 +73,20 @@ public class MyStatistic extends FragmentActivity implements
 
 	int all_records_stat;
 	Dialog dialog;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.statistic);
-		
+
 		db = new MyDB(this);
 		db.open();
-		
+
 		sharedPref = new SharedPreference(this);
 
 		ImageView btnAddStat = (ImageView) findViewById(R.id.btnAddStat);
+		ImageView btnSettings = (ImageView) findViewById(R.id.imageButtonSettingsStat);
+
 		TextView btnProfile = (TextView) findViewById(R.id.btnProfile);
 		listStat = (ListView) findViewById(R.id.listStat);
 
@@ -173,6 +177,14 @@ public class MyStatistic extends FragmentActivity implements
 				show();
 			}
 		});
+
+		btnSettings.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				showSave();
+			}
+		});
+
 		dialog = new Dialog(MyStatistic.this);
 		dialog.setContentView(R.layout.dialog_stat);
 		dialog.setTitle(R.string.statictics);
@@ -206,12 +218,6 @@ public class MyStatistic extends FragmentActivity implements
 	}
 
 	public void show() {
-
-//		final Dialog dialog = new Dialog(MyStatistic.this);
-//		dialog = new Dialog(MyStatistic.this);
-//		dialog.setContentView(R.layout.dialog_stat);
-//		dialog.setTitle("Statictics");
-
 		final NumberPicker npPulse = initNumberPicker(20, 200, R.id.npPulse,
 				dialog);
 		final NumberPicker npSysPressure = initNumberPicker(60, 300,
@@ -241,6 +247,7 @@ public class MyStatistic extends FragmentActivity implements
 							String.valueOf(npDiasPressure.getValue()),
 							profile_id, formattedDate, formattedTime);
 					getSupportLoaderManager().getLoader(0).forceLoad();
+					addRecord();
 					dialog.dismiss();
 				} else if (flag == EDIT_DATA_FLAG) {
 					currentStat[0] = String.valueOf(npPulse.getValue());
@@ -248,10 +255,9 @@ public class MyStatistic extends FragmentActivity implements
 					currentStat[2] = String.valueOf(npDiasPressure.getValue());
 					db.editStat(currentStat, String.valueOf(idCurrentName));
 					getSupportLoaderManager().getLoader(0).forceLoad();
-					saveData();
+					changeRecord();
 					dialog.dismiss();
 				}
-				addData();
 				scrollMyListViewToBottom();
 			}
 		});
@@ -282,7 +288,7 @@ public class MyStatistic extends FragmentActivity implements
 			db.delRecStat(acmi.id);
 			// получаем новый курсор с данными
 			getSupportLoaderManager().getLoader(0).forceLoad();
-			deleteData();
+			deleteRecord();
 			scrollMyListViewToBottom();
 			return true;
 		} else if (item.getItemId() == CM_EDIT_ID) {
@@ -302,7 +308,8 @@ public class MyStatistic extends FragmentActivity implements
 	public void showSave() {
 		final Dialog dialog = new Dialog(MyStatistic.this);
 		dialog.setContentView(R.layout.dialog_save);
-		dialog.setTitle("Settings");
+		Resources res = getResources();
+		dialog.setTitle(res.getString(R.string.settings));
 
 		Button btnSave = (Button) dialog.findViewById(R.id.btnSave);
 		Button btnEmail = (Button) dialog.findViewById(R.id.btnEmail);
@@ -319,12 +326,12 @@ public class MyStatistic extends FragmentActivity implements
 				if (listStat.getCount() < 7) {
 					dialog.dismiss();
 					graphShow();
-//					dialog.dismiss();
+					// dialog.dismiss();
 				} else {
 					dialog.dismiss();
 					Intent intent = new Intent(MyStatistic.this, Graph.class);
 					startActivityForResult(intent, 1);
-//					dialog.dismiss();
+					// dialog.dismiss();
 				}
 			}
 		});
@@ -389,7 +396,7 @@ public class MyStatistic extends FragmentActivity implements
 			public void onClick(View v) {
 				db.delRecAllStat(Long.valueOf(profile_id));
 				getSupportLoaderManager().getLoader(0).forceLoad();
-				deleteData();
+				deleteAllRecords();
 				dialog.dismiss();
 			}
 		});
@@ -417,8 +424,9 @@ public class MyStatistic extends FragmentActivity implements
 		// проверяем доступность SD
 		if (!Environment.getExternalStorageState().equals(
 				Environment.MEDIA_MOUNTED)) {
-			
-			Toast.makeText(this, R.string.cannt_save, Toast.LENGTH_SHORT).show();
+
+			Toast.makeText(this, R.string.cannt_save, Toast.LENGTH_SHORT)
+					.show();
 			Log.d(LOG_TAG,
 					"SD-card is no available: "
 							+ Environment.getExternalStorageState());
@@ -488,24 +496,31 @@ public class MyStatistic extends FragmentActivity implements
 		}
 	}
 
-	void saveData() {
-		Toast.makeText(this, R.string.saved, Toast.LENGTH_SHORT).show();
-	}
-
-	void addData() {
-		Toast.makeText(this, R.string.add, Toast.LENGTH_SHORT).show();
-	}
-
-	void deleteData() {
-		Toast.makeText(this, R.string.deleted, Toast.LENGTH_SHORT).show();
-	}
-
 	void saveOnSD() {
 		Toast.makeText(this, R.string.save_on_SD, Toast.LENGTH_SHORT).show();
 	}
 
 	void graphShow() {
 		Toast.makeText(this, R.string.graphShow, Toast.LENGTH_SHORT).show();
+	}
+
+	void addRecord() {
+		Toast.makeText(this, R.string.record_added, Toast.LENGTH_SHORT).show();
+	}
+
+	void changeRecord() {
+		Toast.makeText(this, R.string.record_changed, Toast.LENGTH_SHORT)
+				.show();
+	}
+
+	void deleteRecord() {
+		Toast.makeText(this, R.string.record_deleted, Toast.LENGTH_SHORT)
+				.show();
+	}
+
+	void deleteAllRecords() {
+		Toast.makeText(this, R.string.record_all_deleted, Toast.LENGTH_SHORT)
+				.show();
 	}
 
 	@Override

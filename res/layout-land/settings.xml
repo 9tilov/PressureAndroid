@@ -1,44 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    android:layout_height="match_parent" >
+
+    <ImageButton
+        android:id="@+id/imageButtonInfo"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="30dp"
+        android:src="@drawable/ic_info" />
 
     <RelativeLayout
         android:id="@+id/check_boxes"
-        android:layout_width="245dp"
-        android:layout_height="50dp"
+        android:layout_width="270dp"
+        android:layout_height="60dp"
         android:layout_alignParentLeft="true"
-        android:layout_marginTop="10dp"
         android:gravity="top"
         android:orientation="horizontal" >
+
+        <CheckBox
+            android:id="@+id/checkBoxTimePicker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/checkBoxRotation"
+            android:layout_alignParentBottom="true"
+            android:checked="false" />
 
         <TextView
             android:id="@+id/profileGraph1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
-            android:layout_toLeftOf="@+id/checkBoxRotation"
+            android:layout_marginTop="5dp"
+            android:layout_above="@+id/checkBoxTimePicker"
+            android:layout_alignParentLeft="true"
             android:text="@string/show_graph_after_rotation" />
+
+        <TextView
+            android:id="@+id/showCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_alignBaseline="@+id/checkBoxTimePicker"
+            android:layout_alignBottom="@+id/checkBoxTimePicker"
+            android:layout_alignParentLeft="true"
+            android:layout_weight="0.04"
+            android:text="@string/show_notifications" />
 
         <CheckBox
             android:id="@+id/checkBoxRotation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/profileGraph1"
-            android:layout_alignBottom="@+id/profileGraph1"
+            android:layout_marginTop="2dp"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="30dp"
+            android:layout_alignParentTop="true"
             android:checked="true" />
 
     </RelativeLayout>
 
-     <RelativeLayout
+    <RelativeLayout
         android:id="@+id/add_notify"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentTop="true"
+        android:layout_alignTop="@+id/notify_list"
         android:layout_toRightOf="@id/check_boxes"
         android:gravity="center"
         android:orientation="horizontal" >
@@ -50,36 +77,38 @@
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="20dp"
             android:orientation="horizontal" >
-
-            <Button
-                android:id="@+id/btnSaveSettings"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_marginLeft="50dp"
-                android:layout_marginRight="5dp"
-                android:layout_toRightOf="@+id/btnAddNotif"
-                android:background="@drawable/button"
-                android:text="@string/save" />
-
-            <Button
-                android:id="@+id/btnAddNotif"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="20dp"
-                android:background="@drawable/button"
-                android:text="@string/add" />
         </RelativeLayout>
 
         <TimePicker
             android:id="@+id/timePicker"
             android:layout_width="192dp"
             android:layout_height="116dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp" />
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" />
+
+        <Button
+            android:id="@+id/btnSaveSettings"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/btnAddNotif"
+            android:layout_alignBottom="@+id/btnAddNotif"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/button"
+            android:text="@string/save" />
+
+        <Button
+            android:id="@+id/btnAddNotif"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/RelativeLayout01"
+            android:layout_toRightOf="@+id/RelativeLayout01"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/button"
+            android:text="@string/add" />
 
     </RelativeLayout>
-    
+
     <RelativeLayout
         android:id="@+id/notify_list"
         android:layout_width="wrap_content"
@@ -102,14 +131,27 @@
         <ListView
             android:id="@+id/listNotif"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="match_parent"
             android:layout_below="@id/editNotif"
             android:textSize="12sp" >
-
         </ListView>
-
     </RelativeLayout>
 
-   
+    <ImageButton
+        android:id="@+id/imageButtonEmail"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginRight="21dp"
+        android:layout_toLeftOf="@+id/imageButtonInfo"
+        android:src="@drawable/ic_email_us" />
+
+    <ImageButton
+        android:id="@+id/imageButtonLanguage"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="22dp"
+        android:layout_toLeftOf="@+id/imageButtonEmail"
+        android:src="@drawable/ic_language" />
 
 </RelativeLayout>

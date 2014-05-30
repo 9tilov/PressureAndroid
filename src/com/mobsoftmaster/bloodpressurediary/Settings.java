@@ -7,6 +7,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -14,9 +15,7 @@ import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.util.Log;
 import android.view.ContextMenu;
-import android.view.InflateException;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -82,6 +81,7 @@ public class Settings extends FragmentActivity implements
 
 		db = new MyDB(this);
 		db.open();
+
 		sharedPref = new SharedPreference(this);
 
 		checkBoxGraph = (CheckBox) findViewById(R.id.checkBoxRotation);
@@ -89,6 +89,8 @@ public class Settings extends FragmentActivity implements
 
 		btnAddNotif = (Button) findViewById(R.id.btnAddNotif);
 		ImageButton infoButton = (ImageButton) findViewById(R.id.imageButtonInfo);
+		ImageButton emailUs = (ImageButton) findViewById(R.id.imageButtonEmail);
+		ImageButton btnLanguage = (ImageButton) findViewById(R.id.imageButtonLanguage);
 
 		editNotif = (EditText) findViewById(R.id.editNotif);
 
@@ -194,6 +196,7 @@ public class Settings extends FragmentActivity implements
 					getSupportLoaderManager().getLoader(0).forceLoad();
 					count_element_notif = db.getCountElementsSettings();
 					scrollMyListViewToBottom();
+					addNotif();
 				} else {
 					inCorrectData();
 				}
@@ -218,7 +221,6 @@ public class Settings extends FragmentActivity implements
 				}
 			}
 		});
-		scrollMyListViewToBottom();
 
 		infoButton.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -227,6 +229,60 @@ public class Settings extends FragmentActivity implements
 				startActivity(intent);
 			}
 		});
+
+		emailUs.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				final Intent emailIntent = new Intent(
+						android.content.Intent.ACTION_SEND);
+
+				emailIntent.setType("plain/text");
+				// Кому
+				Resources res = getResources();
+				emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL,
+						new String[] { res.getString(R.string.app_email) });
+				// Зачем
+				emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,
+						"Blood pressure diary errors");
+				// О чём
+				Settings.this.startActivity(Intent.createChooser(emailIntent,
+						res.getString(R.string.mail_sanding)));
+			}
+		});
+		btnLanguage.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				showLanguage();
+			}
+		});
+		scrollMyListViewToBottom();
+	}
+	
+	public void showLanguage() {
+		final Dialog dialog = new Dialog(Settings.this);
+		dialog.setContentView(R.layout.dialog_language);
+		Resources res = getResources();
+		dialog.setTitle(res.getString(R.string.language));
+
+		Button btnEnglish = (Button) dialog.findViewById(R.id.btnEnglish);
+		Button btnRussian = (Button) dialog.findViewById(R.id.btnRussian);
+
+		btnEnglish.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				sharedPref.saveLanguage("language", 0);
+				dialog.dismiss();
+			}
+		});
+		
+		btnRussian.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				sharedPref.saveLanguage("language", 1);
+				dialog.dismiss();
+			}
+		});
+		dialog.show();
 	}
 
 	private void scrollMyListViewToBottom() {
@@ -238,6 +294,7 @@ public class Settings extends FragmentActivity implements
 				listNotif.setSelection(count_element_notif);
 			}
 		});
+		
 	}
 
 	public void onCreateContextMenu(ContextMenu menu, View v,
@@ -272,7 +329,7 @@ public class Settings extends FragmentActivity implements
 			adb.setView(view);
 
 			// кнопка положительного ответа
-			adb.setPositiveButton(R.string.yes, myClickListener);
+			adb.setPositiveButton(R.string.save, myClickListener);
 			// кнопка нейтрального ответа
 			adb.setNeutralButton(R.string.cancel, myClickListener);
 
@@ -306,6 +363,7 @@ public class Settings extends FragmentActivity implements
 							hour, minute, String.valueOf(idCurrentNotif));
 					getSupportLoaderManager().getLoader(0).forceLoad();
 					scrollMyListViewToBottom();
+					changeNotif();
 				}
 				break;
 			// нейтральная кнопка
@@ -323,6 +381,7 @@ public class Settings extends FragmentActivity implements
 			db.delRecNotif(acmi.id);
 			// получаем новый курсор с данными
 			getSupportLoaderManager().getLoader(0).forceLoad();
+			deleteNotif();
 			scrollMyListViewToBottom();
 			return true;
 		} else if (item.getItemId() == CM_EDIT_NOTIF) {
@@ -341,7 +400,7 @@ public class Settings extends FragmentActivity implements
 	public void showChoice() {
 		final Dialog dialog = new Dialog(Settings.this);
 		dialog.setContentView(R.layout.dialog_choice);
-		dialog.setTitle("Are you sure?");
+		dialog.setTitle(R.string.are_you_sure);
 
 		Button btnYes = (Button) dialog.findViewById(R.id.btnYes);
 		Button btnNo = (Button) dialog.findViewById(R.id.btnNo);
@@ -351,7 +410,7 @@ public class Settings extends FragmentActivity implements
 			public void onClick(View v) {
 				db.delRecAllNotif();
 				getSupportLoaderManager().getLoader(0).forceLoad();
-				deleteData();
+				deleteAllNotif();
 				dialog.dismiss();
 			}
 		});
@@ -420,5 +479,22 @@ public class Settings extends FragmentActivity implements
 
 	void deleteData() {
 		Toast.makeText(this, R.string.deleted, Toast.LENGTH_SHORT).show();
+	}
+
+	void addNotif() {
+		Toast.makeText(this, R.string.notif_added, Toast.LENGTH_SHORT).show();
+	}
+
+	void changeNotif() {
+		Toast.makeText(this, R.string.notif_changed, Toast.LENGTH_SHORT).show();
+	}
+
+	void deleteNotif() {
+		Toast.makeText(this, R.string.notif_deleted, Toast.LENGTH_SHORT).show();
+	}
+
+	void deleteAllNotif() {
+		Toast.makeText(this, R.string.notif_all_deleted, Toast.LENGTH_SHORT)
+				.show();
 	}
 }

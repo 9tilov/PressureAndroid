@@ -4,15 +4,40 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <ImageButton
-        android:id="@+id/imageButtonInfo"
-        android:layout_width="30dp"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="30dp"
-        android:layout_alignTop="@+id/showCheckBox"
-        android:layout_gravity="right"
-        android:layout_marginRight="5dp"
-        android:layout_toLeftOf="@+id/checkBoxTimePicker"
-        android:src="@drawable/ic_info" />
+        android:gravity="top"
+        android:orientation="horizontal" >
+
+        <ImageButton
+            android:id="@+id/imageButtonInfo"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="30dp"
+            android:src="@drawable/ic_info" />
+
+        <ImageButton
+            android:id="@+id/imageButtonEmail"
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="14dp"
+            android:layout_toLeftOf="@+id/imageButtonInfo"
+            android:src="@drawable/ic_email_us" />
+
+        <ImageButton
+            android:id="@+id/imageButtonLanguage"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="16dp"
+            android:layout_toLeftOf="@+id/imageButtonEmail"
+            android:src="@drawable/ic_language" />
+
+    </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -114,10 +139,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_marginTop="26dp"
-            android:layout_toRightOf="@+id/timePicker"
+            android:layout_alignRight="@+id/btnSaveSettings"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="30dp"
             android:background="@drawable/button"
             android:text="@string/add" />
+
     </RelativeLayout>
 
 </LinearLayout>

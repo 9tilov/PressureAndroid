@@ -1,6 +1,7 @@
 package com.mobsoftmaster.bloodpressurediary;
 
 import java.util.LinkedList;
+import java.util.Locale;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GraphViewSeries;
@@ -10,9 +11,12 @@ import com.jjoe64.graphview.GraphView.LegendAlign;
 import com.jjoe64.graphview.GraphViewSeries.GraphViewSeriesStyle;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.view.KeyEvent;
@@ -23,12 +27,15 @@ import android.util.Log;
 public class Graph extends Activity {
 
 	MyDB db;
-	
+
 	SharedPreference sharedPref;
 
 	final String LOG_TAG = "myLogs";
-	
+
 	boolean rotation;
+	Resources res;
+	
+//	Locales locales;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -36,10 +43,11 @@ public class Graph extends Activity {
 
 		db = new MyDB(this);
 		sharedPref = new SharedPreference(this);
-		
+
+		res = getResources();
 		TabHost tabs = (TabHost) findViewById(R.id.tabhost);
 		tabs.setup();
-		
+
 		LinearLayout layoutWeek = (LinearLayout) findViewById(R.id.graphWeek);
 		LinearLayout layoutMonth = (LinearLayout) findViewById(R.id.graphMonth);
 		LinearLayout layout3Month = (LinearLayout) findViewById(R.id.graph3Month);
@@ -50,27 +58,32 @@ public class Graph extends Activity {
 
 		if (!rotation) {
 			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-		}  
+		}
 
 		if ((getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
 				&& (rotation)) {
 			finish();
 		}
 
-		setTab("tag1", R.id.graphWeek, "week", tabs);
-		setTab("tag2", R.id.graphMonth, "month", tabs);
-		setTab("tag3", R.id.graph3Month, "3 month", tabs);
-		setTab("tag4", R.id.graphAllPeriod, "all period", tabs);
+		
+		setTab("tag1", R.id.graphWeek, res.getString(R.string.graphWeek), tabs);
+		setTab("tag2", R.id.graphMonth, res.getString(R.string.graphMonth),
+				tabs);
+		setTab("tag3", R.id.graph3Month, res.getString(R.string.graph3Month),
+				tabs);
+		setTab("tag4", R.id.graphAllPeriod,
+				res.getString(R.string.graphAllPeriod), tabs);
 
 		Log.d(LOG_TAG, "stat_idssss = " + stat_id);
 
-		GraphView graphViewWeek = new LineGraphView(this, "Pressure statistics");
+		GraphView graphViewWeek = new LineGraphView(this,
+				res.getString(R.string.pressure_stat));
 		GraphView graphViewMonth = new LineGraphView(this,
-				"Pressure statistics");
+				res.getString(R.string.pressure_stat));
 		GraphView graphView3Month = new LineGraphView(this,
-				"Pressure statistics");
+				res.getString(R.string.pressure_stat));
 		GraphView graphViewAllPeriod = new LineGraphView(this,
-				"Pressure statistics");
+				res.getString(R.string.pressure_stat));
 
 		db = new MyDB(this);
 		db.open();
@@ -83,14 +96,15 @@ public class Graph extends Activity {
 		createGraph(all_stat_records, all_stat_records, layoutAllPeriod,
 				graphViewAllPeriod, stat_id);
 	}
-	
+
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-	     if ((rotation) && (keyCode == KeyEvent.KEYCODE_BACK)) {
-	     //preventing default implementation previous to android.os.Build.VERSION_CODES.ECLAIR
-	     return true;
-	     }
-	     return super.onKeyDown(keyCode, event);    
+		if ((rotation) && (keyCode == KeyEvent.KEYCODE_BACK)) {
+			// preventing default implementation previous to
+			// android.os.Build.VERSION_CODES.ECLAIR
+			return true;
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 
 	protected void onDestroy() {
@@ -127,17 +141,17 @@ public class Graph extends Activity {
 
 			GraphViewSeriesStyle stylePulse = new GraphViewSeriesStyle();
 			stylePulse.color = Color.rgb(0, 500, 0);
-			GraphViewSeries seriesPulse = new GraphViewSeries("Pulse",
+			GraphViewSeries seriesPulse = new GraphViewSeries(res.getString(R.string.pulse),
 					stylePulse, dataPulse);
 
 			GraphViewSeriesStyle styleSys = new GraphViewSeriesStyle();
 			styleSys.color = Color.rgb(200, 50, 0);
-			GraphViewSeries seriesSys = new GraphViewSeries("Sys.", styleSys,
+			GraphViewSeries seriesSys = new GraphViewSeries(res.getString(R.string.sys), styleSys,
 					dataSys);
 
 			GraphViewSeriesStyle styleDias = new GraphViewSeriesStyle();
 			styleDias.color = Color.rgb(500, 500, 0);
-			GraphViewSeries seriesDias = new GraphViewSeries("Dias.",
+			GraphViewSeries seriesDias = new GraphViewSeries(res.getString(R.string.dias),
 					styleDias, dataDias);
 
 			graphView.addSeries(seriesSys);
