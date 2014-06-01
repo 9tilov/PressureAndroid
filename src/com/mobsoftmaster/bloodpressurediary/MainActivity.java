@@ -82,6 +82,9 @@ public class MainActivity extends FragmentActivity implements
 			c.locale = myLocale;
 			Log.d(LOG_TAG, "language2222 = ");
 			break;
+		case 2:
+			c.locale = Locale.CHINESE;
+			break;
 		}
 		
 		getResources().updateConfiguration(c,

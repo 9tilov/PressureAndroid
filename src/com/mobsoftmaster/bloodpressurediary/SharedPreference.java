@@ -29,7 +29,10 @@ public class SharedPreference {
 	}
 
 	/*
-	 * Languages 0 - english 1 - russian
+	 * Languages 
+	 * 0 - english
+	 * 1 - russian
+	 * 2 - chinese 
 	 */
 	public void saveLanguage(String key, int value) {
 		SharedPreferences sharedPreferences = PreferenceManager

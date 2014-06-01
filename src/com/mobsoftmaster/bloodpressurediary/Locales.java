@@ -25,8 +25,6 @@ public class Locales extends Application {
 
 		int language = sharedPref.LoadLanguage();
 
-		Log.d(LOG_TAG, "languageLoc = " + language);
-
 		switch (language) {
 		case 0:
 			c.locale = Locale.ENGLISH;
@@ -34,6 +32,9 @@ public class Locales extends Application {
 		case 1:
 			Locale myLocale = new Locale("ru", "RU");
 			c.locale = myLocale;
+			break;
+		case 2:
+			c.locale = Locale.CHINESE;
 			break;
 		}
 

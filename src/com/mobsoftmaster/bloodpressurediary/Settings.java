@@ -52,6 +52,8 @@ public class Settings extends FragmentActivity implements
 	final String LOG_TAG = "Pressure";
 
 	EditText editCurrentNotif;
+	
+	int language;
 
 	String[] currentNotif = new String[] { "", "", "" };
 
@@ -217,6 +219,7 @@ public class Settings extends FragmentActivity implements
 					sharedPref.SavePreferences("rotation", rotation);
 					sharedPref.SavePreferences("notification", notification);
 					sharedPref.SavePreferences("state", true);
+					sharedPref.saveLanguage("language", language);
 					startActivity(intent);
 				}
 			}
@@ -266,11 +269,12 @@ public class Settings extends FragmentActivity implements
 
 		Button btnEnglish = (Button) dialog.findViewById(R.id.btnEnglish);
 		Button btnRussian = (Button) dialog.findViewById(R.id.btnRussian);
+		Button btnChinese = (Button) dialog.findViewById(R.id.btnChinese);
 
 		btnEnglish.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				sharedPref.saveLanguage("language", 0);
+				language = 0;
 				chooseLanguage();
 				dialog.dismiss();
 			}
@@ -279,7 +283,16 @@ public class Settings extends FragmentActivity implements
 		btnRussian.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				sharedPref.saveLanguage("language", 1);
+				language = 1;
+				chooseLanguage();
+				dialog.dismiss();
+			}
+		});
+		
+		btnChinese.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				language = 2;
 				chooseLanguage();
 				dialog.dismiss();
 			}

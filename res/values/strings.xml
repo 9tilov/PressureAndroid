@@ -55,6 +55,7 @@
     <string name="chose_language">New languge is chosen</string>
     <string name="english">English</string>
     <string name="russian">Русский</string>
+    <string name="chinese">中国的</string>
     <string name="guest">Guest</string>
     <string name="locale">Locales</string>
     <string name="graphShow">Graph will be shown after 7 records</string>
