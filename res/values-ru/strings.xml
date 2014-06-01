@@ -35,8 +35,8 @@
     <string name="statistics">Статистика</string>
     <string name="programm_info">О программе</string>
     <string name="addStat">Добавить</string>
-    <string name="correct_name">Введите Ваше имя</string>
-    <string name="correct_notif">Введите Ваше уведомление</string>
+    <string name="correct_name">Введите ваше имя</string>
+    <string name="correct_notif">Введите ваше уведомление</string>
     <string name="save_on_email">Отправить по e-mail</string>
     <string name="save_on_SD">Статистика сохранена в папке \"Pressure\"</string>
     <string name="add_profile">Добавить профиль</string>
@@ -54,6 +54,7 @@
     <string name="guest">Гость</string>
     <string name="locale">Языки</string>
     <string name="language">Выберите язык</string>
+    <string name="chose_language">Выбран новый язык</string>
     <string name="graphShow">Сначала добавьте не менее 7 записей</string>
     <string name="graphWeek">неделя</string>
     <string name="graphMonth">месяц</string>
@@ -90,7 +91,7 @@
 										\n
 										Версия 1.0\n
 										\n
-										Благодаря этой программе Вы сможете \n
+										Благодаря этой программе вы сможете \n
 										контролировать свое кровяное давление.\n
 										\n
 										Возможности:\n
@@ -99,15 +100,14 @@
 										-настройка и отправка уведомлений\n
 										-добавление новых пользователей\n
 										-отправка результатов измерений \n
-										 Вашему лечащему врачу на почту\n
+										 вашему лечащему врачу на почту\n
 										-сохранение результатов измерений в файл\n
 										\n
 										В соответствии с законом о неразглашении\n
-										врачебной тайны, данные Ваших давлений и пульса \n
+										врачебной тайны, данные вашего давления и пульса \n
 										сохраняются только в базе данных приложения.\n
 										\n
-										Разработчики не несут ответственности за утечку\n
-										Ваших персональных данных\n
+										Разработчики не несут ответственность за утечку\n
 										\n</string>
 
 </resources>

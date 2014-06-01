@@ -271,6 +271,7 @@ public class Settings extends FragmentActivity implements
 			@Override
 			public void onClick(View v) {
 				sharedPref.saveLanguage("language", 0);
+				chooseLanguage();
 				dialog.dismiss();
 			}
 		});
@@ -279,6 +280,7 @@ public class Settings extends FragmentActivity implements
 			@Override
 			public void onClick(View v) {
 				sharedPref.saveLanguage("language", 1);
+				chooseLanguage();
 				dialog.dismiss();
 			}
 		});
@@ -495,6 +497,11 @@ public class Settings extends FragmentActivity implements
 
 	void deleteAllNotif() {
 		Toast.makeText(this, R.string.notif_all_deleted, Toast.LENGTH_SHORT)
+				.show();
+	}
+	
+	void chooseLanguage() {
+		Toast.makeText(this, R.string.chose_language, Toast.LENGTH_SHORT)
 				.show();
 	}
 }
