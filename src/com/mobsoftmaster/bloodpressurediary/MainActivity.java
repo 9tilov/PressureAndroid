@@ -70,8 +70,6 @@ public class MainActivity extends FragmentActivity implements
 		
 		int language = sharedPref.LoadLanguage();
 		
-		Log.d(LOG_TAG, "language = " + language);
-		
 		switch (language) {
 		case 0:
 			c.locale = Locale.ENGLISH;
@@ -188,8 +186,8 @@ public class MainActivity extends FragmentActivity implements
 				Intent intent = new Intent(MainActivity.this, MyStatistic.class);
 				Cursor cur = (Cursor) lvData.getAdapter().getItem(position);
 				int id_name = cur.getInt(cur.getColumnIndex("_id"));
-				sharedPref.saveID("idName", id_name);
-				sharedPref.SavePreferences("state", false);
+				sharedPref.saveID(sharedPref.s_id, id_name);
+				sharedPref.SavePreferences(sharedPref.s_state, false);
 				startActivity(intent);
 			}
 		});

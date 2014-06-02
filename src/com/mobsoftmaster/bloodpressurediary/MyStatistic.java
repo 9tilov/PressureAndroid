@@ -93,9 +93,9 @@ public class MyStatistic extends FragmentActivity implements
 		profile_id = sharedPref.LoadID();
 		rotation = sharedPref.LoadRotation();
 
-		if (!rotation) {
-			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-		}
+//		if (!rotation) {
+//			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+//		}
 
 		Animation animRotateIn_icon = AnimationUtils.loadAnimation(this,
 				R.anim.rotate);
@@ -115,7 +115,7 @@ public class MyStatistic extends FragmentActivity implements
 		btnProfile.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				sharedPref.SavePreferences("state", true);
+				sharedPref.SavePreferences(sharedPref.s_state, true);
 				finish();
 			}
 		});
