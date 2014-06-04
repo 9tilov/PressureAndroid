@@ -7,6 +7,14 @@ import android.preference.PreferenceManager;
 public class SharedPreference {
 
 	private Context mCtx;
+	
+	public String s_language = "language";
+	public String s_id = "idName";
+	public String s_rotation = "rotation";
+	public String s_state = "state";
+	
+	public boolean notification = false;
+	public String s_notification = "notification";
 
 	public SharedPreference(Context ctx) {
 		mCtx = ctx;
@@ -45,7 +53,7 @@ public class SharedPreference {
 	public int LoadLanguage() {
 		SharedPreferences sharedPreferences = PreferenceManager
 				.getDefaultSharedPreferences(mCtx);
-		int id = sharedPreferences.getInt("language", 0);
+		int id = sharedPreferences.getInt(s_language, 0);
 		return id;
 	}
 
@@ -53,21 +61,21 @@ public class SharedPreference {
 	public int LoadID() {
 		SharedPreferences sharedPreferences = PreferenceManager
 				.getDefaultSharedPreferences(mCtx);
-		int id = sharedPreferences.getInt("idName", 1);
+		int id = sharedPreferences.getInt(s_id, 1);
 		return id;
 	}
 
 	public boolean LoadRotation() {
 		SharedPreferences sharedPreferences = PreferenceManager
 				.getDefaultSharedPreferences(mCtx);
-		boolean rotation = sharedPreferences.getBoolean("rotation", false);
+		boolean rotation = sharedPreferences.getBoolean(s_rotation, false);
 		return rotation;
 	}
 
 	public boolean LoadNotification() {
 		SharedPreferences sharedPreferences = PreferenceManager
 				.getDefaultSharedPreferences(mCtx);
-		boolean notification = sharedPreferences.getBoolean("notification",
+		boolean notification = sharedPreferences.getBoolean(s_notification,
 				false);
 		return notification;
 	}
@@ -75,7 +83,7 @@ public class SharedPreference {
 	public boolean LoadState() {
 		SharedPreferences sharedPreferences = PreferenceManager
 				.getDefaultSharedPreferences(mCtx);
-		boolean state = sharedPreferences.getBoolean("state", true);
+		boolean state = sharedPreferences.getBoolean(s_state, true);
 		return state;
 	}
 

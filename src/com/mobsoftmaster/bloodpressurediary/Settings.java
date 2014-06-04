@@ -216,10 +216,9 @@ public class Settings extends FragmentActivity implements
 				else {
 					Intent intent = new Intent(Settings.this,
 							MainActivity.class);
-					sharedPref.SavePreferences("rotation", rotation);
-					sharedPref.SavePreferences("notification", notification);
-					sharedPref.SavePreferences("state", true);
-					sharedPref.saveLanguage("language", language);
+					sharedPref.SavePreferences(sharedPref.s_rotation, rotation);
+					sharedPref.SavePreferences(sharedPref.s_notification, notification);
+					sharedPref.SavePreferences(sharedPref.s_state, true);
 					startActivity(intent);
 				}
 			}
@@ -275,6 +274,7 @@ public class Settings extends FragmentActivity implements
 			@Override
 			public void onClick(View v) {
 				language = 0;
+				sharedPref.saveLanguage(sharedPref.s_language, language);
 				chooseLanguage();
 				dialog.dismiss();
 			}
@@ -284,6 +284,7 @@ public class Settings extends FragmentActivity implements
 			@Override
 			public void onClick(View v) {
 				language = 1;
+				sharedPref.saveLanguage(sharedPref.s_language, language);
 				chooseLanguage();
 				dialog.dismiss();
 			}
@@ -293,6 +294,7 @@ public class Settings extends FragmentActivity implements
 			@Override
 			public void onClick(View v) {
 				language = 2;
+				sharedPref.saveLanguage(sharedPref.s_language, language);
 				chooseLanguage();
 				dialog.dismiss();
 			}
