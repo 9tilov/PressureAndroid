@@ -67,24 +67,26 @@ public class MainActivity extends FragmentActivity implements
 		Configuration c = new Configuration(getResources().getConfiguration());
 
 		sharedPref = new SharedPreference(this);
-		
+
 		int language = sharedPref.LoadLanguage();
-		
 		switch (language) {
 		case 0:
+			c.locale = Locale.getDefault();
+			break;
+		case 1:
 			c.locale = Locale.ENGLISH;
 			Log.d(LOG_TAG, "language1111 = ");
 			break;
-		case 1:
+		case 2:
 			Locale myLocale = new Locale("ru", "RU");
 			c.locale = myLocale;
 			Log.d(LOG_TAG, "language2222 = ");
 			break;
-		case 2:
+		case 3:
 			c.locale = Locale.CHINESE;
 			break;
 		}
-		
+
 		getResources().updateConfiguration(c,
 				getResources().getDisplayMetrics());
 
@@ -142,7 +144,7 @@ public class MainActivity extends FragmentActivity implements
 
 		ImageButton addProfile = (ImageButton) findViewById(R.id.addProfile);
 		ImageButton btnSettings = (ImageButton) findViewById(R.id.imageButtonSettings);
-		
+
 		addProfile.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -152,7 +154,7 @@ public class MainActivity extends FragmentActivity implements
 				showDialog(DIALOG_ADD);
 			}
 		});
-		
+
 		btnSettings.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {

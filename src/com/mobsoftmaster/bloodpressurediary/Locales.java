@@ -24,16 +24,19 @@ public class Locales extends Application {
 		sharedPref = new SharedPreference(this);
 
 		int language = sharedPref.LoadLanguage();
-
+		
 		switch (language) {
 		case 0:
-			c.locale = Locale.ENGLISH;
+			c.locale = Locale.getDefault();
 			break;
 		case 1:
+			c.locale = Locale.ENGLISH;
+			break;
+		case 2:
 			Locale myLocale = new Locale("ru", "RU");
 			c.locale = myLocale;
 			break;
-		case 2:
+		case 3:
 			c.locale = Locale.CHINESE;
 			break;
 		}

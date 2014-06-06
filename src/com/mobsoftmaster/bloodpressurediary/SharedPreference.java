@@ -38,9 +38,10 @@ public class SharedPreference {
 
 	/*
 	 * Languages 
-	 * 0 - english
-	 * 1 - russian
-	 * 2 - chinese 
+	 * 0 - default
+	 * 1 - english
+	 * 2 - russian
+	 * 3 - chinese
 	 */
 	public void saveLanguage(String key, int value) {
 		SharedPreferences sharedPreferences = PreferenceManager

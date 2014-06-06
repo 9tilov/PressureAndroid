@@ -273,7 +273,7 @@ public class Settings extends FragmentActivity implements
 		btnEnglish.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				language = 0;
+				language = 1;
 				sharedPref.saveLanguage(sharedPref.s_language, language);
 				chooseLanguage();
 				dialog.dismiss();
@@ -283,7 +283,7 @@ public class Settings extends FragmentActivity implements
 		btnRussian.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				language = 1;
+				language = 2;
 				sharedPref.saveLanguage(sharedPref.s_language, language);
 				chooseLanguage();
 				dialog.dismiss();
@@ -293,7 +293,7 @@ public class Settings extends FragmentActivity implements
 		btnChinese.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				language = 2;
+				language = 3;
 				sharedPref.saveLanguage(sharedPref.s_language, language);
 				chooseLanguage();
 				dialog.dismiss();
