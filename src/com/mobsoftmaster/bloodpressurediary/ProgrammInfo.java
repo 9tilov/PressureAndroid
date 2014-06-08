@@ -1,13 +1,12 @@
 package com.mobsoftmaster.bloodpressurediary;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.widget.TextView;
 import android.view.View;
 
-public class ProgrammInfo extends Activity {
+public class ProgrammInfo extends TrackedActivity {
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

@@ -1,8 +1,6 @@
 package com.mobsoftmaster.bloodpressurediary;
 
 import java.util.LinkedList;
-import java.util.Locale;
-
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GraphViewSeries;
 import com.jjoe64.graphview.LineGraphView;
@@ -10,13 +8,10 @@ import com.jjoe64.graphview.GraphView.GraphViewData;
 import com.jjoe64.graphview.GraphView.LegendAlign;
 import com.jjoe64.graphview.GraphViewSeries.GraphViewSeriesStyle;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.view.KeyEvent;
@@ -24,7 +19,7 @@ import android.view.KeyEvent;
 import android.graphics.Color;
 import android.util.Log;
 
-public class Graph extends Activity {
+public class Graph extends TrackedActivity {
 
 	MyDB db;
 

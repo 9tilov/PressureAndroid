@@ -33,7 +33,7 @@ import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
 
-public class Settings extends FragmentActivity implements
+public class Settings extends TrackedActivity implements
 		LoaderCallbacks<Cursor> {
 
 	CheckBox checkBoxGraph, checkBoxNotif;

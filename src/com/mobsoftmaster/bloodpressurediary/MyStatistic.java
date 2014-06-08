@@ -6,7 +6,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Locale;
+
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -28,7 +30,6 @@ import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -42,7 +43,7 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
 
-public class MyStatistic extends FragmentActivity implements
+public class MyStatistic extends TrackedActivity implements
 		LoaderCallbacks<Cursor>, NumberPicker.OnValueChangeListener {
 
 	private static final int CM_DELETE_ID = 0, CM_EDIT_ID = 1,
@@ -73,12 +74,19 @@ public class MyStatistic extends FragmentActivity implements
 
 	int all_records_stat;
 	Dialog dialog;
-
+	private AdView mAdView;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.statistic);
 
+		mAdView = (AdView) findViewById(R.id.adView);
+		AdRequest adRequest = new AdRequest.Builder()
+	    .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+	    .build();
+		mAdView.loadAd(adRequest);
+		
 		db = new MyDB(this);
 		db.open();
 
@@ -108,7 +116,7 @@ public class MyStatistic extends FragmentActivity implements
 			Intent intent = new Intent(MyStatistic.this, Graph.class);
 			startActivity(intent);
 		} else if ((getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
-				&& (all_records_stat < 7)) {
+				&& (rotation) && (all_records_stat < 7)) {
 			graphShow();
 		}
 
@@ -163,13 +171,7 @@ public class MyStatistic extends FragmentActivity implements
 
 		// // создаем лоадер для чтения данных
 		getSupportLoaderManager().initLoader(0, null, this);
-		// //Получаем текущее время
-		Calendar c = Calendar.getInstance();
-		SimpleDateFormat date = new SimpleDateFormat("dd.MM");
-		SimpleDateFormat time = new SimpleDateFormat("HH:mm");
-		formattedDate = date.format(c.getTime());
-		formattedTime = time.format(c.getTime());
-
+		
 		btnAddStat.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -242,6 +244,13 @@ public class MyStatistic extends FragmentActivity implements
 			@Override
 			public void onClick(View v) {
 				if (flag == SAVE_DATA_FLAG) {
+					// //Получаем текущее время
+					Calendar c = Calendar.getInstance();
+					SimpleDateFormat date = new SimpleDateFormat("dd.MM.yyyy");
+					SimpleDateFormat time = new SimpleDateFormat("HH:mm");
+					formattedDate = date.format(c.getTime());
+					formattedTime = time.format(c.getTime());
+					
 					db.addStat(String.valueOf(npPulse.getValue()),
 							String.valueOf(npSysPressure.getValue()),
 							String.valueOf(npDiasPressure.getValue()),
@@ -439,18 +448,19 @@ public class MyStatistic extends FragmentActivity implements
 		// создаем каталог
 		sdPath.mkdirs();
 		// формируем объект File, который содержит путь к файлу
-		File sdFile = new File(sdPath, FILENAME_SD + "_for_" + path + ".txt");
+		File sdFile = new File(sdPath, FILENAME_SD + "_for_" + path + ".csv");
 
 		String[] name = new String[] { "", "", "", "", "", "" };
 
 		try {
 			BufferedWriter bw = new BufferedWriter(new FileWriter(sdFile));
+			bw.write("Time;Date;Systolic;Diastolic;Pulse\n");
 			for (int i = 0; i < listStat.getCount(); i++) {
 				Cursor cur = (Cursor) listStat.getAdapter().getItem(i);
 				long temp = cur.getLong(cur.getColumnIndex("_id"));
 				name = db.getCurrentStat(temp);
-				bw.write(name[4] + "   " + name[1] + "/" + name[2] + "    "
-						+ name[0] + "   " + name[5] + "\n");
+				bw.write(name[4] + ";" + name[3] + ";" + name[1] + ";" + name[2] + ";"
+						+ name[0] + "\n");
 			}
 			bw.close();
 			saveOnSD();
@@ -461,11 +471,24 @@ public class MyStatistic extends FragmentActivity implements
 		return true;
 	}
 
-	protected void onDestroy() {
-		Log.d(LOG_TAG, "closeDB");
-		super.onDestroy();
+	@Override
+	public void onResume() {
+		super.onResume();
+		mAdView.resume();
 	}
 
+    @Override
+    protected void onPause() {
+        mAdView.pause();
+        super.onPause();
+    }
+    
+    @Override
+    protected void onDestroy() {
+        mAdView.destroy();
+        super.onDestroy();
+    }
+	
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle bndl) {
 		return new MyCursorLoader(this, db);

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">血压日记</string>
+    <string name="action_settings">设置</string>
+    <string name="add_record">所有记录</string>
+    <string name="delete_profile">删除配置文件</string>
+    <string name="delete_notif">删除通知е</string>
+    <string name="delete_notif_all">删除所有</string>
+    <string name="edit_profile">编辑个人资料</string>
+    <string name="edit_notif">编辑通知</string>
+    <string name="edit_record">编辑条目</string>
+    <string name="delete_record">删除记录</string>
+    <string name="delete_all_records">删除所有记录</string>
+    <string name="btnSave">节省</string>
+    <string name="exit">产量</string>
+    <string name="save_data">救？</string>
+    <string name="yes">是的</string>
+    <string name="no">无</string>
+    <string name="cancel">出口</string>
+    <string name="saved">保存</string>
+    <string name="save">节省</string>
+    <string name="deleted">移除</string>
+    <string name="profile_deleted">个人资料已删除</string>
+    <string name="new_name">新名称</string>
+    <string name="current_name">你的名字</string>
+    <string name="add_name">添加一个名称</string>
+    <string name="added">附加的</string>
+    <string name="add">加</string>
+    <string name="profile_added">配置文件被添加</string>
+    <string name="profile_list">型材</string>
+    <string name="high_pressure">收缩压</string>
+    <string name="low_pressure">舒张压</string>
+    <string name="pulse">脉冲</string>
+    <string name="statistics">统计</string>
+    <string name="programm_info">节目</string>
+    <string name="addStat">加</string>
+    <string name="correct_name">输入你的名字</string>
+    <string name="correct_notif">输入您的通知</string>
+    <string name="save_on_email">通过电子邮件发送</string>
+    <string name="save_on_SD">存储在文件夹中的统计数据 \"Pressure\"</string>
+    <string name="add_profile">添加一个配置文件</string>
+    <string name="notif_added">补充通知</string>
+    <string name="notif_saved">补充通知</string>
+    <string name="notif_deleted">删除通知</string>
+    <string name="notif_all_deleted">删除所有通知</string>
+    <string name="record_added">条目添加</string>
+    <string name="record_changed">记录改变</string>
+    <string name="record_deleted">记录被删除</string>
+    <string name="record_all_deleted">所有记录都将被删除</string>
+    <string name="start">开始</string>
+    <string name="stop">停止</string>
+    <string name="graph">时间表</string>
+    <string name="guest">客人</string>
+    <string name="locale">指南</string>
+    <string name="language">选择语言</string>
+    <string name="chose_language">选择了一个新的语言</string>
+    <string name="graphShow">新增7条记录</string>
+    <string name="graphWeek">周</string>
+    <string name="graphMonth">月</string>
+    <string name="graph3Month">3个月</string>
+    <string name="graphAllPeriod">整个时期</string>
+    <string name="not_enough_records">记录不足</string>
+    <string name="receiver">Receiver</string>
+    <string name="pressure_stat">统计测量</string>
+    <string name="profile">轮廓</string>
+    <string name="service">Service</string>
+    <string name="settings">设置</string>
+    <string name="date">日期</string>
+    <string name="pressure">压力</string>
+    <string name="mmhg">托</string>
+    <string name="bitpersec">次/分</string>
+    <string name="sys">收缩压</string>
+    <string name="dias">舒张期</string>
+    <string name="show_graph_after_rotation">屏幕旋转后显示进度</string>
+    <string name="show_notifications">看到通知</string>
+    <string name="your_notification">您的通知</string>
+    <string name="edit_notification">编辑通知</string>
+    <string name="your_name">你的名字</string>
+    <string name="are_you_sure">你确定吗？</string>
+    <string name="mail_sanding">发送消息...</string>
+    <string name="statictics">统计</string>
+    <string name="cannt_save">对不起，但统计数据不会被保存或发送，如可用SD卡</string>
+    <string name="e_mail">电子邮件</string>
+    <string name="doctor_e_mail">邮件医师</string>
+    <string name="sharedPrefLoadState">state</string>
+    <string name="app_email">bloodPressureDiaryApp@gmail.com</string>
+    <string name="contact_us">写信给我们！</string>
+    <string name="programm_description">© 2014 by Ser and moggot.\n
+										保留所有权利.\n
+										\n
+										版本 1.0\n
+										\n
+										通过这个程序，你可以控制你的血压.\n
+										\n
+										能力:\n
+										-记录压力和心脏率在日记\n
+										-情节分析\n
+										-建立和发送通知\n
+										-添加新用户\n
+										-发送测量你的医生信箱\n
+										-测量结果保存到文件\n
+										\n
+										按照非公开医疗保密的法律，\n
+										你的血压和脉搏的详细资料只保存在数据库中的应用.\n
+										\n
+										开发商不负责泄漏\n
+										\n</string>
+
+</resources>

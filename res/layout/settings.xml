@@ -59,7 +59,9 @@
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@+id/checkBoxRotation"
             android:layout_alignBottom="@+id/checkBoxRotation"
+            android:layout_alignParentLeft="true"
             android:layout_marginLeft="10dp"
+            android:layout_toLeftOf="@id/checkBoxRotation"
             android:text="@string/show_graph_after_rotation" />
 
         <CheckBox
@@ -78,8 +80,10 @@
             android:layout_alignBottom="@+id/checkBoxTimePicker"
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="10dp"
+            android:layout_toLeftOf="@id/checkBoxTimePicker"
             android:layout_weight="0.04"
             android:text="@string/show_notifications" />
+
     </RelativeLayout>
 
     <RelativeLayout

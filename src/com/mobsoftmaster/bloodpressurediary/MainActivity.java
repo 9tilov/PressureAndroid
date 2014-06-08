@@ -3,7 +3,13 @@ package com.mobsoftmaster.bloodpressurediary;
 import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.Locale;
+import java.util.regex.Pattern;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -15,12 +21,12 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.KeyEvent;
@@ -37,7 +43,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class MainActivity extends FragmentActivity implements
+public class MainActivity extends TrackedActivity implements
 		LoaderCallbacks<Cursor> {
 
 	private static final int CM_EDIT_ID = 0, CM_DELETE_ID = 1;
@@ -54,12 +60,14 @@ public class MainActivity extends FragmentActivity implements
 
 	final String LOG_TAG = "Pressure";
 	final int DIALOG_EDIT = 1, DIALOG_ADD = 2;
-
+	private AdView mAdView;
+	
 	/** Called when the activity is first created. */
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+		
 		// открываем подключение к БД
 		db = new MyDB(this);
 		db.open();
@@ -75,12 +83,10 @@ public class MainActivity extends FragmentActivity implements
 			break;
 		case 1:
 			c.locale = Locale.ENGLISH;
-			Log.d(LOG_TAG, "language1111 = ");
 			break;
 		case 2:
 			Locale myLocale = new Locale("ru", "RU");
 			c.locale = myLocale;
-			Log.d(LOG_TAG, "language2222 = ");
 			break;
 		case 3:
 			c.locale = Locale.CHINESE;
@@ -175,7 +181,8 @@ public class MainActivity extends FragmentActivity implements
 
 		if (db.emptyDataBase() == false) {
 			Resources res = getResources();
-			db.addRec(res.getString(R.string.guest));
+			
+			db.addRec(res.getString(R.string.guest), getUserEmail());
 			lvData.setAdapter(scAdapter);
 			getSupportLoaderManager().getLoader(0).forceLoad();
 		} else {
@@ -193,6 +200,11 @@ public class MainActivity extends FragmentActivity implements
 				startActivity(intent);
 			}
 		});
+		mAdView = (AdView) findViewById(R.id.adView);
+		AdRequest adRequest = new AdRequest.Builder()
+	    .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+	    .build();
+		mAdView.loadAd(adRequest);
 	}
 
 	@Override
@@ -243,10 +255,16 @@ public class MainActivity extends FragmentActivity implements
 		} else if (id == DIALOG_ADD) {
 			addName = (EditText) dialog.getWindow().findViewById(
 					R.id.addNewName);
-			addName.setText("");
+			editMail = (EditText) dialog.getWindow().findViewById(
+					R.id.addMail);
+			String t = getUserEmail();
+			if (t != "") {
+				editMail.setText(t);
+			}
 		}
 	}
 
+	
 	DialogInterface.OnClickListener myClickListener = new DialogInterface.OnClickListener() {
 		public void onClick(DialogInterface dialog, int which) {
 			switch (which) {
@@ -268,7 +286,7 @@ public class MainActivity extends FragmentActivity implements
 						inCorrectData();
 						break;
 					} else {
-						db.addRec(addName.getText().toString());
+						db.addRec(addName.getText().toString(), editMail.getText().toString());
 						getSupportLoaderManager().getLoader(0).forceLoad();
 						addData();
 						break;
@@ -332,7 +350,7 @@ public class MainActivity extends FragmentActivity implements
 		menu.add(0, CM_EDIT_ID, 0, R.string.edit_record);
 		menu.add(0, CM_DELETE_ID, 0, R.string.delete_record);
 	}
-
+	
 	public boolean onContextItemSelected(MenuItem item) {
 		AdapterContextMenuInfo acmi = (AdapterContextMenuInfo) item
 				.getMenuInfo();
@@ -378,10 +396,24 @@ public class MainActivity extends FragmentActivity implements
 		Toast.makeText(this, R.string.correct_name, Toast.LENGTH_SHORT).show();
 	}
 
-	protected void onDestroy() {
-		super.onDestroy();
+	@Override
+	public void onResume() {
+		super.onResume();
+		mAdView.resume();
 	}
 
+    @Override
+    protected void onPause() {
+        mAdView.pause();
+        super.onPause();
+    }
+    
+    @Override
+    protected void onDestroy() {
+        mAdView.destroy();
+        super.onDestroy();
+    }
+    
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle bndl) {
 		return new MyCursorLoader(this, db);
@@ -415,5 +447,18 @@ public class MainActivity extends FragmentActivity implements
 	// Запрещаем использование кнопки "Назад"
 	@Override
 	public void onBackPressed() {
+	}
+	
+	private String getUserEmail() {
+		Pattern emailPattern = Patterns.EMAIL_ADDRESS; // API level 8+
+		Account[] accounts = AccountManager.get(this).getAccounts();
+		String possibleEmail = "";
+		for (Account account : accounts) {
+		    if (emailPattern.matcher(account.name).matches()) {
+		        possibleEmail = account.name;
+		        break;
+		    }
+		}
+		return possibleEmail;
 	}
 }
