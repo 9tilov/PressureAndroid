@@ -8,7 +8,6 @@ import com.jjoe64.graphview.GraphView.GraphViewData;
 import com.jjoe64.graphview.GraphView.LegendAlign;
 import com.jjoe64.graphview.GraphViewSeries.GraphViewSeriesStyle;
 
-import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -20,7 +19,7 @@ import android.view.KeyEvent;
 import android.graphics.Color;
 import android.util.Log;
 
-public class Graph extends Activity {
+public class Graph extends TrackedActivity {
 
 	MyDB db;
 

@@ -33,7 +33,7 @@ import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
 
-public class Settings extends FragmentActivity implements
+public class Settings extends TrackedActivity implements
 		LoaderCallbacks<Cursor> {
 
 	CheckBox checkBoxGraph, checkBoxNotif;
@@ -273,7 +273,7 @@ public class Settings extends FragmentActivity implements
 		btnEnglish.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				language = 0;
+				language = 1;
 				sharedPref.saveLanguage(sharedPref.s_language, language);
 				chooseLanguage();
 				dialog.dismiss();
@@ -283,7 +283,7 @@ public class Settings extends FragmentActivity implements
 		btnRussian.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				language = 1;
+				language = 2;
 				sharedPref.saveLanguage(sharedPref.s_language, language);
 				chooseLanguage();
 				dialog.dismiss();
@@ -293,7 +293,7 @@ public class Settings extends FragmentActivity implements
 		btnChinese.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				language = 2;
+				language = 3;
 				sharedPref.saveLanguage(sharedPref.s_language, language);
 				chooseLanguage();
 				dialog.dismiss();
