@@ -448,7 +448,7 @@ public class MyStatistic extends TrackedActivity implements
 		// создаем каталог
 		sdPath.mkdirs();
 		// формируем объект File, который содержит путь к файлу
-		File sdFile = new File(sdPath, FILENAME_SD + "_for_" + path + ".csv");
+		File sdFile = new File(sdPath, FILENAME_SD + "_for_" + path + ".txt");
 
 		String[] name = new String[] { "", "", "", "", "", "" };
 

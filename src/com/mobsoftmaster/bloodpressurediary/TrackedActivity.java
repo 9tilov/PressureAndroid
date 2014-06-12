@@ -17,15 +17,17 @@ public class TrackedActivity extends FragmentActivity{
 
     @Override
     protected void onStart() {
+    	super.onStart();
     	//Get an Analytics tracker to report app starts & uncaught exceptions etc.
       	GoogleAnalytics.getInstance(this).reportActivityStart(this);
-        super.onStart();
+        
     }
 
     @Override
     protected void onStop() {
-        super.onStop();
+        
         //Stop the analytics tracking
   		GoogleAnalytics.getInstance(this).reportActivityStop(this);
+  		super.onStop();
     }
 }
