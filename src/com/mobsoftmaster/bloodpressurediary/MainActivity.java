@@ -30,6 +30,7 @@ import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -57,6 +58,7 @@ public class MainActivity extends FragmentActivity implements
 	SharedPreference sharedPref;
 
 	SimpleCursorAdapter scAdapter;
+	int language;
 
 	long idCurrentName;
 	EditText editName, editMail, addName;
@@ -81,8 +83,10 @@ public class MainActivity extends FragmentActivity implements
 		Configuration c = new Configuration(getResources().getConfiguration());
 
 		sharedPref = new SharedPreference(this);
-
-		int language = sharedPref.LoadLanguage();
+//		setTitle(R.string.app_name);
+		language = sharedPref.LoadLanguage();
+		Log.d(LOG_TAG, "LANG&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& = " + language);
+		setTitle(R.string.app_name);
 		switch (language) {
 		case 0:
 			c.locale = Locale.getDefault();
@@ -101,6 +105,8 @@ public class MainActivity extends FragmentActivity implements
 
 		getResources().updateConfiguration(c,
 				getResources().getDisplayMetrics());
+		
+		
 
 		AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
@@ -133,7 +139,6 @@ public class MainActivity extends FragmentActivity implements
 
 		Cursor cursor = db.getAllDataNotif();
 		for (int i = 0; i < count_element_notif; ++i) {
-
 			if (cursor != null) {
 				cursor.moveToNext();
 				data_notif_fields[i] = data_notif_fields[i]
@@ -509,6 +514,7 @@ public class MainActivity extends FragmentActivity implements
 	}
 	@Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		Log.d(LOG_TAG, "LANG&&&&&&&32423423424&&&&&&&&&&&&&&&&&&&&& = " + language);
         if (requestCode == REQUEST_CODE_EMAIL && resultCode == RESULT_OK) {
             String accountName = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
             editMail.setText(accountName);
