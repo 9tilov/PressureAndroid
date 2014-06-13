@@ -83,6 +83,7 @@ public class MainActivity extends FragmentActivity implements
 		sharedPref = new SharedPreference(this);
 
 		int language = sharedPref.LoadLanguage();
+		
 		switch (language) {
 		case 0:
 			c.locale = Locale.getDefault();
@@ -101,6 +102,8 @@ public class MainActivity extends FragmentActivity implements
 
 		getResources().updateConfiguration(c,
 				getResources().getDisplayMetrics());
+		
+		setTitle(R.string.app_name);
 
 		AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
@@ -133,7 +136,6 @@ public class MainActivity extends FragmentActivity implements
 
 		Cursor cursor = db.getAllDataNotif();
 		for (int i = 0; i < count_element_notif; ++i) {
-
 			if (cursor != null) {
 				cursor.moveToNext();
 				data_notif_fields[i] = data_notif_fields[i]

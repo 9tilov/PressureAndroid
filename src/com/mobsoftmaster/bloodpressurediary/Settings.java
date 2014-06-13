@@ -229,7 +229,6 @@ public class Settings extends TrackedActivity implements
 					sharedPref.SavePreferences(sharedPref.s_notification,
 							notification);
 					sharedPref.SavePreferences(sharedPref.s_state, true);
-					sharedPref.saveLanguage(sharedPref.s_language, language);
 					startActivity(intent);
 				}
 			}
@@ -294,6 +293,7 @@ public class Settings extends TrackedActivity implements
 				c.locale = Locale.ENGLISH;
 				getResources().updateConfiguration(c,
 						getResources().getDisplayMetrics());
+				sharedPref.saveLanguage(sharedPref.s_language, language);
 				dialog.dismiss();
 			}
 		});
@@ -310,6 +310,7 @@ public class Settings extends TrackedActivity implements
 				c.locale = myLocale;
 				getResources().updateConfiguration(c,
 						getResources().getDisplayMetrics());
+				sharedPref.saveLanguage(sharedPref.s_language, language);
 				dialog.dismiss();
 			}
 		});
@@ -325,6 +326,7 @@ public class Settings extends TrackedActivity implements
 				c.locale = Locale.CHINESE;
 				getResources().updateConfiguration(c,
 						getResources().getDisplayMetrics());
+				sharedPref.saveLanguage(sharedPref.s_language, language);
 				dialog.dismiss();
 			}
 		});
