@@ -41,7 +41,7 @@
     <string name="save_on_SD">存储在文件夹中的统计数据 \"Pressure\"</string>
     <string name="add_profile">添加一个配置文件</string>
     <string name="notif_added">补充通知</string>
-    <string name="notif_saved">补充通知</string>
+    <string name="notif_changed">补充通知</string>
     <string name="notif_deleted">删除通知</string>
     <string name="notif_all_deleted">删除所有通知</string>
     <string name="record_added">条目添加</string>

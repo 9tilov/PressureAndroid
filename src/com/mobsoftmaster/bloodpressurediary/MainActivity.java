@@ -7,6 +7,9 @@ import java.util.regex.Pattern;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.auth.GoogleAuthUtil;
+import com.google.android.gms.common.AccountPicker;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -14,6 +17,7 @@ import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.PendingIntent;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -21,11 +25,11 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -43,11 +47,12 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class MainActivity extends TrackedActivity implements
+public class MainActivity extends FragmentActivity implements
 		LoaderCallbacks<Cursor> {
 
 	private static final int CM_EDIT_ID = 0, CM_DELETE_ID = 1;
-
+	private static final int REQUEST_CODE_EMAIL = 1;
+	private static final int REQUEST_CODE_EMAIL_AUTO = 2;
 	MyDB db;
 	SharedPreference sharedPref;
 
@@ -55,7 +60,7 @@ public class MainActivity extends TrackedActivity implements
 
 	long idCurrentName;
 	EditText editName, editMail, addName;
-
+	String possibleEmail = "";
 	String[] currentProfile = new String[] { "", "" };
 
 	final String LOG_TAG = "Pressure";
@@ -66,6 +71,8 @@ public class MainActivity extends TrackedActivity implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		//Get a Tracker (should auto-report)
+  		((Locales) getApplication()).getTracker(Locales.TrackerName.APP_TRACKER);
 
 		// открываем подключение к БД
 		db = new MyDB(this);
@@ -75,10 +82,7 @@ public class MainActivity extends TrackedActivity implements
 
 		sharedPref = new SharedPreference(this);
 
-		setTitle(R.string.app_name);
-		
 		int language = sharedPref.LoadLanguage();
-
 		switch (language) {
 		case 0:
 			c.locale = Locale.getDefault();
@@ -94,6 +98,9 @@ public class MainActivity extends TrackedActivity implements
 			c.locale = Locale.CHINESE;
 			break;
 		}
+
+		getResources().updateConfiguration(c,
+				getResources().getDisplayMetrics());
 
 		AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
@@ -179,11 +186,9 @@ public class MainActivity extends TrackedActivity implements
 		getSupportLoaderManager().initLoader(0, null, this);
 
 		if (db.emptyDataBase() == false) {
-			Resources res = getResources();
 
-			db.addRec(res.getString(R.string.guest), getUserEmail());
-			lvData.setAdapter(scAdapter);
-			getSupportLoaderManager().getLoader(0).forceLoad();
+			getUserEmailAuto();
+
 		} else {
 			lvData.setAdapter(scAdapter);
 		}
@@ -200,8 +205,9 @@ public class MainActivity extends TrackedActivity implements
 			}
 		});
 		mAdView = (AdView) findViewById(R.id.adView);
-		AdRequest adRequest = new AdRequest.Builder().addTestDevice(
-				AdRequest.DEVICE_ID_EMULATOR).build();
+		AdRequest adRequest = new AdRequest.Builder()
+	    .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+	    .build();
 		mAdView.loadAd(adRequest);
 	}
 
@@ -209,11 +215,6 @@ public class MainActivity extends TrackedActivity implements
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
-	}
-
-	public void onBackPressed() {
-		super.onBackPressed();
-		this.finish();
 	}
 
 	public void setRepeatingAlarm(AlarmManager am, int id, String message,
@@ -258,13 +259,16 @@ public class MainActivity extends TrackedActivity implements
 		} else if (id == DIALOG_ADD) {
 			addName = (EditText) dialog.getWindow().findViewById(
 					R.id.addNewName);
-			editMail = (EditText) dialog.getWindow().findViewById(R.id.addMail);
-			String t = getUserEmail();
-			if (t != "") {
-				editMail.setText(t);
+			editMail = (EditText) dialog.getWindow().findViewById(
+					R.id.addMail);
+			possibleEmail = "";
+			getUserEmail();
+			if (possibleEmail != "") {
+				editMail.setText(possibleEmail);
 			}
 		}
 	}
+
 
 	DialogInterface.OnClickListener myClickListener = new DialogInterface.OnClickListener() {
 		public void onClick(DialogInterface dialog, int which) {
@@ -287,8 +291,7 @@ public class MainActivity extends TrackedActivity implements
 						inCorrectData();
 						break;
 					} else {
-						db.addRec(addName.getText().toString(), editMail
-								.getText().toString());
+						db.addRec(addName.getText().toString(), editMail.getText().toString());
 						getSupportLoaderManager().getLoader(0).forceLoad();
 						addData();
 						break;
@@ -404,18 +407,32 @@ public class MainActivity extends TrackedActivity implements
 		mAdView.resume();
 	}
 
-	@Override
-	protected void onPause() {
-		mAdView.pause();
-		super.onPause();
-	}
+    @Override
+    protected void onPause() {
+        mAdView.pause();
+        super.onPause();
+    }
+    
+    @Override
+    protected void onDestroy() {
+        mAdView.destroy();
+        super.onDestroy();
+    }
+    @Override
+    protected void onStart() {
+    	super.onStart();
+    	//Get an Analytics tracker to report app starts & uncaught exceptions etc.
+      	GoogleAnalytics.getInstance(this).reportActivityStart(this);
+        
+    }
 
-	@Override
-	protected void onDestroy() {
-		mAdView.destroy();
-		super.onDestroy();
-	}
-
+    @Override
+    protected void onStop() {
+        
+        //Stop the analytics tracking
+  		GoogleAnalytics.getInstance(this).reportActivityStop(this);
+  		super.onStop();
+    }    
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle bndl) {
 		return new MyCursorLoader(this, db);
@@ -446,16 +463,68 @@ public class MainActivity extends TrackedActivity implements
 		}
 	}
 
-	private String getUserEmail() {
-		Pattern emailPattern = Patterns.EMAIL_ADDRESS; // API level 8+
-		Account[] accounts = AccountManager.get(this).getAccounts();
-		String possibleEmail = "";
-		for (Account account : accounts) {
-			if (emailPattern.matcher(account.name).matches()) {
-				possibleEmail = account.name;
-				break;
-			}
-		}
-		return possibleEmail;
+	// Запрещаем использование кнопки "Назад"
+	@Override
+	public void onBackPressed() {
 	}
+
+	private void getUserEmail() {
+//		String possibleEmail = "";
+//		Pattern emailPattern = Patterns.EMAIL_ADDRESS; // API level 8+
+//		Account[] accounts = AccountManager.get(this).getAccounts();
+//		for (Account account : accounts) {
+//		    if (emailPattern.matcher(account.name).matches()) {
+//		        possibleEmail = account.name;
+//		        break;
+//		    }
+//		}
+		 try {
+	        Intent intent = AccountPicker.newChooseAccountIntent(null, null,
+	                new String[] { GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE }, false, null, null, null, null);
+	        startActivityForResult(intent, REQUEST_CODE_EMAIL);
+	    } catch (ActivityNotFoundException e) {
+	        // TODO
+	    }
+//		return possibleEmail;
+	}
+
+	private void getUserEmailAuto() {
+//		String possibleEmail = "";
+//		Pattern emailPattern = Patterns.EMAIL_ADDRESS; // API level 8+
+//		Account[] accounts = AccountManager.get(this).getAccounts();
+//		for (Account account : accounts) {
+//		    if (emailPattern.matcher(account.name).matches()) {
+//		        possibleEmail = account.name;
+//		        break;
+//		    }
+//		}
+		 try {
+	        Intent intent = AccountPicker.newChooseAccountIntent(null, null,
+	                new String[] { GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE }, false, null, null, null, null);
+	        startActivityForResult(intent, REQUEST_CODE_EMAIL_AUTO);
+	    } catch (ActivityNotFoundException e) {
+	        // TODO
+	    }
+//		return possibleEmail;
+	}
+	@Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE_EMAIL && resultCode == RESULT_OK) {
+            String accountName = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
+            editMail.setText(accountName);
+        } else if (requestCode == REQUEST_CODE_EMAIL_AUTO && resultCode == RESULT_OK) {
+        	String accountName = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
+        	Resources res = getResources();
+        	db.addRec(res.getString(R.string.guest), accountName);
+        	final ListView lvData = (ListView) findViewById(R.id.lvData);
+			lvData.setAdapter(scAdapter);
+			getSupportLoaderManager().getLoader(0).forceLoad();
+        } else if (requestCode == REQUEST_CODE_EMAIL_AUTO && resultCode == RESULT_CANCELED) {
+        	Resources res = getResources();
+        	db.addRec(res.getString(R.string.guest), "");
+        	final ListView lvData = (ListView) findViewById(R.id.lvData);
+			lvData.setAdapter(scAdapter);
+			getSupportLoaderManager().getLoader(0).forceLoad();
+        }
+    }
 }

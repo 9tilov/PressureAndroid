@@ -41,7 +41,7 @@
     <string name="save_on_SD">Статистика сохранена в папке \"Pressure\"</string>
     <string name="add_profile">Добавить профиль</string>
     <string name="notif_added">Уведомление добавлено</string>
-    <string name="notif_saved">Уведомление изменено</string>
+    <string name="notif_changed">Уведомление изменено</string>
     <string name="notif_deleted">Уведомление удалено</string>
     <string name="notif_all_deleted">Все уведомления удалены</string>
     <string name="record_added">Запись добавлена</string>

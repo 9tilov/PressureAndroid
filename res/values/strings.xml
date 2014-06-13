@@ -112,7 +112,7 @@
 										Developers doesn\'t responsible for the loss of
 										user personal data.\n
 										\n</string>
-	<string name="admob_publisher_id_main">ca-app-pub-4895351525471764/2445965539</string>
-	<string name="admob_publisher_id_statistic">ca-app-pub-4895351525471764/9585625930</string>
+	<string name="admob_publisher_id_main" translatable="false">ca-app-pub-4895351525471764/2445965539</string>
+	<string name="admob_publisher_id_statistic" translatable="false">ca-app-pub-4895351525471764/9585625930</string>
 	
 </resources>

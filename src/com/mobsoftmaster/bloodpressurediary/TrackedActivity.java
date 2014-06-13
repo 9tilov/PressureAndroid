@@ -15,6 +15,7 @@ public class TrackedActivity extends FragmentActivity {
 
 	}
 
+<<<<<<< HEAD
 	@Override
 	protected void onStart() {
 		// Get an Analytics tracker to report app starts & uncaught exceptions
@@ -29,4 +30,21 @@ public class TrackedActivity extends FragmentActivity {
 		// Stop the analytics tracking
 		GoogleAnalytics.getInstance(this).reportActivityStop(this);
 	}
+=======
+    @Override
+    protected void onStart() {
+    	super.onStart();
+    	//Get an Analytics tracker to report app starts & uncaught exceptions etc.
+      	GoogleAnalytics.getInstance(this).reportActivityStart(this);
+        
+    }
+
+    @Override
+    protected void onStop() {
+        
+        //Stop the analytics tracking
+  		GoogleAnalytics.getInstance(this).reportActivityStop(this);
+  		super.onStop();
+    }
+>>>>>>> e13d38127a64de2895c11c306da053010a94443f
 }
