@@ -56,7 +56,7 @@ public class MyDB {
 	private DBHelper mDBHelper;
 	private SQLiteDatabase mDB;
 	final String LOG_TAG = "myLogs";
-	
+
 	MainActivity mainActivity;
 
 	public MyDB(Context ctx) {
@@ -116,8 +116,8 @@ public class MyDB {
 	}
 
 	public int getCountElementsStat(int id) {
-		String sql = "SELECT COUNT() FROM " + DB_TABLE_STAT + " WHERE " + COLUMN_UID + "='" + id
-				+ "'";
+		String sql = "SELECT COUNT() FROM " + DB_TABLE_STAT + " WHERE "
+				+ COLUMN_UID + "='" + id + "'";
 		SQLiteStatement statement = mDB.compileStatement(sql);
 		int count = (int) statement.simpleQueryForLong();
 		return count;
@@ -196,7 +196,7 @@ public class MyDB {
 	}
 
 	// добавить запись в DB_TABLE
-	public void addRec(String name,String e_mail) {
+	public void addRec(String name, String e_mail) {
 		ContentValues cv = new ContentValues();
 		cv.put(COLUMN_NAME, name);
 		cv.put(COLUMN_EMAIL, e_mail);
@@ -242,7 +242,7 @@ public class MyDB {
 	public void delRecNotif(long id) {
 		mDB.delete(DB_TABLE_NOTIF, COLUMN_ID + " = " + id, null);
 	}
-	
+
 	public void delRecAllNotif() {
 		mDB.delete(DB_TABLE_NOTIF, null, null);
 	}

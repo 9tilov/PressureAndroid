@@ -61,13 +61,12 @@ public class MainActivity extends TrackedActivity implements
 	final String LOG_TAG = "Pressure";
 	final int DIALOG_EDIT = 1, DIALOG_ADD = 2;
 	private AdView mAdView;
-	
+
 	/** Called when the activity is first created. */
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		
 		// открываем подключение к БД
 		db = new MyDB(this);
 		db.open();
@@ -76,7 +75,10 @@ public class MainActivity extends TrackedActivity implements
 
 		sharedPref = new SharedPreference(this);
 
+		setTitle(R.string.app_name);
+		
 		int language = sharedPref.LoadLanguage();
+
 		switch (language) {
 		case 0:
 			c.locale = Locale.getDefault();
@@ -92,9 +94,6 @@ public class MainActivity extends TrackedActivity implements
 			c.locale = Locale.CHINESE;
 			break;
 		}
-
-		getResources().updateConfiguration(c,
-				getResources().getDisplayMetrics());
 
 		AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
@@ -181,7 +180,7 @@ public class MainActivity extends TrackedActivity implements
 
 		if (db.emptyDataBase() == false) {
 			Resources res = getResources();
-			
+
 			db.addRec(res.getString(R.string.guest), getUserEmail());
 			lvData.setAdapter(scAdapter);
 			getSupportLoaderManager().getLoader(0).forceLoad();
@@ -201,9 +200,8 @@ public class MainActivity extends TrackedActivity implements
 			}
 		});
 		mAdView = (AdView) findViewById(R.id.adView);
-		AdRequest adRequest = new AdRequest.Builder()
-	    .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-	    .build();
+		AdRequest adRequest = new AdRequest.Builder().addTestDevice(
+				AdRequest.DEVICE_ID_EMULATOR).build();
 		mAdView.loadAd(adRequest);
 	}
 
@@ -211,6 +209,11 @@ public class MainActivity extends TrackedActivity implements
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
+	}
+
+	public void onBackPressed() {
+		super.onBackPressed();
+		this.finish();
 	}
 
 	public void setRepeatingAlarm(AlarmManager am, int id, String message,
@@ -255,8 +258,7 @@ public class MainActivity extends TrackedActivity implements
 		} else if (id == DIALOG_ADD) {
 			addName = (EditText) dialog.getWindow().findViewById(
 					R.id.addNewName);
-			editMail = (EditText) dialog.getWindow().findViewById(
-					R.id.addMail);
+			editMail = (EditText) dialog.getWindow().findViewById(R.id.addMail);
 			String t = getUserEmail();
 			if (t != "") {
 				editMail.setText(t);
@@ -264,7 +266,6 @@ public class MainActivity extends TrackedActivity implements
 		}
 	}
 
-	
 	DialogInterface.OnClickListener myClickListener = new DialogInterface.OnClickListener() {
 		public void onClick(DialogInterface dialog, int which) {
 			switch (which) {
@@ -286,7 +287,8 @@ public class MainActivity extends TrackedActivity implements
 						inCorrectData();
 						break;
 					} else {
-						db.addRec(addName.getText().toString(), editMail.getText().toString());
+						db.addRec(addName.getText().toString(), editMail
+								.getText().toString());
 						getSupportLoaderManager().getLoader(0).forceLoad();
 						addData();
 						break;
@@ -350,7 +352,7 @@ public class MainActivity extends TrackedActivity implements
 		menu.add(0, CM_EDIT_ID, 0, R.string.edit_record);
 		menu.add(0, CM_DELETE_ID, 0, R.string.delete_record);
 	}
-	
+
 	public boolean onContextItemSelected(MenuItem item) {
 		AdapterContextMenuInfo acmi = (AdapterContextMenuInfo) item
 				.getMenuInfo();
@@ -402,18 +404,18 @@ public class MainActivity extends TrackedActivity implements
 		mAdView.resume();
 	}
 
-    @Override
-    protected void onPause() {
-        mAdView.pause();
-        super.onPause();
-    }
-    
-    @Override
-    protected void onDestroy() {
-        mAdView.destroy();
-        super.onDestroy();
-    }
-    
+	@Override
+	protected void onPause() {
+		mAdView.pause();
+		super.onPause();
+	}
+
+	@Override
+	protected void onDestroy() {
+		mAdView.destroy();
+		super.onDestroy();
+	}
+
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle bndl) {
 		return new MyCursorLoader(this, db);
@@ -444,20 +446,15 @@ public class MainActivity extends TrackedActivity implements
 		}
 	}
 
-	// Запрещаем использование кнопки "Назад"
-	@Override
-	public void onBackPressed() {
-	}
-	
 	private String getUserEmail() {
 		Pattern emailPattern = Patterns.EMAIL_ADDRESS; // API level 8+
 		Account[] accounts = AccountManager.get(this).getAccounts();
 		String possibleEmail = "";
 		for (Account account : accounts) {
-		    if (emailPattern.matcher(account.name).matches()) {
-		        possibleEmail = account.name;
-		        break;
-		    }
+			if (emailPattern.matcher(account.name).matches()) {
+				possibleEmail = account.name;
+				break;
+			}
 		}
 		return possibleEmail;
 	}

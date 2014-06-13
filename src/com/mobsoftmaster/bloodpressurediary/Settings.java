@@ -1,12 +1,14 @@
 package com.mobsoftmaster.bloodpressurediary;
 
 import java.util.Calendar;
+import java.util.Locale;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -15,6 +17,7 @@ import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.MenuItem;
@@ -52,7 +55,7 @@ public class Settings extends TrackedActivity implements
 	final String LOG_TAG = "Pressure";
 
 	EditText editCurrentNotif;
-	
+
 	int language;
 
 	String[] currentNotif = new String[] { "", "", "" };
@@ -68,6 +71,8 @@ public class Settings extends TrackedActivity implements
 	Button btnAddNotif;
 
 	int count_element_notif;
+
+	Configuration c;
 
 	static class time {
 		public static int hour = 0;
@@ -85,7 +90,11 @@ public class Settings extends TrackedActivity implements
 		db.open();
 
 		sharedPref = new SharedPreference(this);
-
+		language = sharedPref.LoadLanguage();
+		
+		Log.d(LOG_TAG, "language_Start = " + language);
+		setTitle(R.string.settings);
+		
 		checkBoxGraph = (CheckBox) findViewById(R.id.checkBoxRotation);
 		checkBoxNotif = (CheckBox) findViewById(R.id.checkBoxTimePicker);
 
@@ -217,8 +226,10 @@ public class Settings extends TrackedActivity implements
 					Intent intent = new Intent(Settings.this,
 							MainActivity.class);
 					sharedPref.SavePreferences(sharedPref.s_rotation, rotation);
-					sharedPref.SavePreferences(sharedPref.s_notification, notification);
+					sharedPref.SavePreferences(sharedPref.s_notification,
+							notification);
 					sharedPref.SavePreferences(sharedPref.s_state, true);
+					sharedPref.saveLanguage(sharedPref.s_language, language);
 					startActivity(intent);
 				}
 			}
@@ -259,7 +270,7 @@ public class Settings extends TrackedActivity implements
 		});
 		scrollMyListViewToBottom();
 	}
-	
+
 	public void showLanguage() {
 		final Dialog dialog = new Dialog(Settings.this);
 		dialog.setContentView(R.layout.dialog_language);
@@ -270,32 +281,50 @@ public class Settings extends TrackedActivity implements
 		Button btnRussian = (Button) dialog.findViewById(R.id.btnRussian);
 		Button btnChinese = (Button) dialog.findViewById(R.id.btnChinese);
 
+		c = new Configuration(getResources().getConfiguration());
+
 		btnEnglish.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				language = 1;
-				sharedPref.saveLanguage(sharedPref.s_language, language);
 				chooseLanguage();
+				Intent intent = getIntent();
+				finish();
+				startActivity(intent);
+				c.locale = Locale.ENGLISH;
+				getResources().updateConfiguration(c,
+						getResources().getDisplayMetrics());
 				dialog.dismiss();
 			}
 		});
-		
+
 		btnRussian.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				language = 2;
-				sharedPref.saveLanguage(sharedPref.s_language, language);
 				chooseLanguage();
+				Intent intent = getIntent();
+				finish();
+				startActivity(intent);
+				Locale myLocale = new Locale("ru", "RU");
+				c.locale = myLocale;
+				getResources().updateConfiguration(c,
+						getResources().getDisplayMetrics());
 				dialog.dismiss();
 			}
 		});
-		
+
 		btnChinese.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				language = 3;
-				sharedPref.saveLanguage(sharedPref.s_language, language);
 				chooseLanguage();
+				Intent intent = getIntent();
+				finish();
+				startActivity(intent);
+				c.locale = Locale.CHINESE;
+				getResources().updateConfiguration(c,
+						getResources().getDisplayMetrics());
 				dialog.dismiss();
 			}
 		});
@@ -311,7 +340,7 @@ public class Settings extends TrackedActivity implements
 				listNotif.setSelection(count_element_notif);
 			}
 		});
-		
+
 	}
 
 	public void onCreateContextMenu(ContextMenu menu, View v,
@@ -440,6 +469,13 @@ public class Settings extends TrackedActivity implements
 		});
 		dialog.show();
 	}
+	
+	@Override
+	public void onBackPressed() {
+	    language = sharedPref.LoadLanguage();
+	    Log.d(LOG_TAG, "language = " + language);
+	    finish();
+	}
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -514,7 +550,7 @@ public class Settings extends TrackedActivity implements
 		Toast.makeText(this, R.string.notif_all_deleted, Toast.LENGTH_SHORT)
 				.show();
 	}
-	
+
 	void chooseLanguage() {
 		Toast.makeText(this, R.string.chose_language, Toast.LENGTH_SHORT)
 				.show();

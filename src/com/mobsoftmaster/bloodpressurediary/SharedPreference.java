@@ -7,12 +7,12 @@ import android.preference.PreferenceManager;
 public class SharedPreference {
 
 	private Context mCtx;
-	
+
 	public String s_language = "language";
 	public String s_id = "idName";
 	public String s_rotation = "rotation";
 	public String s_state = "state";
-	
+
 	public boolean notification = false;
 	public String s_notification = "notification";
 
@@ -37,11 +37,7 @@ public class SharedPreference {
 	}
 
 	/*
-	 * Languages 
-	 * 0 - default
-	 * 1 - english
-	 * 2 - russian
-	 * 3 - chinese
+	 * Languages 0 - default 1 - english 2 - russian 3 - chinese
 	 */
 	public void saveLanguage(String key, int value) {
 		SharedPreferences sharedPreferences = PreferenceManager
@@ -50,14 +46,13 @@ public class SharedPreference {
 		editor.putInt(key, value);
 		editor.commit();
 	}
-	
+
 	public int LoadLanguage() {
 		SharedPreferences sharedPreferences = PreferenceManager
 				.getDefaultSharedPreferences(mCtx);
 		int id = sharedPreferences.getInt(s_language, 0);
 		return id;
 	}
-
 
 	public int LoadID() {
 		SharedPreferences sharedPreferences = PreferenceManager

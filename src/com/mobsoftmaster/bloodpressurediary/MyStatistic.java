@@ -75,22 +75,22 @@ public class MyStatistic extends TrackedActivity implements
 	int all_records_stat;
 	Dialog dialog;
 	private AdView mAdView;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.statistic);
 
 		mAdView = (AdView) findViewById(R.id.adView);
-		AdRequest adRequest = new AdRequest.Builder()
-	    .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-	    .build();
+		AdRequest adRequest = new AdRequest.Builder().addTestDevice(
+				AdRequest.DEVICE_ID_EMULATOR).build();
 		mAdView.loadAd(adRequest);
-		
+
 		db = new MyDB(this);
 		db.open();
 
 		sharedPref = new SharedPreference(this);
+		setTitle(R.string.statictics);
 
 		ImageView btnAddStat = (ImageView) findViewById(R.id.btnAddStat);
 		ImageView btnSettings = (ImageView) findViewById(R.id.imageButtonSettingsStat);
@@ -100,10 +100,6 @@ public class MyStatistic extends TrackedActivity implements
 
 		profile_id = sharedPref.LoadID();
 		rotation = sharedPref.LoadRotation();
-
-//		if (!rotation) {
-//			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-//		}
 
 		Animation animRotateIn_icon = AnimationUtils.loadAnimation(this,
 				R.anim.rotate);
@@ -171,7 +167,7 @@ public class MyStatistic extends TrackedActivity implements
 
 		// // создаем лоадер для чтения данных
 		getSupportLoaderManager().initLoader(0, null, this);
-		
+
 		btnAddStat.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -250,7 +246,7 @@ public class MyStatistic extends TrackedActivity implements
 					SimpleDateFormat time = new SimpleDateFormat("HH:mm");
 					formattedDate = date.format(c.getTime());
 					formattedTime = time.format(c.getTime());
-					
+
 					db.addStat(String.valueOf(npPulse.getValue()),
 							String.valueOf(npSysPressure.getValue()),
 							String.valueOf(npDiasPressure.getValue()),
@@ -459,8 +455,8 @@ public class MyStatistic extends TrackedActivity implements
 				Cursor cur = (Cursor) listStat.getAdapter().getItem(i);
 				long temp = cur.getLong(cur.getColumnIndex("_id"));
 				name = db.getCurrentStat(temp);
-				bw.write(name[4] + ";" + name[3] + ";" + name[1] + ";" + name[2] + ";"
-						+ name[0] + "\n");
+				bw.write(name[4] + ";" + name[3] + ";" + name[1] + ";"
+						+ name[2] + ";" + name[0] + "\n");
 			}
 			bw.close();
 			saveOnSD();
@@ -477,18 +473,18 @@ public class MyStatistic extends TrackedActivity implements
 		mAdView.resume();
 	}
 
-    @Override
-    protected void onPause() {
-        mAdView.pause();
-        super.onPause();
-    }
-    
-    @Override
-    protected void onDestroy() {
-        mAdView.destroy();
-        super.onDestroy();
-    }
-	
+	@Override
+	protected void onPause() {
+		mAdView.pause();
+		super.onPause();
+	}
+
+	@Override
+	protected void onDestroy() {
+		mAdView.destroy();
+		super.onDestroy();
+	}
+
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle bndl) {
 		return new MyCursorLoader(this, db);

@@ -29,8 +29,6 @@ public class Graph extends TrackedActivity {
 
 	boolean rotation;
 	Resources res;
-	
-//	Locales locales;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -60,7 +58,6 @@ public class Graph extends TrackedActivity {
 			finish();
 		}
 
-		
 		setTab("tag1", R.id.graphWeek, res.getString(R.string.graphWeek), tabs);
 		setTab("tag2", R.id.graphMonth, res.getString(R.string.graphMonth),
 				tabs);
@@ -136,18 +133,18 @@ public class Graph extends TrackedActivity {
 
 			GraphViewSeriesStyle stylePulse = new GraphViewSeriesStyle();
 			stylePulse.color = Color.rgb(0, 500, 0);
-			GraphViewSeries seriesPulse = new GraphViewSeries(res.getString(R.string.pulse),
-					stylePulse, dataPulse);
+			GraphViewSeries seriesPulse = new GraphViewSeries(
+					res.getString(R.string.pulse), stylePulse, dataPulse);
 
 			GraphViewSeriesStyle styleSys = new GraphViewSeriesStyle();
 			styleSys.color = Color.rgb(200, 50, 0);
-			GraphViewSeries seriesSys = new GraphViewSeries(res.getString(R.string.sys), styleSys,
-					dataSys);
+			GraphViewSeries seriesSys = new GraphViewSeries(
+					res.getString(R.string.sys), styleSys, dataSys);
 
 			GraphViewSeriesStyle styleDias = new GraphViewSeriesStyle();
 			styleDias.color = Color.rgb(500, 500, 0);
-			GraphViewSeries seriesDias = new GraphViewSeries(res.getString(R.string.dias),
-					styleDias, dataDias);
+			GraphViewSeries seriesDias = new GraphViewSeries(
+					res.getString(R.string.dias), styleDias, dataDias);
 
 			graphView.addSeries(seriesSys);
 			graphView.addSeries(seriesDias);
