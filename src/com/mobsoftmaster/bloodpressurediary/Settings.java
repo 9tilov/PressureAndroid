@@ -1,7 +1,6 @@
 package com.mobsoftmaster.bloodpressurediary;
 
 import java.util.Calendar;
-import java.util.LinkedList;
 import java.util.Locale;
 
 import android.app.AlarmManager;
@@ -15,16 +14,19 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.util.Log;
 import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -34,10 +36,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TimePicker;
 import android.widget.Toast;
-import android.widget.AdapterView.AdapterContextMenuInfo;
-import android.view.ContextMenu.ContextMenuInfo;
-import android.view.View.OnClickListener;
-import android.view.inputmethod.InputMethodManager;
 
 public class Settings extends TrackedActivity implements
 		LoaderCallbacks<Cursor> {
@@ -151,6 +149,17 @@ public class Settings extends TrackedActivity implements
 							btnAddNotif.setEnabled(true);
 							editNotif.setEnabled(true);
 							listNotif.setEnabled(true);
+							Cursor cursor = db.getAllDataNotif();
+							if (cursor != null) {
+								cursor.moveToFirst();
+								for (int i = 0; i < cursor.getCount(); ++i) {
+									setRepeatingAlarm(Integer.valueOf(cursor.getString(0)),
+											cursor.getString(1),
+											Integer.valueOf(cursor.getString(2)),
+											Integer.valueOf(cursor.getString(3)));
+									cursor.moveToNext();
+								}
+							} 
 						} else {
 							imm.hideSoftInputFromWindow(
 									editNotif.getWindowToken(), 0);
@@ -158,6 +167,14 @@ public class Settings extends TrackedActivity implements
 							btnAddNotif.setEnabled(false);
 							editNotif.setEnabled(false);
 							listNotif.setEnabled(false);
+							Cursor cursor = db.getAllDataNotif();
+							if (cursor != null) {
+								cursor.moveToFirst();
+								for (int i = 0; i < cursor.getCount(); ++i) {
+									cancelRepeatingAlarm(Integer.valueOf(cursor.getString(0)));
+									cursor.moveToNext();
+								}
+							} 
 						}
 					}
 				});
@@ -200,24 +217,18 @@ public class Settings extends TrackedActivity implements
 					minute = String.valueOf(time.minute);
 
 				if (0 != editNotif.getText().toString().length()) {
-					AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+					
 					startService(new Intent(Settings.this, Receiver.class));
-					Cursor cursor = db.getAllDataNotif();
-					if (cursor != null) {
-						cursor.moveToFirst();
-						for (int i = 0; i < cursor.getCount(); ++i) {
-							setRepeatingAlarm(am, Integer.valueOf(cursor.getString(0)),
-									cursor.getString(1),
-									Integer.valueOf(cursor.getString(2)),
-									Integer.valueOf(cursor.getString(3)));
-							Log.d(LOG_TAG, "ID = " + cursor.getString(0));
-							Log.d(LOG_TAG, "Message = " + cursor.getString(1));
-							Log.d(LOG_TAG, "hour = " + cursor.getString(2));
-							Log.d(LOG_TAG, "minute = " + cursor.getString(3));
-							cursor.moveToNext();
-						}
-					} 
+					
+					//сохраняем в базу добавляемое уведомление, заодним на сгенериться для него id
 					db.addNotif(editNotif.getText().toString(), hour, minute);
+					// берём из базы только что созданное уведомление
+					Cursor cursor = db.getAllDataNotif();
+					cursor.moveToLast();
+					setRepeatingAlarm(Integer.valueOf(cursor.getString(0)),
+							cursor.getString(1),
+							Integer.valueOf(cursor.getString(2)),
+							Integer.valueOf(cursor.getString(3)));
 					editNotif.setText("");
 					getSupportLoaderManager().getLoader(0).forceLoad();
 					scrollMyListViewToBottom();
@@ -347,8 +358,9 @@ public class Settings extends TrackedActivity implements
 		dialog.show();
 	}
 
-	public void setRepeatingAlarm(AlarmManager am, int id, String message,
+	public void setRepeatingAlarm(int id, String message,
 			int hour, int minute) {
+		AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 		Calendar cal_alarm;
 		Calendar now = Calendar.getInstance();
 		cal_alarm = Calendar.getInstance();
@@ -374,7 +386,17 @@ public class Settings extends TrackedActivity implements
 				intent, PendingIntent.FLAG_UPDATE_CURRENT);
 		am.setRepeating(AlarmManager.RTC_WAKEUP, alarm, AlarmManager.INTERVAL_DAY, pendingIntent);
 	}
+	
+	public void cancelRepeatingAlarm(int id) {
+		AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
+		Intent intent = new Intent(this, Receiver.class);
+
+		PendingIntent pendingIntent = PendingIntent.getBroadcast(this, id,
+				intent, PendingIntent.FLAG_UPDATE_CURRENT);
+		am.cancel(pendingIntent);
+	}
+	
 	private void scrollMyListViewToBottom() {
 		listNotif.post(new Runnable() {
 			@Override
@@ -470,6 +492,7 @@ public class Settings extends TrackedActivity implements
 		if (item.getItemId() == CM_DELETE_NOTIF) {
 			// извлекаем id записи и удаляем соответствующую запись в БД
 			db.delRecNotif(acmi.id);
+			cancelRepeatingAlarm((int) acmi.id);
 			// получаем новый курсор с данными
 			getSupportLoaderManager().getLoader(0).forceLoad();
 			deleteNotif();
@@ -499,7 +522,16 @@ public class Settings extends TrackedActivity implements
 		btnYes.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				Cursor cursor = db.getAllDataNotif();
+				if (cursor != null) {
+					cursor.moveToFirst();
+					for (int i = 0; i < cursor.getCount(); ++i) {
+						cancelRepeatingAlarm(Integer.valueOf(cursor.getString(0)));
+						cursor.moveToNext();
+					}
+				} 
 				db.delRecAllNotif();
+				
 				getSupportLoaderManager().getLoader(0).forceLoad();
 				deleteAllNotif();
 				dialog.dismiss();
