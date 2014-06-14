@@ -73,8 +73,9 @@ public class MainActivity extends FragmentActivity implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		//Get a Tracker (should auto-report)
-  		((Locales) getApplication()).getTracker(Locales.TrackerName.APP_TRACKER);
+		// Get a Tracker (should auto-report)
+		((Locales) getApplication())
+				.getTracker(Locales.TrackerName.APP_TRACKER);
 
 		// открываем подключение к БД
 		db = new MyDB(this);
@@ -83,9 +84,7 @@ public class MainActivity extends FragmentActivity implements
 		Configuration c = new Configuration(getResources().getConfiguration());
 
 		sharedPref = new SharedPreference(this);
-//		setTitle(R.string.app_name);
 		language = sharedPref.LoadLanguage();
-		Log.d(LOG_TAG, "LANG&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& = " + language);
 		setTitle(R.string.app_name);
 		switch (language) {
 		case 0:
@@ -105,8 +104,6 @@ public class MainActivity extends FragmentActivity implements
 
 		getResources().updateConfiguration(c,
 				getResources().getDisplayMetrics());
-		
-		
 
 		AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
@@ -115,45 +112,12 @@ public class MainActivity extends FragmentActivity implements
 		boolean notification = sharedPref.LoadNotification();
 		boolean stateActivity = sharedPref.LoadState();
 
-		if (stateActivity) {
-			setContentView(R.layout.activity_main);
-		} else {
-			setContentView(R.layout.activity_main);
+		setContentView(R.layout.activity_main);
 
+		if (!stateActivity) {
 			Intent intent = new Intent(MainActivity.this, MyStatistic.class);
 			startActivity(intent);
 		}
-
-		// тут жесть
-
-		int count_element_notif = db.getCountElementsSettings();
-
-		String[] data_notif_fields = new String[count_element_notif];
-		for (int i = 0; i < count_element_notif; ++i) {
-			data_notif_fields[i] = "";
-		}
-
-		String[] data_notif = new String[] { "", "", "" };
-
-		LinkedList<String[]> list = new LinkedList<String[]>();
-
-		Cursor cursor = db.getAllDataNotif();
-		for (int i = 0; i < count_element_notif; ++i) {
-			if (cursor != null) {
-				cursor.moveToNext();
-				data_notif_fields[i] = data_notif_fields[i]
-						+ cursor.getString(0);
-			}
-
-			data_notif = db.getCurrentNotif(Long.valueOf(data_notif_fields[i]));
-			list.add(data_notif);
-			if ((notification))
-				setRepeatingAlarm(am, Integer.valueOf(data_notif_fields[i]),
-						list.get(i)[0], Integer.valueOf(list.get(i)[1]),
-						Integer.valueOf(list.get(i)[2]), notification);
-		}
-
-		// жесть кончилась
 
 		// формируем столбцы сопоставления
 		String[] from = new String[] { MyDB.COLUMN_NAME };
@@ -210,9 +174,8 @@ public class MainActivity extends FragmentActivity implements
 			}
 		});
 		mAdView = (AdView) findViewById(R.id.adView);
-		AdRequest adRequest = new AdRequest.Builder()
-	    .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-	    .build();
+		AdRequest adRequest = new AdRequest.Builder().addTestDevice(
+				AdRequest.DEVICE_ID_EMULATOR).build();
 		mAdView.loadAd(adRequest);
 	}
 
@@ -247,8 +210,7 @@ public class MainActivity extends FragmentActivity implements
 
 		PendingIntent pendingIntent = PendingIntent.getBroadcast(this, id,
 				intent, PendingIntent.FLAG_UPDATE_CURRENT);
-		am.setRepeating(AlarmManager.RTC_WAKEUP, alarm,
-				AlarmManager.INTERVAL_DAY, pendingIntent);
+		am.setRepeating(AlarmManager.RTC_WAKEUP, alarm, 5000, pendingIntent);
 		if (!notif)
 			am.cancel(pendingIntent);
 	}
@@ -264,8 +226,7 @@ public class MainActivity extends FragmentActivity implements
 		} else if (id == DIALOG_ADD) {
 			addName = (EditText) dialog.getWindow().findViewById(
 					R.id.addNewName);
-			editMail = (EditText) dialog.getWindow().findViewById(
-					R.id.addMail);
+			editMail = (EditText) dialog.getWindow().findViewById(R.id.addMail);
 			possibleEmail = "";
 			getUserEmail();
 			if (possibleEmail != "") {
@@ -273,7 +234,6 @@ public class MainActivity extends FragmentActivity implements
 			}
 		}
 	}
-
 
 	DialogInterface.OnClickListener myClickListener = new DialogInterface.OnClickListener() {
 		public void onClick(DialogInterface dialog, int which) {
@@ -296,7 +256,8 @@ public class MainActivity extends FragmentActivity implements
 						inCorrectData();
 						break;
 					} else {
-						db.addRec(addName.getText().toString(), editMail.getText().toString());
+						db.addRec(addName.getText().toString(), editMail
+								.getText().toString());
 						getSupportLoaderManager().getLoader(0).forceLoad();
 						addData();
 						break;
@@ -412,32 +373,35 @@ public class MainActivity extends FragmentActivity implements
 		mAdView.resume();
 	}
 
-    @Override
-    protected void onPause() {
-        mAdView.pause();
-        super.onPause();
-    }
-    
-    @Override
-    protected void onDestroy() {
-        mAdView.destroy();
-        super.onDestroy();
-    }
-    @Override
-    protected void onStart() {
-    	super.onStart();
-    	//Get an Analytics tracker to report app starts & uncaught exceptions etc.
-      	GoogleAnalytics.getInstance(this).reportActivityStart(this);
-        
-    }
+	@Override
+	protected void onPause() {
+		mAdView.pause();
+		super.onPause();
+	}
 
-    @Override
-    protected void onStop() {
-        
-        //Stop the analytics tracking
-  		GoogleAnalytics.getInstance(this).reportActivityStop(this);
-  		super.onStop();
-    }    
+	@Override
+	protected void onDestroy() {
+		mAdView.destroy();
+		super.onDestroy();
+	}
+
+	@Override
+	protected void onStart() {
+		super.onStart();
+		// Get an Analytics tracker to report app starts & uncaught exceptions
+		// etc.
+		GoogleAnalytics.getInstance(this).reportActivityStart(this);
+
+	}
+
+	@Override
+	protected void onStop() {
+
+		// Stop the analytics tracking
+		GoogleAnalytics.getInstance(this).reportActivityStop(this);
+		super.onStop();
+	}
+
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle bndl) {
 		return new MyCursorLoader(this, db);
@@ -468,69 +432,72 @@ public class MainActivity extends FragmentActivity implements
 		}
 	}
 
-	// Запрещаем использование кнопки "Назад"
-	@Override
-	public void onBackPressed() {
-	}
-
 	private void getUserEmail() {
-//		String possibleEmail = "";
-//		Pattern emailPattern = Patterns.EMAIL_ADDRESS; // API level 8+
-//		Account[] accounts = AccountManager.get(this).getAccounts();
-//		for (Account account : accounts) {
-//		    if (emailPattern.matcher(account.name).matches()) {
-//		        possibleEmail = account.name;
-//		        break;
-//		    }
-//		}
-		 try {
-	        Intent intent = AccountPicker.newChooseAccountIntent(null, null,
-	                new String[] { GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE }, false, null, null, null, null);
-	        startActivityForResult(intent, REQUEST_CODE_EMAIL);
-	    } catch (ActivityNotFoundException e) {
-	        // TODO
-	    }
-//		return possibleEmail;
+		// String possibleEmail = "";
+		// Pattern emailPattern = Patterns.EMAIL_ADDRESS; // API level 8+
+		// Account[] accounts = AccountManager.get(this).getAccounts();
+		// for (Account account : accounts) {
+		// if (emailPattern.matcher(account.name).matches()) {
+		// possibleEmail = account.name;
+		// break;
+		// }
+		// }
+		try {
+			Intent intent = AccountPicker.newChooseAccountIntent(null, null,
+					new String[] { GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE }, false,
+					null, null, null, null);
+			startActivityForResult(intent, REQUEST_CODE_EMAIL);
+		} catch (ActivityNotFoundException e) {
+			// TODO
+		}
+		// return possibleEmail;
 	}
 
 	private void getUserEmailAuto() {
-//		String possibleEmail = "";
-//		Pattern emailPattern = Patterns.EMAIL_ADDRESS; // API level 8+
-//		Account[] accounts = AccountManager.get(this).getAccounts();
-//		for (Account account : accounts) {
-//		    if (emailPattern.matcher(account.name).matches()) {
-//		        possibleEmail = account.name;
-//		        break;
-//		    }
-//		}
-		 try {
-	        Intent intent = AccountPicker.newChooseAccountIntent(null, null,
-	                new String[] { GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE }, false, null, null, null, null);
-	        startActivityForResult(intent, REQUEST_CODE_EMAIL_AUTO);
-	    } catch (ActivityNotFoundException e) {
-	        // TODO
-	    }
-//		return possibleEmail;
+		// String possibleEmail = "";
+		// Pattern emailPattern = Patterns.EMAIL_ADDRESS; // API level 8+
+		// Account[] accounts = AccountManager.get(this).getAccounts();
+		// for (Account account : accounts) {
+		// if (emailPattern.matcher(account.name).matches()) {
+		// possibleEmail = account.name;
+		// break;
+		// }
+		// }
+		try {
+			Intent intent = AccountPicker.newChooseAccountIntent(null, null,
+					new String[] { GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE }, false,
+					null, null, null, null);
+			startActivityForResult(intent, REQUEST_CODE_EMAIL_AUTO);
+		} catch (ActivityNotFoundException e) {
+			// TODO
+		}
+		// return possibleEmail;
 	}
+
 	@Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		Log.d(LOG_TAG, "LANG&&&&&&&32423423424&&&&&&&&&&&&&&&&&&&&& = " + language);
-        if (requestCode == REQUEST_CODE_EMAIL && resultCode == RESULT_OK) {
-            String accountName = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
-            editMail.setText(accountName);
-        } else if (requestCode == REQUEST_CODE_EMAIL_AUTO && resultCode == RESULT_OK) {
-        	String accountName = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
-        	Resources res = getResources();
-        	db.addRec(res.getString(R.string.guest), accountName);
-        	final ListView lvData = (ListView) findViewById(R.id.lvData);
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		Log.d(LOG_TAG, "LANG&&&&&&&32423423424&&&&&&&&&&&&&&&&&&&&& = "
+				+ language);
+		if (requestCode == REQUEST_CODE_EMAIL && resultCode == RESULT_OK) {
+			String accountName = data
+					.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
+			editMail.setText(accountName);
+		} else if (requestCode == REQUEST_CODE_EMAIL_AUTO
+				&& resultCode == RESULT_OK) {
+			String accountName = data
+					.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
+			Resources res = getResources();
+			db.addRec(res.getString(R.string.guest), accountName);
+			final ListView lvData = (ListView) findViewById(R.id.lvData);
 			lvData.setAdapter(scAdapter);
 			getSupportLoaderManager().getLoader(0).forceLoad();
-        } else if (requestCode == REQUEST_CODE_EMAIL_AUTO && resultCode == RESULT_CANCELED) {
-        	Resources res = getResources();
-        	db.addRec(res.getString(R.string.guest), "");
-        	final ListView lvData = (ListView) findViewById(R.id.lvData);
+		} else if (requestCode == REQUEST_CODE_EMAIL_AUTO
+				&& resultCode == RESULT_CANCELED) {
+			Resources res = getResources();
+			db.addRec(res.getString(R.string.guest), "");
+			final ListView lvData = (ListView) findViewById(R.id.lvData);
 			lvData.setAdapter(scAdapter);
 			getSupportLoaderManager().getLoader(0).forceLoad();
-        }
-    }
+		}
+	}
 }

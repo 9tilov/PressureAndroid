@@ -1,10 +1,13 @@
 package com.mobsoftmaster.bloodpressurediary;
 
 import java.util.Calendar;
+import java.util.LinkedList;
 import java.util.Locale;
 
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -56,15 +59,11 @@ public class Settings extends TrackedActivity implements
 
 	EditText editCurrentNotif;
 
-	int language;
-
 	String[] currentNotif = new String[] { "", "", "" };
 
 	MyDB db;
 
 	SharedPreference sharedPref;
-
-	boolean rotation, notification;
 
 	ListView listNotif;
 
@@ -90,11 +89,11 @@ public class Settings extends TrackedActivity implements
 		db.open();
 
 		sharedPref = new SharedPreference(this);
-		language = sharedPref.LoadLanguage();
-		
+		int language = sharedPref.LoadLanguage();
+
 		Log.d(LOG_TAG, "language_Start = " + language);
 		setTitle(R.string.settings);
-		
+
 		checkBoxGraph = (CheckBox) findViewById(R.id.checkBoxRotation);
 		checkBoxNotif = (CheckBox) findViewById(R.id.checkBoxTimePicker);
 
@@ -114,8 +113,8 @@ public class Settings extends TrackedActivity implements
 		timePicker.setCurrentHour(cal_alarm.get(Calendar.HOUR_OF_DAY));
 		timePicker.setCurrentMinute(cal_alarm.get(Calendar.MINUTE));
 
-		rotation = sharedPref.LoadRotation();
-		notification = sharedPref.LoadNotification();
+		boolean rotation = sharedPref.LoadRotation();
+		boolean notification = sharedPref.LoadNotification();
 
 		if (rotation) {
 			checkBoxGraph.setChecked(true);
@@ -125,14 +124,31 @@ public class Settings extends TrackedActivity implements
 
 		if (notification) {
 			checkBoxNotif.setChecked(true);
+			AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+			startService(new Intent(this, Receiver.class));
+			Cursor cursor = db.getAllDataNotif();
+			Log.d(LOG_TAG, "aasdasdasdasdasdasdasdasd");
+			// int i = cursor.getColumnCount();
+			// int j = cursor.getCount();
+			// Log.d(LOG_TAG, "I = " + i);
+			// Log.d(LOG_TAG, "J = " + j);
 
+			if (cursor != null) {
+				cursor.moveToFirst();
+				for (int i = 0; i < cursor.getCount(); ++i) {
+					setRepeatingAlarm(am, Integer.valueOf(cursor.getString(0)),
+							cursor.getString(1),
+							Integer.valueOf(cursor.getString(2)),
+							Integer.valueOf(cursor.getString(3)));
+				}
+			}
 			timePicker.setEnabled(true);
 			btnAddNotif.setEnabled(true);
 			editNotif.setEnabled(true);
 			listNotif.setEnabled(true);
 		} else {
+			sharedPref.SavePreferences(sharedPref.s_notification, notification);
 			checkBoxNotif.setChecked(false);
-
 			timePicker.setEnabled(false);
 			btnAddNotif.setEnabled(false);
 			editNotif.setEnabled(false);
@@ -217,8 +233,8 @@ public class Settings extends TrackedActivity implements
 		btnSaveSettings.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				rotation = checkCheckBox(checkBoxGraph);
-				notification = checkCheckBox(checkBoxNotif);
+				boolean rotation = checkCheckBox(checkBoxGraph);
+				boolean notification = checkCheckBox(checkBoxNotif);
 				if ((db.getCountElementsSettings() == 0)
 						&& (checkCheckBox(checkBoxNotif)))
 					inCorrectData();
@@ -285,7 +301,7 @@ public class Settings extends TrackedActivity implements
 		btnEnglish.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				language = 1;
+				int language = 1;
 				chooseLanguage();
 				Intent intent = getIntent();
 				finish();
@@ -301,7 +317,7 @@ public class Settings extends TrackedActivity implements
 		btnRussian.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				language = 2;
+				int language = 2;
 				chooseLanguage();
 				Intent intent = getIntent();
 				finish();
@@ -318,7 +334,7 @@ public class Settings extends TrackedActivity implements
 		btnChinese.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				language = 3;
+				int language = 3;
 				chooseLanguage();
 				Intent intent = getIntent();
 				finish();
@@ -333,13 +349,42 @@ public class Settings extends TrackedActivity implements
 		dialog.show();
 	}
 
+	public void setRepeatingAlarm(AlarmManager am, int id, String message,
+			int hour, int minute) {
+		Calendar cal_alarm;
+		Calendar now = Calendar.getInstance();
+		cal_alarm = Calendar.getInstance();
+		cal_alarm.setTimeInMillis(System.currentTimeMillis());
+		cal_alarm.set(Calendar.HOUR_OF_DAY, hour);
+		cal_alarm.set(Calendar.MINUTE, minute);
+
+		long alarm = 0;
+
+		if (cal_alarm.getTimeInMillis() <= now.getTimeInMillis())
+			alarm = cal_alarm.getTimeInMillis()
+					+ (AlarmManager.INTERVAL_DAY + 1);
+		else
+			alarm = cal_alarm.getTimeInMillis();
+
+		Resources res = getResources();
+
+		Intent intent = new Intent(this, Receiver.class);
+		intent.putExtra("message", message);
+		intent.putExtra("appName", res.getString(R.string.app_name));
+
+		PendingIntent pendingIntent = PendingIntent.getBroadcast(this, id,
+				intent, PendingIntent.FLAG_UPDATE_CURRENT);
+		am.setRepeating(AlarmManager.RTC_WAKEUP, alarm, 5000, pendingIntent);
+	}
+
 	private void scrollMyListViewToBottom() {
 		listNotif.post(new Runnable() {
 			@Override
 			public void run() {
 				listNotif.setAdapter(scAdapter);
+				Cursor cursor = db.getAllDataNotif();
 				// Select the last row so it will scroll into view...
-				listNotif.setSelection(count_element_notif);
+				listNotif.setSelection(cursor.getCount());
 			}
 		});
 
@@ -434,7 +479,7 @@ public class Settings extends TrackedActivity implements
 			return true;
 		} else if (item.getItemId() == CM_EDIT_NOTIF) {
 			idCurrentNotif = (int) acmi.id;
-			currentNotif = db.getCurrentNotif(acmi.id);
+			// currentNotif = db.getCurrentNotif(acmi.id);
 			showDialog(DIALOG_EDIT);
 			scrollMyListViewToBottom();
 			return true;
@@ -470,15 +515,6 @@ public class Settings extends TrackedActivity implements
 			}
 		});
 		dialog.show();
-	}
-	
-	@Override
-	public void onBackPressed() {
-		Intent intent = new Intent(Settings.this,
-				MainActivity.class);
-		startActivity(intent);
-	    language = sharedPref.LoadLanguage();
-	    Log.d(LOG_TAG, "language = " + language);
 	}
 
 	@Override

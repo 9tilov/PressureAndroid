@@ -15,6 +15,8 @@ public class Receiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
+//		SharedPreference sharedPref = new SharedPreference(this);
+//		boolean notification = sharedPref.LoadNotification();
 		Bundle bundle = intent.getExtras();
 		String m_message = bundle.getString("message");
 		String app_name = bundle.getString("appName");
@@ -24,7 +26,7 @@ public class Receiver extends BroadcastReceiver {
 		Notification notif = new Notification(R.drawable.ic_pressure,
 				m_message, System.currentTimeMillis());
 
-		intent = new Intent(context, MainActivity.class);
+		intent = new Intent(context, Settings.class);
 
 		notif.setLatestEventInfo(context, app_name, m_message, PendingIntent
 				.getActivity(context, 0, intent,
@@ -33,6 +35,8 @@ public class Receiver extends BroadcastReceiver {
 				| Notification.FLAG_AUTO_CANCEL | Notification.DEFAULT_SOUND
 				| Notification.DEFAULT_VIBRATE;
 		nm.notify(1, notif);
+//		if (!notification)
+//			nm.cancelAll();
 	}
 
 	public IBinder onBind(Intent arg0) {
