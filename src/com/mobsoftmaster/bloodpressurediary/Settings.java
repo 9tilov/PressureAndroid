@@ -70,6 +70,9 @@ public class Settings extends TrackedActivity implements
 	int count_element_notif;
 
 	Configuration c;
+	
+	boolean rotation;
+	boolean notification;
 
 	static class time {
 		public static int hour = 0;
@@ -111,8 +114,8 @@ public class Settings extends TrackedActivity implements
 		timePicker.setCurrentHour(cal_alarm.get(Calendar.HOUR_OF_DAY));
 		timePicker.setCurrentMinute(cal_alarm.get(Calendar.MINUTE));
 
-		boolean rotation = sharedPref.LoadRotation();
-		boolean notification = sharedPref.LoadNotification();
+		rotation = sharedPref.LoadRotation();
+		notification = sharedPref.LoadNotification();
 
 		if (rotation) {
 			checkBoxGraph.setChecked(true);
@@ -199,8 +202,6 @@ public class Settings extends TrackedActivity implements
 
 		count_element_notif = db.getCountElementsSettings();
 
-		Button btnSaveSettings = (Button) findViewById(R.id.btnSaveSettings);
-
 		btnAddNotif.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -236,27 +237,6 @@ public class Settings extends TrackedActivity implements
 				} else {
 					inCorrectData();
 				}
-			}
-		});
-
-		btnSaveSettings.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				boolean rotation = checkCheckBox(checkBoxGraph);
-				boolean notification = checkCheckBox(checkBoxNotif);
-				if ((db.getCountElementsSettings() == 0)
-						&& (checkCheckBox(checkBoxNotif)))
-					inCorrectData();
-				else {
-//					Intent intent = new Intent(Settings.this,
-//							MainActivity.class);
-					sharedPref.SavePreferences(sharedPref.s_rotation, rotation);
-					sharedPref.SavePreferences(sharedPref.s_notification,
-							notification);
-					sharedPref.SavePreferences(sharedPref.s_state, true);
-//					startActivity(intent);
-				}
-				finish();
 			}
 		});
 
@@ -296,6 +276,20 @@ public class Settings extends TrackedActivity implements
 		scrollMyListViewToBottom();
 	}
 
+	@Override
+	public void onBackPressed() {
+		rotation = checkBoxGraph.isChecked();
+		
+		if ((db.getCountElementsSettings() == 0)
+				&& (checkCheckBox(checkBoxNotif)))
+			checkBoxNotif.setChecked(false);			
+		notification = checkBoxNotif.isChecked();
+		sharedPref.SavePreferences(sharedPref.s_rotation, rotation);
+		sharedPref.SavePreferences(sharedPref.s_notification,
+				notification);
+		super.onBackPressed();
+	}
+	
 	public void showLanguage() {
 		final Dialog dialog = new Dialog(Settings.this);
 		dialog.setContentView(R.layout.dialog_language);

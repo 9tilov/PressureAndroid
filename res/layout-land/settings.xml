@@ -79,35 +79,24 @@
             android:orientation="horizontal" >
         </RelativeLayout>
 
-        <TimePicker
-            android:id="@+id/timePicker"
-            android:layout_width="192dp"
-            android:layout_height="116dp"
-            android:layout_above="@id/btnAddNotif"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true" />
-
-        <Button
-            android:id="@+id/btnSaveSettings"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/btnAddNotif"
-            android:layout_alignBottom="@+id/btnAddNotif"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="15dp"
-            android:background="@drawable/button"
-            android:text="@string/save" />
-
         <Button
             android:id="@+id/btnAddNotif"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/RelativeLayout01"
             android:layout_alignParentLeft="true"
+            android:layout_alignRight="@+id/timePicker"
             android:layout_marginLeft="5dp"
             android:layout_toRightOf="@+id/RelativeLayout01"
             android:background="@drawable/button"
             android:text="@string/add" />
+
+        <TimePicker
+            android:id="@+id/timePicker"
+            android:layout_width="192dp"
+            android:layout_height="116dp"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/RelativeLayout01" />
 
     </RelativeLayout>
 
