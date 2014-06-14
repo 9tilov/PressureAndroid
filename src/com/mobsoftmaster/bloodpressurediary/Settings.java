@@ -124,24 +124,6 @@ public class Settings extends TrackedActivity implements
 
 		if (notification) {
 			checkBoxNotif.setChecked(true);
-			AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-			startService(new Intent(this, Receiver.class));
-			Cursor cursor = db.getAllDataNotif();
-			Log.d(LOG_TAG, "aasdasdasdasdasdasdasdasd");
-			// int i = cursor.getColumnCount();
-			// int j = cursor.getCount();
-			// Log.d(LOG_TAG, "I = " + i);
-			// Log.d(LOG_TAG, "J = " + j);
-
-			if (cursor != null) {
-				cursor.moveToFirst();
-				for (int i = 0; i < cursor.getCount(); ++i) {
-					setRepeatingAlarm(am, Integer.valueOf(cursor.getString(0)),
-							cursor.getString(1),
-							Integer.valueOf(cursor.getString(2)),
-							Integer.valueOf(cursor.getString(3)));
-				}
-			}
 			timePicker.setEnabled(true);
 			btnAddNotif.setEnabled(true);
 			editNotif.setEnabled(true);
@@ -218,6 +200,19 @@ public class Settings extends TrackedActivity implements
 					minute = String.valueOf(time.minute);
 
 				if (0 != editNotif.getText().toString().length()) {
+					AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+					startService(new Intent(Settings.this, Receiver.class));
+					Cursor cursor = db.getAllDataNotif();
+					Log.d(LOG_TAG, "aasdasdasdasdasdasdasdasd");
+					if (cursor != null) {
+						cursor.moveToFirst();
+						for (int i = 0; i < cursor.getCount(); ++i) {
+							setRepeatingAlarm(am, Integer.valueOf(cursor.getString(0)),
+									cursor.getString(1),
+									Integer.valueOf(cursor.getString(2)),
+									Integer.valueOf(cursor.getString(3)));
+						}
+					} 
 					db.addNotif(editNotif.getText().toString(), hour, minute);
 					editNotif.setText("");
 					getSupportLoaderManager().getLoader(0).forceLoad();
@@ -375,6 +370,7 @@ public class Settings extends TrackedActivity implements
 		PendingIntent pendingIntent = PendingIntent.getBroadcast(this, id,
 				intent, PendingIntent.FLAG_UPDATE_CURRENT);
 		am.setRepeating(AlarmManager.RTC_WAKEUP, alarm, 5000, pendingIntent);
+		Log.d(LOG_TAG, "ENTER");
 	}
 
 	private void scrollMyListViewToBottom() {

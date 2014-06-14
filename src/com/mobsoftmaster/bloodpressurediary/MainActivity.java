@@ -58,8 +58,7 @@ public class MainActivity extends FragmentActivity implements
 	SharedPreference sharedPref;
 
 	SimpleCursorAdapter scAdapter;
-	int language;
-
+	
 	long idCurrentName;
 	EditText editName, editMail, addName;
 	String possibleEmail = "";
@@ -479,8 +478,6 @@ public class MainActivity extends FragmentActivity implements
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		Log.d(LOG_TAG, "LANG&&&&&&&32423423424&&&&&&&&&&&&&&&&&&&&& = "
-				+ language);
 		if (requestCode == REQUEST_CODE_EMAIL && resultCode == RESULT_OK) {
 			String accountName = data
 					.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
