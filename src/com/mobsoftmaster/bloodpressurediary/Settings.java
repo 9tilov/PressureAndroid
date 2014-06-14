@@ -142,6 +142,8 @@ public class Settings extends TrackedActivity implements
 					public void onCheckedChanged(CompoundButton checkView,
 							boolean isChecked) {
 						InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+						sharedPref.SavePreferences(sharedPref.s_notification,
+								checkView.isChecked());
 						if (checkView.isChecked()) {
 							imm.showSoftInput(editNotif,
 									InputMethodManager.SHOW_IMPLICIT);
@@ -218,8 +220,6 @@ public class Settings extends TrackedActivity implements
 
 				if (0 != editNotif.getText().toString().length()) {
 					
-					startService(new Intent(Settings.this, Receiver.class));
-					
 					//сохраняем в базу добавляемое уведомление, заодним на сгенериться для него id
 					db.addNotif(editNotif.getText().toString(), hour, minute);
 					// берём из базы только что созданное уведомление
@@ -248,14 +248,15 @@ public class Settings extends TrackedActivity implements
 						&& (checkCheckBox(checkBoxNotif)))
 					inCorrectData();
 				else {
-					Intent intent = new Intent(Settings.this,
-							MainActivity.class);
+//					Intent intent = new Intent(Settings.this,
+//							MainActivity.class);
 					sharedPref.SavePreferences(sharedPref.s_rotation, rotation);
 					sharedPref.SavePreferences(sharedPref.s_notification,
 							notification);
 					sharedPref.SavePreferences(sharedPref.s_state, true);
-					startActivity(intent);
+//					startActivity(intent);
 				}
+				finish();
 			}
 		});
 
@@ -474,6 +475,8 @@ public class Settings extends TrackedActivity implements
 				if (0 != editCurrentNotif.getText().toString().length()) {
 					db.editNotif(String.valueOf(editCurrentNotif.getText()),
 							hour, minute, String.valueOf(idCurrentNotif));
+					String[] s = db.getCurrentNotif(idCurrentNotif);
+					setRepeatingAlarm(idCurrentNotif, s[0], Integer.valueOf(s[1]),Integer.valueOf(s[2]));
 					getSupportLoaderManager().getLoader(0).forceLoad();
 					scrollMyListViewToBottom();
 					changeNotif();
@@ -500,7 +503,7 @@ public class Settings extends TrackedActivity implements
 			return true;
 		} else if (item.getItemId() == CM_EDIT_NOTIF) {
 			idCurrentNotif = (int) acmi.id;
-			// currentNotif = db.getCurrentNotif(acmi.id);
+			currentNotif = db.getCurrentNotif(acmi.id);
 			showDialog(DIALOG_EDIT);
 			scrollMyListViewToBottom();
 			return true;

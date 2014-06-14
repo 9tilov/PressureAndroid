@@ -13,7 +13,6 @@ import com.google.android.gms.ads.AdView;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.database.Cursor;
@@ -37,7 +36,6 @@ import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.AdapterContextMenuInfo;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -214,7 +212,13 @@ public class MyStatistic extends TrackedActivity implements
 			}
 		});
 	}
-
+	
+	@Override
+	public void onBackPressed() {
+		sharedPref.SavePreferences(sharedPref.s_state, true);
+		super.onBackPressed();
+	}
+	
 	public void show() {
 		final NumberPicker npPulse = initNumberPicker(20, 200, R.id.npPulse,
 				dialog);
