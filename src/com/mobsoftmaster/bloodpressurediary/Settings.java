@@ -203,7 +203,6 @@ public class Settings extends TrackedActivity implements
 					AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 					startService(new Intent(Settings.this, Receiver.class));
 					Cursor cursor = db.getAllDataNotif();
-					Log.d(LOG_TAG, "aasdasdasdasdasdasdasdasd");
 					if (cursor != null) {
 						cursor.moveToFirst();
 						for (int i = 0; i < cursor.getCount(); ++i) {
@@ -211,12 +210,16 @@ public class Settings extends TrackedActivity implements
 									cursor.getString(1),
 									Integer.valueOf(cursor.getString(2)),
 									Integer.valueOf(cursor.getString(3)));
+							Log.d(LOG_TAG, "ID = " + cursor.getString(0));
+							Log.d(LOG_TAG, "Message = " + cursor.getString(1));
+							Log.d(LOG_TAG, "hour = " + cursor.getString(2));
+							Log.d(LOG_TAG, "minute = " + cursor.getString(3));
+							cursor.moveToNext();
 						}
 					} 
 					db.addNotif(editNotif.getText().toString(), hour, minute);
 					editNotif.setText("");
 					getSupportLoaderManager().getLoader(0).forceLoad();
-					count_element_notif = db.getCountElementsSettings();
 					scrollMyListViewToBottom();
 					addNotif();
 				} else {
@@ -369,8 +372,7 @@ public class Settings extends TrackedActivity implements
 
 		PendingIntent pendingIntent = PendingIntent.getBroadcast(this, id,
 				intent, PendingIntent.FLAG_UPDATE_CURRENT);
-		am.setRepeating(AlarmManager.RTC_WAKEUP, alarm, 5000, pendingIntent);
-		Log.d(LOG_TAG, "ENTER");
+		am.setRepeating(AlarmManager.RTC_WAKEUP, alarm, AlarmManager.INTERVAL_DAY, pendingIntent);
 	}
 
 	private void scrollMyListViewToBottom() {
@@ -380,7 +382,7 @@ public class Settings extends TrackedActivity implements
 				listNotif.setAdapter(scAdapter);
 				Cursor cursor = db.getAllDataNotif();
 				// Select the last row so it will scroll into view...
-				listNotif.setSelection(cursor.getCount());
+				listNotif.setSelection(cursor.getCount() + 1);
 			}
 		});
 

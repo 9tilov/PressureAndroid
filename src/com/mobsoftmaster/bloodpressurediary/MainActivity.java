@@ -107,9 +107,9 @@ public class MainActivity extends FragmentActivity implements
 		
 		setTitle(R.string.app_name);
 
-		AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+//		AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
-		startService(new Intent(this, Receiver.class));
+//		startService(new Intent(this, Receiver.class));
 
 		boolean notification = sharedPref.LoadNotification();
 		boolean stateActivity = sharedPref.LoadState();
