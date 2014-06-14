@@ -84,8 +84,9 @@ public class MainActivity extends FragmentActivity implements
 		Configuration c = new Configuration(getResources().getConfiguration());
 
 		sharedPref = new SharedPreference(this);
-		language = sharedPref.LoadLanguage();
 		setTitle(R.string.app_name);
+		int language = sharedPref.LoadLanguage();
+		
 		switch (language) {
 		case 0:
 			c.locale = Locale.getDefault();
@@ -104,6 +105,8 @@ public class MainActivity extends FragmentActivity implements
 
 		getResources().updateConfiguration(c,
 				getResources().getDisplayMetrics());
+		
+		setTitle(R.string.app_name);
 
 		AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
