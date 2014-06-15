@@ -212,13 +212,13 @@ public class MyStatistic extends TrackedActivity implements
 			}
 		});
 	}
-	
+
 	@Override
 	public void onBackPressed() {
 		sharedPref.SavePreferences(sharedPref.s_state, true);
 		super.onBackPressed();
 	}
-	
+
 	public void show() {
 		final NumberPicker npPulse = initNumberPicker(20, 200, R.id.npPulse,
 				dialog);

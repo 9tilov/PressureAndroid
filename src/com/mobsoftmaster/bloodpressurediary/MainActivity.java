@@ -26,6 +26,7 @@ import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.KeyEvent;
@@ -52,7 +53,7 @@ public class MainActivity extends FragmentActivity implements
 	SharedPreference sharedPref;
 
 	SimpleCursorAdapter scAdapter;
-	
+
 	long idCurrentName;
 	EditText editName, editMail, addName;
 	String possibleEmail = "";
@@ -79,7 +80,7 @@ public class MainActivity extends FragmentActivity implements
 		sharedPref = new SharedPreference(this);
 		setTitle(R.string.app_name);
 		int language = sharedPref.LoadLanguage();
-		
+
 		switch (language) {
 		case 0:
 			c.locale = Locale.getDefault();
@@ -98,12 +99,13 @@ public class MainActivity extends FragmentActivity implements
 
 		getResources().updateConfiguration(c,
 				getResources().getDisplayMetrics());
-		
+
 		setTitle(R.string.app_name);
 
-//		AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+		// AlarmManager am = (AlarmManager)
+		// getSystemService(Context.ALARM_SERVICE);
 
-//		startService(new Intent(this, Receiver.class));
+		// startService(new Intent(this, Receiver.class));
 
 		boolean notification = sharedPref.LoadNotification();
 		boolean stateActivity = sharedPref.LoadState();
@@ -366,6 +368,7 @@ public class MainActivity extends FragmentActivity implements
 	@Override
 	public void onResume() {
 		super.onResume();
+		setTitle(R.string.app_name);
 		mAdView.resume();
 	}
 

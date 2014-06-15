@@ -70,7 +70,7 @@ public class Settings extends TrackedActivity implements
 	int count_element_notif;
 
 	Configuration c;
-	
+
 	boolean rotation;
 	boolean notification;
 
@@ -158,13 +158,14 @@ public class Settings extends TrackedActivity implements
 							if (cursor != null) {
 								cursor.moveToFirst();
 								for (int i = 0; i < cursor.getCount(); ++i) {
-									setRepeatingAlarm(Integer.valueOf(cursor.getString(0)),
+									setRepeatingAlarm(
+											Integer.valueOf(cursor.getString(0)),
 											cursor.getString(1),
 											Integer.valueOf(cursor.getString(2)),
 											Integer.valueOf(cursor.getString(3)));
 									cursor.moveToNext();
 								}
-							} 
+							}
 						} else {
 							imm.hideSoftInputFromWindow(
 									editNotif.getWindowToken(), 0);
@@ -176,10 +177,11 @@ public class Settings extends TrackedActivity implements
 							if (cursor != null) {
 								cursor.moveToFirst();
 								for (int i = 0; i < cursor.getCount(); ++i) {
-									cancelRepeatingAlarm(Integer.valueOf(cursor.getString(0)));
+									cancelRepeatingAlarm(Integer.valueOf(cursor
+											.getString(0)));
 									cursor.moveToNext();
 								}
-							} 
+							}
 						}
 					}
 				});
@@ -220,8 +222,9 @@ public class Settings extends TrackedActivity implements
 					minute = String.valueOf(time.minute);
 
 				if (0 != editNotif.getText().toString().length()) {
-					
-					//сохраняем в базу добавляемое уведомление, заодним на сгенериться для него id
+
+					// сохраняем в базу добавляемое уведомление, заодним на
+					// сгенериться для него id
 					db.addNotif(editNotif.getText().toString(), hour, minute);
 					// берём из базы только что созданное уведомление
 					Cursor cursor = db.getAllDataNotif();
@@ -279,17 +282,16 @@ public class Settings extends TrackedActivity implements
 	@Override
 	public void onBackPressed() {
 		rotation = checkBoxGraph.isChecked();
-		
+
 		if ((db.getCountElementsSettings() == 0)
 				&& (checkCheckBox(checkBoxNotif)))
-			checkBoxNotif.setChecked(false);			
+			checkBoxNotif.setChecked(false);
 		notification = checkBoxNotif.isChecked();
 		sharedPref.SavePreferences(sharedPref.s_rotation, rotation);
-		sharedPref.SavePreferences(sharedPref.s_notification,
-				notification);
+		sharedPref.SavePreferences(sharedPref.s_notification, notification);
 		super.onBackPressed();
 	}
-	
+
 	public void showLanguage() {
 		final Dialog dialog = new Dialog(Settings.this);
 		dialog.setContentView(R.layout.dialog_language);
@@ -353,8 +355,7 @@ public class Settings extends TrackedActivity implements
 		dialog.show();
 	}
 
-	public void setRepeatingAlarm(int id, String message,
-			int hour, int minute) {
+	public void setRepeatingAlarm(int id, String message, int hour, int minute) {
 		AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 		Calendar cal_alarm;
 		Calendar now = Calendar.getInstance();
@@ -379,9 +380,10 @@ public class Settings extends TrackedActivity implements
 
 		PendingIntent pendingIntent = PendingIntent.getBroadcast(this, id,
 				intent, PendingIntent.FLAG_UPDATE_CURRENT);
-		am.setRepeating(AlarmManager.RTC_WAKEUP, alarm, AlarmManager.INTERVAL_DAY, pendingIntent);
+		am.setRepeating(AlarmManager.RTC_WAKEUP, alarm,
+				AlarmManager.INTERVAL_DAY, pendingIntent);
 	}
-	
+
 	public void cancelRepeatingAlarm(int id) {
 		AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
@@ -391,7 +393,7 @@ public class Settings extends TrackedActivity implements
 				intent, PendingIntent.FLAG_UPDATE_CURRENT);
 		am.cancel(pendingIntent);
 	}
-	
+
 	private void scrollMyListViewToBottom() {
 		listNotif.post(new Runnable() {
 			@Override
@@ -470,7 +472,8 @@ public class Settings extends TrackedActivity implements
 					db.editNotif(String.valueOf(editCurrentNotif.getText()),
 							hour, minute, String.valueOf(idCurrentNotif));
 					String[] s = db.getCurrentNotif(idCurrentNotif);
-					setRepeatingAlarm(idCurrentNotif, s[0], Integer.valueOf(s[1]),Integer.valueOf(s[2]));
+					setRepeatingAlarm(idCurrentNotif, s[0],
+							Integer.valueOf(s[1]), Integer.valueOf(s[2]));
 					getSupportLoaderManager().getLoader(0).forceLoad();
 					scrollMyListViewToBottom();
 					changeNotif();
@@ -523,12 +526,13 @@ public class Settings extends TrackedActivity implements
 				if (cursor != null) {
 					cursor.moveToFirst();
 					for (int i = 0; i < cursor.getCount(); ++i) {
-						cancelRepeatingAlarm(Integer.valueOf(cursor.getString(0)));
+						cancelRepeatingAlarm(Integer.valueOf(cursor
+								.getString(0)));
 						cursor.moveToNext();
 					}
-				} 
+				}
 				db.delRecAllNotif();
-				
+
 				getSupportLoaderManager().getLoader(0).forceLoad();
 				deleteAllNotif();
 				dialog.dismiss();
