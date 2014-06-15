@@ -54,7 +54,6 @@
     <string name="guest">Гость</string>
     <string name="locale">Языки</string>
     <string name="language">Выберите язык</string>
-    <string name="chose_language">Выбран новый язык</string>
     <string name="graphShow">Сначала добавьте не менее 7 записей</string>
     <string name="graphWeek">неделя</string>
     <string name="graphMonth">месяц</string>

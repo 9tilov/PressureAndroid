@@ -308,7 +308,6 @@ public class Settings extends TrackedActivity implements
 			@Override
 			public void onClick(View v) {
 				int language = 1;
-				chooseLanguage();
 				Intent intent = getIntent();
 				finish();
 				startActivity(intent);
@@ -324,7 +323,6 @@ public class Settings extends TrackedActivity implements
 			@Override
 			public void onClick(View v) {
 				int language = 2;
-				chooseLanguage();
 				Intent intent = getIntent();
 				finish();
 				startActivity(intent);
@@ -341,7 +339,6 @@ public class Settings extends TrackedActivity implements
 			@Override
 			public void onClick(View v) {
 				int language = 3;
-				chooseLanguage();
 				Intent intent = getIntent();
 				finish();
 				startActivity(intent);
@@ -619,11 +616,6 @@ public class Settings extends TrackedActivity implements
 
 	void deleteAllNotif() {
 		Toast.makeText(this, R.string.notif_all_deleted, Toast.LENGTH_SHORT)
-				.show();
-	}
-
-	void chooseLanguage() {
-		Toast.makeText(this, R.string.chose_language, Toast.LENGTH_SHORT)
 				.show();
 	}
 }
