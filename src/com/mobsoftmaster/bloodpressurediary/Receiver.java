@@ -21,7 +21,7 @@ public class Receiver extends BroadcastReceiver {
 
 		NotificationManager nm = (NotificationManager) context
 				.getSystemService(Context.NOTIFICATION_SERVICE);
-		Notification notif = new Notification(R.drawable.ic_pressure,
+		Notification notif = new Notification(R.drawable.ic_logo_app,
 				m_message, System.currentTimeMillis());
 
 		intent = new Intent(context, Settings.class);

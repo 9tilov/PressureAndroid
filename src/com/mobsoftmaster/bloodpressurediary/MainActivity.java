@@ -102,12 +102,6 @@ public class MainActivity extends FragmentActivity implements
 
 		setTitle(R.string.app_name);
 
-		// AlarmManager am = (AlarmManager)
-		// getSystemService(Context.ALARM_SERVICE);
-
-		// startService(new Intent(this, Receiver.class));
-
-		boolean notification = sharedPref.LoadNotification();
 		boolean stateActivity = sharedPref.LoadState();
 
 		setContentView(R.layout.activity_main);
@@ -155,7 +149,7 @@ public class MainActivity extends FragmentActivity implements
 		if (db.emptyDataBase() == false) {
 
 			getUserEmailAuto();
-
+ 
 		} else {
 			lvData.setAdapter(scAdapter);
 		}
