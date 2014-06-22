@@ -100,7 +100,7 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:clickable="true"
-            android:src="@drawable/heartbeat_button" />
+            android:src="@drawable/ic_button_add_stat" />
 
     </RelativeLayout>
 
