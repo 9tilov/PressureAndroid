@@ -36,21 +36,21 @@
             android:layout_marginRight="16dp"
             android:layout_toLeftOf="@+id/imageButtonEmail"
             android:src="@drawable/ic_language" />
-
     </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="70dp"
-        android:gravity="top"
+        android:gravity="left"
         android:orientation="horizontal" >
 
         <CheckBox
             android:id="@+id/checkBoxRotation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="30dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="17dp"
             android:checked="true" />
 
         <TextView
@@ -59,17 +59,16 @@
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@+id/checkBoxRotation"
             android:layout_alignBottom="@+id/checkBoxRotation"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="10dp"
-            android:layout_toLeftOf="@id/checkBoxRotation"
+            android:layout_marginLeft="14dp"
+            android:layout_toRightOf="@+id/checkBoxRotation"
             android:text="@string/show_graph_after_rotation" />
 
         <CheckBox
             android:id="@+id/checkBoxTimePicker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/checkBoxRotation"
-            android:layout_alignParentBottom="true"
+            android:layout_below="@+id/checkBoxRotation"
+            android:layout_toLeftOf="@+id/profileGraph1"
             android:checked="false" />
 
         <TextView
@@ -78,11 +77,9 @@
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@+id/checkBoxTimePicker"
             android:layout_alignBottom="@+id/checkBoxTimePicker"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="10dp"
-            android:layout_toLeftOf="@id/checkBoxTimePicker"
-            android:layout_weight="0.04"
+            android:layout_alignLeft="@+id/profileGraph1"
             android:text="@string/show_notifications" />
+
     </RelativeLayout>
 
     <RelativeLayout
@@ -131,11 +128,10 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="22dp"
             android:layout_marginLeft="20dp"
+            android:layout_marginRight="22dp"
             android:background="@drawable/button"
             android:text="@string/add" />
-
     </RelativeLayout>
 
 </LinearLayout>
