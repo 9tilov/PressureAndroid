@@ -105,6 +105,7 @@
             android:focusableInTouchMode="true"
             android:hint="@string/your_notification" >
         </EditText>
+
     </RelativeLayout>
 
     <RelativeLayout
