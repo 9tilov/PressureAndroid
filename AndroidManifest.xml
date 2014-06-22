@@ -11,7 +11,7 @@
     <application
         android:name="com.mobsoftmaster.bloodpressurediary.Locales"
         android:allowBackup="true"
-        android:icon="@drawable/ic_logo_app"
+        android:icon="@drawable/ic_logo"
         android:label="@string/app_name" >
         <activity
             android:name="MainActivity"
