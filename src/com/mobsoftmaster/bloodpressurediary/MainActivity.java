@@ -2,6 +2,8 @@ package com.mobsoftmaster.bloodpressurediary;
 
 import java.util.Calendar;
 import java.util.Locale;
+
+import com.mobsoftmaster.bloodpressurediary.EditNameDialog.EditNameDialogListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.analytics.GoogleAnalytics;
@@ -21,7 +23,9 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -44,7 +48,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 public class MainActivity extends FragmentActivity implements
-		LoaderCallbacks<Cursor> {
+		LoaderCallbacks<Cursor>, EditNameDialogListener {
 
 	private static final int CM_EDIT_ID = 0, CM_DELETE_ID = 1;
 	private static final int REQUEST_CODE_EMAIL = 1;
@@ -121,10 +125,7 @@ public class MainActivity extends FragmentActivity implements
 		addProfile.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				idCurrentName = 0;
-				currentProfile[0] = "";
-				currentProfile[1] = "";
-				showDialog(DIALOG_ADD);
+				showEditNameDialog(true, "", "");
 			}
 		});
 
@@ -149,7 +150,7 @@ public class MainActivity extends FragmentActivity implements
 		if (db.emptyDataBase() == false) {
 
 			getUserEmailAuto();
- 
+
 		} else {
 			lvData.setAdapter(scAdapter);
 		}
@@ -172,6 +173,37 @@ public class MainActivity extends FragmentActivity implements
 	}
 
 	@Override
+	public void onFinishEditDialog(boolean is_adding, String inputText_name,
+			String inputText_email) {
+		if ((0 == inputText_name.length())) {
+			inCorrectName();
+			showEditNameDialog(true, "", "");
+		} else if (!isValidEmail(inputText_email)) {
+			inCorrectEmail();
+			// inputText_email = "";
+			// getUserEmail();
+			// if (inputText_email != "") {
+			// editMail.setText(inputText_email);
+			// }
+		} else {
+			if (is_adding)
+				db.addRec(inputText_name, inputText_email);
+			else
+				db.editRec(inputText_name, inputText_email,
+						String.valueOf(idCurrentName));
+			getSupportLoaderManager().getLoader(0).forceLoad();
+			addData();
+		}
+	}
+
+	void showEditNameDialog(boolean is_adding, String name, String email) {
+		final FragmentManager fm = getSupportFragmentManager();
+		EditNameDialog dFragment = EditNameDialog.newInstance(is_adding, name,
+				email);
+		// Show DialogFragment
+		dFragment.show(fm, "Dialog Fragment");
+	}
+
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
@@ -207,94 +239,95 @@ public class MainActivity extends FragmentActivity implements
 			am.cancel(pendingIntent);
 	}
 
-	protected void onPrepareDialog(int id, Dialog dialog) {
-		if (id == DIALOG_EDIT) {
-			editName = (EditText) dialog.getWindow()
-					.findViewById(R.id.editName);
-			editMail = (EditText) dialog.getWindow()
-					.findViewById(R.id.editMail);
-			editName.setText(currentProfile[0]);
-			editMail.setText(currentProfile[1]);
-		} else if (id == DIALOG_ADD) {
-			addName = (EditText) dialog.getWindow().findViewById(
-					R.id.addNewName);
-			editMail = (EditText) dialog.getWindow().findViewById(R.id.addMail);
-			possibleEmail = "";
-			getUserEmail();
-			if (possibleEmail != "") {
-				editMail.setText(possibleEmail);
-			}
-		}
-	}
+	// protected void onPrepareDialog(int id, Dialog dialog) {
+	// if (id == DIALOG_EDIT) {
+	// editName = (EditText) dialog.getWindow()
+	// .findViewById(R.id.editName);
+	// editMail = (EditText) dialog.getWindow()
+	// .findViewById(R.id.editMail);
+	// editName.setText(currentProfile[0]);
+	// editMail.setText(currentProfile[1]);
+	// } else if (id == DIALOG_ADD) {
+	// addName = (EditText) dialog.getWindow().findViewById(
+	// R.id.addNewName);
+	// editMail = (EditText) dialog.getWindow().findViewById(R.id.addMail);
+	// possibleEmail = "";
+	// getUserEmail();
+	// if (possibleEmail != "") {
+	// editMail.setText(possibleEmail);
+	// }
+	// }
+	// }
 
-	DialogInterface.OnClickListener myClickListener = new DialogInterface.OnClickListener() {
-		public void onClick(DialogInterface dialog, int which) {
-			switch (which) {
-			// положительная кнопка
-			case Dialog.BUTTON_POSITIVE:
-				if (idCurrentName != 0) {
-					if ((!(isValidEmail(editMail.getText().toString())))) {
-						break;
-					} else {
-						db.editRec(editName.getText().toString(), editMail
-								.getText().toString(), String
-								.valueOf(idCurrentName));
-						getSupportLoaderManager().getLoader(0).forceLoad();
-						saveData();
-						break;
-					}
-				} else {
-					if ((0 == addName.getText().toString().length())) {
-						inCorrectData();
-						break;
-					} else {
-						db.addRec(addName.getText().toString(), editMail
-								.getText().toString());
-						getSupportLoaderManager().getLoader(0).forceLoad();
-						addData();
-						break;
-					}
-				}
-				// нейтральная кнопка
-			case Dialog.BUTTON_NEUTRAL:
-				break;
-			}
-		}
-	};
+	// DialogInterface.OnClickListener myClickListener = new
+	// DialogInterface.OnClickListener() {
+	// public void onClick(DialogInterface dialog, int which) {
+	// switch (which) {
+	// // положительная кнопка
+	// case Dialog.BUTTON_POSITIVE:
+	// if (idCurrentName != 0) {
+	// if ((!(isValidEmail(editMail.getText().toString())))) {
+	// break;
+	// } else {
+	// db.editRec(editName.getText().toString(), editMail
+	// .getText().toString(), String
+	// .valueOf(idCurrentName));
+	// getSupportLoaderManager().getLoader(0).forceLoad();
+	// saveData();
+	// break;
+	// }
+	// } else {
+	// if ((0 == addName.getText().toString().length())) {
+	// inCorrectName();
+	// break;
+	// } else {
+	// db.addRec(addName.getText().toString(), editMail
+	// .getText().toString());
+	// getSupportLoaderManager().getLoader(0).forceLoad();
+	// addData();
+	// break;
+	// }
+	// }
+	// // нейтральная кнопка
+	// case Dialog.BUTTON_NEUTRAL:
+	// break;
+	// }
+	// }
+	// };
 
-	@Override
-	protected Dialog onCreateDialog(int id) {
-		AlertDialog.Builder adb = new AlertDialog.Builder(this);
-		if (id == DIALOG_EDIT) {
-
-			LinearLayout view = (LinearLayout) getLayoutInflater().inflate(
-					R.layout.dialog, null);
-			// устанавливаем ее, как содержимое тела диалога
-			adb.setView(view);
-
-			// кнопка положительного ответа
-			adb.setPositiveButton(R.string.save, myClickListener);
-			// кнопка нейтрального ответа
-			adb.setNeutralButton(R.string.cancel, myClickListener);
-
-			Dialog dialog = adb.create();
-			return dialog;
-		} else if (id == DIALOG_ADD) {
-			LinearLayout view = (LinearLayout) getLayoutInflater().inflate(
-					R.layout.dialog_add_name, null);
-			// устанавливаем ее, как содержимое тела диалога
-			adb.setView(view);
-
-			// кнопка положительного ответа
-			adb.setPositiveButton(R.string.save, myClickListener);
-			// кнопка нейтрального ответа
-			adb.setNeutralButton(R.string.cancel, myClickListener);
-
-			Dialog dialog = adb.create();
-			return dialog;
-		}
-		return super.onCreateDialog(id);
-	}
+	// @Override
+	// protected Dialog onCreateDialog(int id) {
+	// AlertDialog.Builder adb = new AlertDialog.Builder(this);
+	// if (id == DIALOG_EDIT) {
+	//
+	// LinearLayout view = (LinearLayout) getLayoutInflater().inflate(
+	// R.layout.dialog, null);
+	// // устанавливаем ее, как содержимое тела диалога
+	// adb.setView(view);
+	//
+	// // кнопка положительного ответа
+	// adb.setPositiveButton(R.string.save, myClickListener);
+	// // кнопка нейтрального ответа
+	// adb.setNeutralButton(R.string.cancel, myClickListener);
+	//
+	// Dialog dialog = adb.create();
+	// return dialog;
+	// } else if (id == DIALOG_ADD) {
+	// LinearLayout view = (LinearLayout) getLayoutInflater().inflate(
+	// R.layout.dialog_add_name, null);
+	// // устанавливаем ее, как содержимое тела диалога
+	// adb.setView(view);
+	//
+	// // кнопка положительного ответа
+	// adb.setPositiveButton(R.string.save, myClickListener);
+	// // кнопка нейтрального ответа
+	// adb.setNeutralButton(R.string.cancel, myClickListener);
+	//
+	// Dialog dialog = adb.create();
+	// return dialog;
+	// }
+	// return super.onCreateDialog(id);
+	// }
 
 	@Override
 	public boolean onKeyDown(int keycode, KeyEvent e) {
@@ -310,8 +343,8 @@ public class MainActivity extends FragmentActivity implements
 	public void onCreateContextMenu(ContextMenu menu, View v,
 			ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
-		menu.add(0, CM_EDIT_ID, 0, R.string.edit_record);
-		menu.add(0, CM_DELETE_ID, 0, R.string.delete_record);
+		menu.add(0, CM_EDIT_ID, 0, R.string.edit_profile);
+		menu.add(0, CM_DELETE_ID, 0, R.string.delete_profile);
 	}
 
 	public boolean onContextItemSelected(MenuItem item) {
@@ -327,7 +360,7 @@ public class MainActivity extends FragmentActivity implements
 		} else if (item.getItemId() == CM_EDIT_ID) {
 			currentProfile = db.getCurrentName((int) acmi.id);
 			idCurrentName = acmi.id;
-			showDialog(DIALOG_EDIT);
+			showEditNameDialog(false, currentProfile[0], currentProfile[1]);
 			return true;
 		}
 		return super.onContextItemSelected(item);
@@ -355,8 +388,14 @@ public class MainActivity extends FragmentActivity implements
 		Toast.makeText(this, R.string.profile_added, Toast.LENGTH_SHORT).show();
 	}
 
-	void inCorrectData() {
-		Toast.makeText(this, R.string.correct_name, Toast.LENGTH_SHORT).show();
+	void inCorrectName() {
+		Toast.makeText(this, R.string.incorrect_name, Toast.LENGTH_SHORT)
+				.show();
+	}
+
+	void inCorrectEmail() {
+		Toast.makeText(this, R.string.incorrect_email, Toast.LENGTH_SHORT)
+				.show();
 	}
 
 	@Override

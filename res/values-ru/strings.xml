@@ -5,6 +5,7 @@
     <string name="action_settings">Настройки</string>
     <string name="add_record">Все записи</string>
     <string name="delete_profile">Удалить профиль</string>
+    <string name="profile_data">Данные профиля</string>
     <string name="delete_notif">Удалить уведомление</string>
     <string name="delete_notif_all">Удалить все</string>
     <string name="edit_profile">Редактировать профиль</string>
@@ -35,7 +36,8 @@
     <string name="statistics">Статистика</string>
     <string name="programm_info">О программе</string>
     <string name="addStat">Добавить</string>
-    <string name="correct_name">Введите ваше имя</string>
+    <string name="incorrect_name">Введите ваше имя</string>
+    <string name="incorrect_email">Введите корректный адрес почты</string>
     <string name="correct_notif">Введите ваше уведомление</string>
     <string name="save_on_email">Отправить по e-mail</string>
     <string name="save_on_SD">Статистика сохранена в папке \"Pressure\"</string>
