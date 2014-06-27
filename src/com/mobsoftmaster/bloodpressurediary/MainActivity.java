@@ -116,8 +116,8 @@ public class MainActivity extends FragmentActivity implements
 		}
 
 		// формируем столбцы сопоставления
-		String[] from = new String[] { MyDB.COLUMN_NAME };
-		int[] to = new int[] { R.id.tvName };
+		String[] from = new String[] { MyDB.COLUMN_NAME, MyDB.COLUMN_EMAIL };
+		int[] to = new int[] { R.id.tvName, R.id.tvMail };
 
 		ImageButton addProfile = (ImageButton) findViewById(R.id.addProfile);
 		ImageButton btnSettings = (ImageButton) findViewById(R.id.imageButtonSettings);
