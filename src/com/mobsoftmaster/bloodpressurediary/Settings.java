@@ -1,5 +1,6 @@
 package com.mobsoftmaster.bloodpressurediary;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -34,6 +35,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.NumberPicker;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -50,8 +52,6 @@ public class Settings extends TrackedActivity implements
 
 	private static final int CM_EDIT_NOTIF = 0, CM_DELETE_NOTIF = 1,
 			CM_DELETE_ALL = 2;
-
-	final int DIALOG_EDIT = 1;
 
 	final String LOG_TAG = "Pressure";
 
@@ -73,6 +73,8 @@ public class Settings extends TrackedActivity implements
 
 	boolean rotation;
 	boolean notification;
+
+	Dialog dialog;
 
 	static class time {
 		public static int hour = 0;
@@ -277,6 +279,10 @@ public class Settings extends TrackedActivity implements
 			}
 		});
 		scrollMyListViewToBottom();
+
+		dialog = new Dialog(Settings.this);
+		dialog.setContentView(R.layout.dialog_settings);
+		dialog.setTitle(R.string.settings);
 	}
 
 	@Override
@@ -391,67 +397,23 @@ public class Settings extends TrackedActivity implements
 		am.cancel(pendingIntent);
 	}
 
-	private void scrollMyListViewToBottom() {
-		listNotif.post(new Runnable() {
+	public void dialogNotif() {
+		Button btnSaveNotif = (Button) dialog.getWindow().findViewById(
+				R.id.btnSaveNotif);
+		editCurrentNotif = (EditText) dialog.getWindow().findViewById(
+				R.id.editCurrentNotif);
+		editCurrentNotif.setText(currentNotif[0]);
+
+		timeEditPicker = (TimePicker) dialog.getWindow().findViewById(
+				R.id.timeEditPicker);
+		timeEditPicker.setIs24HourView(true);
+
+		timeEditPicker.setCurrentHour(Integer.valueOf(currentNotif[1]));
+		timeEditPicker.setCurrentMinute(Integer.valueOf(currentNotif[2]));
+
+		btnSaveNotif.setOnClickListener(new OnClickListener() {
 			@Override
-			public void run() {
-				listNotif.setAdapter(scAdapter);
-				Cursor cursor = db.getAllDataNotif();
-				// Select the last row so it will scroll into view...
-				listNotif.setSelection(cursor.getCount() + 1);
-			}
-		});
-
-	}
-
-	public void onCreateContextMenu(ContextMenu menu, View v,
-			ContextMenuInfo menuInfo) {
-		super.onCreateContextMenu(menu, v, menuInfo);
-		menu.add(0, CM_EDIT_NOTIF, 0, R.string.edit_notif);
-		menu.add(0, CM_DELETE_NOTIF, 0, R.string.delete_notif);
-		menu.add(0, CM_DELETE_ALL, 0, R.string.delete_notif_all);
-	}
-
-	protected void onPrepareDialog(int id, Dialog dialog) {
-		if (id == DIALOG_EDIT) {
-			editCurrentNotif = (EditText) dialog.getWindow().findViewById(
-					R.id.editCurrentNotif);
-			editCurrentNotif.setText(currentNotif[0]);
-
-			timeEditPicker = (TimePicker) dialog.getWindow().findViewById(
-					R.id.timeEditPicker);
-			timeEditPicker.setIs24HourView(true);
-
-			timeEditPicker.setCurrentHour(Integer.valueOf(currentNotif[1]));
-			timeEditPicker.setCurrentMinute(Integer.valueOf(currentNotif[2]));
-		}
-	}
-
-	protected Dialog onCreateDialog(int id) {
-		AlertDialog.Builder adb = new AlertDialog.Builder(this);
-		if (id == DIALOG_EDIT) {
-			LinearLayout view = (LinearLayout) getLayoutInflater().inflate(
-					R.layout.dialog_settings, null);
-			// устанавливаем ее, как содержимое тела диалога
-			adb.setView(view);
-
-			// кнопка положительного ответа
-			adb.setPositiveButton(R.string.save, myClickListener);
-			// кнопка нейтрального ответа
-			adb.setNeutralButton(R.string.cancel, myClickListener);
-
-			Dialog dialog = adb.create();
-			return dialog;
-		}
-		return super.onCreateDialog(id);
-	}
-
-	DialogInterface.OnClickListener myClickListener = new DialogInterface.OnClickListener() {
-		public void onClick(DialogInterface dialog, int which) {
-			// EditTextValidator firstnameValidator = new EditTextValidator();
-			switch (which) {
-			// положительная кнопка
-			case Dialog.BUTTON_POSITIVE:
+			public void onClick(View v) {
 				String hour;
 				String minute;
 				if (timeEditPicker.getCurrentHour() < 10)
@@ -475,13 +437,32 @@ public class Settings extends TrackedActivity implements
 					scrollMyListViewToBottom();
 					changeNotif();
 				}
-				break;
-			// нейтральная кнопка
-			case Dialog.BUTTON_NEUTRAL:
-				break;
+				dialog.dismiss();
 			}
-		}
-	};
+		});
+		dialog.show();
+	}
+
+	private void scrollMyListViewToBottom() {
+		listNotif.post(new Runnable() {
+			@Override
+			public void run() {
+				listNotif.setAdapter(scAdapter);
+				Cursor cursor = db.getAllDataNotif();
+				// Select the last row so it will scroll into view...
+				listNotif.setSelection(cursor.getCount() + 1);
+			}
+		});
+
+	}
+
+	public void onCreateContextMenu(ContextMenu menu, View v,
+			ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
+		menu.add(0, CM_EDIT_NOTIF, 0, R.string.edit_notif);
+		menu.add(0, CM_DELETE_NOTIF, 0, R.string.delete_notif);
+		menu.add(0, CM_DELETE_ALL, 0, R.string.delete_notif_all);
+	}
 
 	public boolean onContextItemSelected(MenuItem item) {
 		AdapterContextMenuInfo acmi = (AdapterContextMenuInfo) item
@@ -498,7 +479,7 @@ public class Settings extends TrackedActivity implements
 		} else if (item.getItemId() == CM_EDIT_NOTIF) {
 			idCurrentNotif = (int) acmi.id;
 			currentNotif = db.getCurrentNotif(acmi.id);
-			showDialog(DIALOG_EDIT);
+			dialogNotif();
 			scrollMyListViewToBottom();
 			return true;
 		} else if (item.getItemId() == CM_DELETE_ALL) {

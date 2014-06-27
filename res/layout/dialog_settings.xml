@@ -27,4 +27,15 @@
         android:scaleX="0.8"
         android:scaleY="0.8" />
 
+    <Button
+        android:id="@+id/btnSaveNotif"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/button"
+        android:text="@string/save" />
+
 </LinearLayout>
