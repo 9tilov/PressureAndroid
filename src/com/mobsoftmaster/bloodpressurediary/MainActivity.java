@@ -186,9 +186,11 @@ public class MainActivity extends FragmentActivity implements
 			// editMail.setText(inputText_email);
 			// }
 		} else {
-			if (is_adding)
+			if (is_adding) {
+				getUserEmail();
+				// getUserEmailAuto();
 				db.addRec(inputText_name, inputText_email);
-			else
+			} else
 				db.editRec(inputText_name, inputText_email,
 						String.valueOf(idCurrentName));
 			getSupportLoaderManager().getLoader(0).forceLoad();

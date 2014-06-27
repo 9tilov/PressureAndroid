@@ -1,21 +1,35 @@
 package com.mobsoftmaster.bloodpressurediary;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
+import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.ContextMenu.ContextMenuInfo;
+import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
 import android.view.WindowManager.LayoutParams;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.TextView.OnEditorActionListener;
+
+
 
 public class EditNameDialog extends DialogFragment implements
 		OnEditorActionListener {
 
 	boolean is_adding;
+	final String LOG_TAG = "myLogs";
 
 	String name_field, email_field;
 
@@ -23,7 +37,8 @@ public class EditNameDialog extends DialogFragment implements
 	 * Create a new instance of MyDialogFragment, providing "num" as an
 	 * argument.
 	 */
-	static EditNameDialog newInstance(boolean is_adding, String name, String email) {
+	static EditNameDialog newInstance(boolean is_adding, String name,
+			String email) {
 		EditNameDialog dialog = new EditNameDialog();
 
 		Bundle args = new Bundle();
@@ -66,6 +81,13 @@ public class EditNameDialog extends DialogFragment implements
 		email.setText(email_field);
 		getDialog().getWindow().setSoftInputMode(
 				LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+		email.setOnFocusChangeListener(new OnFocusChangeListener() {
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				if (hasFocus) {
+				}
+			}
+		});
 		name.setOnEditorActionListener(this);
 		email.setOnEditorActionListener(this);
 		return view;
@@ -77,11 +99,11 @@ public class EditNameDialog extends DialogFragment implements
 			// Return input text to activity
 			EditNameDialogListener activity = (EditNameDialogListener) getActivity();
 			if (is_adding)
-				activity.onFinishEditDialog(true, name.getText().toString(), email
-					.getText().toString());
+				activity.onFinishEditDialog(true, name.getText().toString(),
+						email.getText().toString());
 			else
-				activity.onFinishEditDialog(false, name.getText().toString(), email
-						.getText().toString());
+				activity.onFinishEditDialog(false, name.getText().toString(),
+						email.getText().toString());
 			this.dismiss();
 			return true;
 		}
