@@ -26,6 +26,7 @@ import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.WindowManager.LayoutParams;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.Button;
@@ -130,6 +131,8 @@ public class Settings extends TrackedActivity implements
 			timePicker.setEnabled(true);
 			btnAddNotif.setEnabled(true);
 			editNotif.setEnabled(true);
+			editNotif.requestFocus();
+			getWindow().setSoftInputMode(LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 			listNotif.setEnabled(true);
 		} else {
 			sharedPref.SavePreferences(sharedPref.s_notification, notification);
@@ -155,6 +158,9 @@ public class Settings extends TrackedActivity implements
 							timePicker.setEnabled(true);
 							btnAddNotif.setEnabled(true);
 							editNotif.setEnabled(true);
+							editNotif.requestFocus();
+							getWindow().setSoftInputMode(
+									LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 							listNotif.setEnabled(true);
 							Cursor cursor = db.getAllDataNotif();
 							if (cursor != null) {
@@ -402,6 +408,9 @@ public class Settings extends TrackedActivity implements
 				R.id.btnSaveNotif);
 		editCurrentNotif = (EditText) dialog.getWindow().findViewById(
 				R.id.editCurrentNotif);
+		editCurrentNotif.requestFocus();
+		dialog.getWindow().setSoftInputMode(
+				LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 		editCurrentNotif.setText(currentNotif[0]);
 
 		timeEditPicker = (TimePicker) dialog.getWindow().findViewById(

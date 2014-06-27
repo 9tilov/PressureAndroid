@@ -38,6 +38,9 @@
     <string name="addStat">加</string>
     <string name="incorrect_name">输入你的名字</string>
     <string name="incorrect_email">請輸入正確的郵箱地址</string>
+    <string name="email_default">從帳戶</string>
+    <string name="email_typing">寫你自己</string>
+    <string name="email_print">輸入電子郵件</string>
     <string name="correct_notif">输入您的通知</string>
     <string name="save_on_email">通过电子邮件发送</string>
     <string name="save_on_SD">存储在文件夹中的统计数据 \"Pressure\"</string>

@@ -38,6 +38,9 @@
     <string name="addStat">Добавить</string>
     <string name="incorrect_name">Введите ваше имя</string>
     <string name="incorrect_email">Введите корректный адрес почты</string>
+    <string name="email_default">Взять из аккаунта</string>
+    <string name="email_typing">Написать самостоятельно</string>
+    <string name="email_print">Ввести почту</string>
     <string name="correct_notif">Введите ваше уведомление</string>
     <string name="save_on_email">Отправить по e-mail</string>
     <string name="save_on_SD">Статистика сохранена в папке \"Pressure\"</string>
