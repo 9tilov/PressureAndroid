@@ -109,12 +109,10 @@ public class MyStatistic extends TrackedActivity implements
 
 		if ((getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
 				&& (rotation) && (all_records_stat >= 7)) {
-			Log.d(LOG_TAG, "FAILED1");
 			Intent intent = new Intent(MyStatistic.this, Graph.class);
 			startActivity(intent);
 		} else if ((getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
 				&& (rotation) && (all_records_stat < 7)) {
-			Log.d(LOG_TAG, "FAILED");
 			graphShow();
 		}
 
@@ -177,12 +175,12 @@ public class MyStatistic extends TrackedActivity implements
 				show();
 			}
 		});
-
+		
 		if (!rotation)
 			btnGraph.setVisibility(View.VISIBLE);
 		else
 			btnGraph.setVisibility(View.INVISIBLE);
-
+		
 		btnGraph.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -196,7 +194,7 @@ public class MyStatistic extends TrackedActivity implements
 				}
 			}
 		});
-
+		
 		btnSave.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -443,7 +441,7 @@ public class MyStatistic extends TrackedActivity implements
 		}
 		return true;
 	}
-
+	
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_MENU) {
