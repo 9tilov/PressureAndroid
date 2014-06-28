@@ -20,15 +20,29 @@
             android:drawableStart="@drawable/user_icon"
             android:textSize="25dp" />
 
-        <ImageButton
-            android:id="@+id/imageButtonSettingsStat"
+        <ImageView
+            android:id="@+id/imageViewSave"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
-            android:layout_marginRight="25dp"
-            android:src="@android:drawable/ic_menu_preferences" />
-       
+            android:src="@drawable/ic_save_button" />
+
+        <ImageView
+            android:id="@+id/imageViewMail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/imageViewSave"
+            android:src="@drawable/ic_mail_button" />
+
+        <ImageView
+            android:id="@+id/imageViewGraph"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/imageViewMail"
+            android:src="@drawable/ic_graph_button" />
     </RelativeLayout>
 
     <com.google.android.gms.ads.AdView
@@ -99,7 +113,6 @@
             android:layout_centerVertical="true"
             android:clickable="true"
             android:src="@drawable/stat_button" />
-
     </RelativeLayout>
 
 </LinearLayout>

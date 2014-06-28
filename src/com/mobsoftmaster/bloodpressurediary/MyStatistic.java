@@ -91,7 +91,9 @@ public class MyStatistic extends TrackedActivity implements
 		setTitle(R.string.statictics);
 
 		ImageView btnAddStat = (ImageView) findViewById(R.id.btnAddStat);
-		ImageView btnSettings = (ImageView) findViewById(R.id.imageButtonSettingsStat);
+		ImageView btnGraph = (ImageView) findViewById(R.id.imageViewGraph);
+		ImageView btnMail = (ImageView) findViewById(R.id.imageViewMail);
+		ImageView btnSave = (ImageView) findViewById(R.id.imageViewSave);
 
 		TextView btnProfile = (TextView) findViewById(R.id.btnProfile);
 		listStat = (ListView) findViewById(R.id.listStat);
@@ -107,10 +109,12 @@ public class MyStatistic extends TrackedActivity implements
 
 		if ((getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
 				&& (rotation) && (all_records_stat >= 7)) {
+			Log.d(LOG_TAG, "FAILED1");
 			Intent intent = new Intent(MyStatistic.this, Graph.class);
 			startActivity(intent);
 		} else if ((getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
 				&& (rotation) && (all_records_stat < 7)) {
+			Log.d(LOG_TAG, "FAILED");
 			graphShow();
 		}
 
@@ -174,10 +178,67 @@ public class MyStatistic extends TrackedActivity implements
 			}
 		});
 
-		btnSettings.setOnClickListener(new OnClickListener() {
+		if (!rotation)
+			btnGraph.setVisibility(View.VISIBLE);
+		else
+			btnGraph.setVisibility(View.INVISIBLE);
+
+		btnGraph.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				showSave();
+				if (listStat.getCount() < 7) {
+					dialog.dismiss();
+					graphShow();
+				} else {
+					dialog.dismiss();
+					Intent intent = new Intent(MyStatistic.this, Graph.class);
+					startActivityForResult(intent, 1);
+				}
+			}
+		});
+
+		btnSave.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				writeFileSD(profile_name[0]);
+				dialog.dismiss();
+			}
+		});
+
+		btnMail.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				final Intent emailIntent = new Intent(
+						android.content.Intent.ACTION_SEND);
+				if (!writeFileSD(profile_name[0])) {
+					dialog.dismiss();
+					return;
+				}
+				emailIntent.setType("plain/text");
+				// Кому
+				emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL,
+						new String[] { profile_name[1].toString() });
+				// Зачем
+				emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,
+						"Pressure diary");
+				// О чём
+				emailIntent.putExtra(android.content.Intent.EXTRA_TEXT,
+						"Hello, " + profile_name[0]
+								+ ", this is your statistic:");
+				emailIntent.putExtra(
+						android.content.Intent.EXTRA_STREAM,
+						Uri.parse("file://"
+								+ Environment.getExternalStorageDirectory()
+								+ "/" + DIR_SD + "/" + FILENAME_SD + "_for_"
+								+ profile_name[0] + ".txt"));
+				Log.d(LOG_TAG,
+						"genm: " + Environment.getExternalStorageDirectory()
+								+ "/" + DIR_SD + "/" + FILENAME_SD + "_for_"
+								+ profile_name[0] + ".txt");
+				Resources res = getResources();
+				MyStatistic.this.startActivity(Intent.createChooser(
+						emailIntent, res.getString(R.string.mail_sanding)));
+				dialog.dismiss();
 			}
 		});
 
@@ -314,84 +375,6 @@ public class MyStatistic extends TrackedActivity implements
 		return super.onContextItemSelected(item);
 	}
 
-	public void showSave() {
-		final Dialog dialog = new Dialog(MyStatistic.this);
-		dialog.setContentView(R.layout.dialog_save);
-		Resources res = getResources();
-		dialog.setTitle(res.getString(R.string.settings));
-
-		Button btnSave = (Button) dialog.findViewById(R.id.btnSave);
-		Button btnEmail = (Button) dialog.findViewById(R.id.btnEmail);
-		Button btnGraph = (Button) dialog.findViewById(R.id.btnGraph);
-
-		if (!rotation)
-			btnGraph.setEnabled(true);
-		else
-			btnGraph.setEnabled(false);
-
-		btnGraph.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if (listStat.getCount() < 7) {
-					dialog.dismiss();
-					graphShow();
-					// dialog.dismiss();
-				} else {
-					dialog.dismiss();
-					Intent intent = new Intent(MyStatistic.this, Graph.class);
-					startActivityForResult(intent, 1);
-					// dialog.dismiss();
-				}
-			}
-		});
-
-		btnSave.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				writeFileSD(profile_name[0]);
-				dialog.dismiss();
-			}
-		});
-
-		btnEmail.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				final Intent emailIntent = new Intent(
-						android.content.Intent.ACTION_SEND);
-				if (!writeFileSD(profile_name[0])) {
-					dialog.dismiss();
-					return;
-				}
-				emailIntent.setType("plain/text");
-				// Кому
-				emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL,
-						new String[] { profile_name[1].toString() });
-				// Зачем
-				emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,
-						"Pressure diary");
-				// О чём
-				emailIntent.putExtra(android.content.Intent.EXTRA_TEXT,
-						"Hello, " + profile_name[0]
-								+ ", this is your statistic:");
-				emailIntent.putExtra(
-						android.content.Intent.EXTRA_STREAM,
-						Uri.parse("file://"
-								+ Environment.getExternalStorageDirectory()
-								+ "/" + DIR_SD + "/" + FILENAME_SD + "_for_"
-								+ profile_name[0] + ".txt"));
-				Log.d(LOG_TAG,
-						"genm: " + Environment.getExternalStorageDirectory()
-								+ "/" + DIR_SD + "/" + FILENAME_SD + "_for_"
-								+ profile_name[0] + ".txt");
-				Resources res = getResources();
-				MyStatistic.this.startActivity(Intent.createChooser(
-						emailIntent, res.getString(R.string.mail_sanding)));
-				dialog.dismiss();
-			}
-		});
-		dialog.show();
-	}
-
 	public void showChoice() {
 		final Dialog dialog = new Dialog(MyStatistic.this);
 		dialog.setContentView(R.layout.dialog_choice);
@@ -417,16 +400,6 @@ public class MyStatistic extends TrackedActivity implements
 			}
 		});
 		dialog.show();
-	}
-
-	@Override
-	public boolean onKeyDown(int keycode, KeyEvent e) {
-		switch (keycode) {
-		case KeyEvent.KEYCODE_MENU:
-			showSave();
-			break;
-		}
-		return super.onKeyDown(keycode, e);
 	}
 
 	boolean writeFileSD(String path) {
@@ -469,6 +442,14 @@ public class MyStatistic extends TrackedActivity implements
 			return false;
 		}
 		return true;
+	}
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_MENU) {
+			return true;
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 
 	@Override
