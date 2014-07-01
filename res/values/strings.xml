@@ -58,6 +58,7 @@
     <string name="start">Start</string>
     <string name="stop">Stop</string>
     <string name="graph">Graph</string>
+    <string name="title_tutorial">Tutorial</string>
     <string name="language">Choose language</string>
     <string name="english">English</string>
     <string name="russian">Русский</string>

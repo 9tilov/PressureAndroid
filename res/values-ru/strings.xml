@@ -56,6 +56,7 @@
     <string name="start">Start</string>
     <string name="stop">Stop</string>
     <string name="graph">График</string>
+    <string name="title_tutorial">Обучение</string>
     <string name="guest">Гость</string>
     <string name="locale">Языки</string>
     <string name="language">Выберите язык</string>

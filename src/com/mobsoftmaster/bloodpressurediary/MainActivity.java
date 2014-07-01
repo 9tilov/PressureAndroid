@@ -63,7 +63,7 @@ public class MainActivity extends FragmentActivity implements
 	String possibleEmail = "";
 	String[] currentProfile = new String[] { "", "" };
 
-	final String LOG_TAG = "Pressure";
+	final String LOG_TAG = "myLogs";
 	final int DIALOG_EDIT = 1, DIALOG_ADD = 2;
 	private AdView mAdView;
 
@@ -109,6 +109,13 @@ public class MainActivity extends FragmentActivity implements
 		boolean stateActivity = sharedPref.LoadState();
 
 		setContentView(R.layout.activity_main);
+
+		boolean tutorial = sharedPref.LoadTutorial();
+
+		if (tutorial) {
+			Intent intent = new Intent(MainActivity.this, Tutorial.class);
+			startActivity(intent);
+		}
 
 		if (!stateActivity) {
 			Intent intent = new Intent(MainActivity.this, MyStatistic.class);
@@ -279,8 +286,8 @@ public class MainActivity extends FragmentActivity implements
 	}
 
 	boolean isValidEmail(String target) {
-		if (target == null) {
-			return false;
+		if (target.length() == 0) {
+			return true;
 		} else {
 			return android.util.Patterns.EMAIL_ADDRESS.matcher(target)
 					.matches();

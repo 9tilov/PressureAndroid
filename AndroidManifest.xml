@@ -37,6 +37,12 @@
             android:windowSoftInputMode="stateHidden" >
         </activity>
         <activity
+            android:name="Tutorial"
+            android:label="@string/title_tutorial"
+            android:windowSoftInputMode="stateHidden" 
+            android:configChanges="keyboardHidden|orientation|screenSize">
+        </activity>
+        <activity
             android:name=".Receiver"
             android:label="@string/receiver" >
         </activity>

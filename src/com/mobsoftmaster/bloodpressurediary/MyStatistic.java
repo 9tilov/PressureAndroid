@@ -94,7 +94,7 @@ public class MyStatistic extends TrackedActivity implements
 		ImageView btnGraph = (ImageView) findViewById(R.id.imageViewGraph);
 		ImageView btnMail = (ImageView) findViewById(R.id.imageViewMail);
 		ImageView btnSave = (ImageView) findViewById(R.id.imageViewSave);
-
+		
 		TextView btnProfile = (TextView) findViewById(R.id.btnProfile);
 		listStat = (ListView) findViewById(R.id.listStat);
 

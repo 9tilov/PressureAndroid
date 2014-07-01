@@ -56,6 +56,7 @@
     <string name="start">开始</string>
     <string name="stop">停止</string>
     <string name="graph">时间表</string>
+    <string name="title_tutorial">教程</string>
     <string name="guest">客人</string>
     <string name="locale">指南</string>
     <string name="language">选择语言</string>

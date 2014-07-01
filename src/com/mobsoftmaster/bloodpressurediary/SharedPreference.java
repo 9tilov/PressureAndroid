@@ -12,6 +12,7 @@ public class SharedPreference {
 	public String s_id = "idName";
 	public String s_rotation = "rotation";
 	public String s_state = "state";
+	public String s_tutorial = "tutrorial";
 
 	public boolean notification = false;
 	public String s_notification = "notification";
@@ -84,6 +85,13 @@ public class SharedPreference {
 		SharedPreferences sharedPreferences = PreferenceManager
 				.getDefaultSharedPreferences(mCtx);
 		boolean state = sharedPreferences.getBoolean(s_state, true);
+		return state;
+	}
+	
+	public boolean LoadTutorial() {
+		SharedPreferences sharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(mCtx);
+		boolean state = sharedPreferences.getBoolean(s_tutorial, true);
 		return state;
 	}
 
