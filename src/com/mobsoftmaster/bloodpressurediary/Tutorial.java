@@ -33,51 +33,25 @@ public class Tutorial extends Activity {
 
 		sharedPref = new SharedPreference(this);
 
-		final String[] viewName_ru = new String[] { "ic_screen_title_ru",
-				"ic_screen_profile_ru", "ic_screen_profile_add_ru",
-				"ic_screen_stat_ru", "ic_screen_stat_add_ru",
-				"ic_screen_graph_ru", "ic_screen_settings_ru" };
-
-		final String[] viewNameLand_ru = new String[] {
-				"ic_screen_title_land_ru", "ic_screen_profile_land_ru",
-				"ic_screen_profile_add_land_ru", "ic_screen_stat_land_ru",
-				"ic_screen_stat_add_land_ru", "ic_screen_graph_ru",
-				"ic_screen_settings_land_ru" };
-
-		final String[] viewName_en = new String[] { "ic_screen_title_en",
-				"ic_screen_profile_en", "ic_screen_profile_add_en",
-				"ic_screen_stat_en", "ic_screen_stat_add_en",
-				"ic_screen_graph_en", "ic_screen_settings_en" };
-
-		final String[] viewNameLand_en = new String[] {
-				"ic_screen_title_land_en", "ic_screen_profile_land_en",
-				"ic_screen_profile_add_land_en", "ic_screen_stat_land_en",
-				"ic_screen_stat_add_land_en", "ic_screen_graph_en",
-				"ic_screen_settings_land_en" };
+		final String[] viewName = new String[] { "ic_screen_title_",
+				"ic_screen_profile_", "ic_screen_profile_add_",
+				"ic_screen_stat_", "ic_screen_stat_add_", "ic_screen_graph_",
+				"ic_screen_settings_", "ic_title_end_" };
 
 		final String locale_define = Locale.getDefault().getLanguage();
 		Log.d(LOG_TAG, "LANG1 = " + locale_define);
 
-		int resID = 0;
 		if (locale_define.equals("ru")) {
-
-			Log.d(LOG_TAG, "LANG2 = " + locale_define + " - ru");
 			if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
-				resID = getResources().getIdentifier("ic_screen_title_land_ru",
-						"raw", getPackageName());
+				showView(viewName[0] + "land_ru");
 			else
-				resID = getResources().getIdentifier("ic_screen_title_ru",
-						"raw", getPackageName());
+				showView(viewName[0] + "ru");
 		} else {
 			if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
-				resID = getResources().getIdentifier("ic_screen_title_land_en",
-						"raw", getPackageName());
+				showView(viewName[0] + "land_en");
 			else
-				resID = getResources().getIdentifier("ic_screen_title_en",
-						"raw", getPackageName());
+				showView(viewName[0] + "en");
 		}
-
-		screen.setImageResource(resID);
 
 		if (i == 0)
 			btnPrevious.setVisibility(View.INVISIBLE);
@@ -85,42 +59,23 @@ public class Tutorial extends Activity {
 		btnNext.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				int resID;
-				if (locale_define.equals("ru")) {
-					if (i == viewName_ru.length - 1) {
-						sharedPref
-								.SavePreferences(sharedPref.s_tutorial, false);
-						onBackPressed();
-					} else {
-						i++;
-						btnPrevious.setVisibility(View.VISIBLE);
 
-						if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-							resID = getResources()
-									.getIdentifier(viewNameLand_ru[i], "raw",
-											getPackageName());
-						} else
-							resID = getResources().getIdentifier(
-									viewName_ru[i], "raw", getPackageName());
-						screen.setImageResource(resID);
-					}
+				if (i == viewName.length - 1) {
+					sharedPref.SavePreferences(sharedPref.s_tutorial, false);
+					onBackPressed();
 				} else {
-					if (i == viewName_en.length - 1) {
-						sharedPref
-								.SavePreferences(sharedPref.s_tutorial, false);
-						onBackPressed();
+					i++;
+					btnPrevious.setVisibility(View.VISIBLE);
+					if (locale_define.equals("ru")) {
+						if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
+							showView(viewName[i] + "land_ru");
+						else
+							showView(viewName[i] + "ru");
 					} else {
-						i++;
-						btnPrevious.setVisibility(View.VISIBLE);
-
 						if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-							resID = getResources()
-									.getIdentifier(viewNameLand_en[i], "raw",
-											getPackageName());
+							showView(viewName[i] + "land_en");
 						} else
-							resID = getResources().getIdentifier(
-									viewName_en[i], "raw", getPackageName());
-						screen.setImageResource(resID);
+							showView(viewName[i] + "en");
 					}
 				}
 			}
@@ -129,32 +84,28 @@ public class Tutorial extends Activity {
 		btnPrevious.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if (i > 0) {
-					if (i == 1)
-						btnPrevious.setVisibility(View.INVISIBLE);
-					i--;
-					int resID;
-					if (locale_define.equals("ru")) {
-						if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-							resID = getResources()
-									.getIdentifier(viewNameLand_ru[i], "raw",
-											getPackageName());
-						} else
-							resID = getResources().getIdentifier(
-									viewName_ru[i], "raw", getPackageName());
-						screen.setImageResource(resID);
-					} else {
-						if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-							resID = getResources()
-									.getIdentifier(viewNameLand_en[i], "raw",
-											getPackageName());
-						} else
-							resID = getResources().getIdentifier(
-									viewName_en[i], "raw", getPackageName());
-						screen.setImageResource(resID);
-					}
+				if (i == 1)
+					btnPrevious.setVisibility(View.INVISIBLE);
+				i--;
+				if (locale_define.equals("ru")) {
+					if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+						showView(viewName[i] + "land_ru");
+					} else
+						showView(viewName[i] + "ru");
+				} else {
+					if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+						showView(viewName[i] + "land_en");
+					} else
+						showView(viewName[i] + "en");
 				}
 			}
 		});
+	}
+
+	void showView(String viewName) {
+		final ImageView screen = (ImageView) findViewById(R.id.imageViewScreenProfile);
+		int resID = getResources().getIdentifier(viewName, "raw",
+				getPackageName());
+		screen.setImageResource(resID);
 	}
 }
