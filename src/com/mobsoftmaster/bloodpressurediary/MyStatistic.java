@@ -121,6 +121,7 @@ public class MyStatistic extends TrackedActivity implements
 			public void onClick(View v) {
 				sharedPref.SavePreferences(sharedPref.s_state, true);
 				finish();
+				overridePendingTransition(R.anim.close_window_start, R.anim.close_window_end);
 			}
 		});
 		// формируем столбцы сопоставления
@@ -276,6 +277,7 @@ public class MyStatistic extends TrackedActivity implements
 	public void onBackPressed() {
 		sharedPref.SavePreferences(sharedPref.s_state, true);
 		super.onBackPressed();
+		overridePendingTransition(R.anim.close_window_start, R.anim.close_window_end);
 	}
 
 	public void show() {

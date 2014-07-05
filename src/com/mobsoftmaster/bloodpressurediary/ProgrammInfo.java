@@ -17,10 +17,17 @@ public class ProgrammInfo extends TrackedActivity {
 		ImageView imageViewReview = (ImageView) findViewById(R.id.imageViewReview);
 		imageViewReview.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				Uri uri = Uri.parse("https://play.google.com/store/apps/details?id=com.mobsoftmaster.bloodpressurediary");
+				Uri uri = Uri
+						.parse("https://play.google.com/store/apps/details?id=com.mobsoftmaster.bloodpressurediary");
 				Intent intent = new Intent(Intent.ACTION_VIEW, uri);
 				startActivity(intent);
 			}
 		});
+	}
+
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+		overridePendingTransition(R.anim.close_window_start, R.anim.close_window_end);
 	}
 }

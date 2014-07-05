@@ -1,6 +1,7 @@
 package com.mobsoftmaster.bloodpressurediary;
 
 import java.util.LinkedList;
+
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GraphViewSeries;
 import com.jjoe64.graphview.LineGraphView;
@@ -15,7 +16,6 @@ import android.os.Bundle;
 import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.view.KeyEvent;
-
 import android.graphics.Color;
 import android.util.Log;
 

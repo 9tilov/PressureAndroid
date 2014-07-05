@@ -150,7 +150,7 @@ public class ScreenSlidePageFragment extends Fragment {
 			}
 
 			if (mPageNumber == 8) {
-				// sharedPref.SavePreferences(sharedPref.s_tutorial, false);
+				sharedPref.SavePreferences(sharedPref.s_tutorial, false);
 				getActivity().onBackPressed();
 			}
 		}

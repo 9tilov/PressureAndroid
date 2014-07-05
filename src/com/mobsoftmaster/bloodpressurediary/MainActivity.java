@@ -12,25 +12,20 @@ import com.google.android.gms.common.AccountPicker;
 
 import android.accounts.AccountManager;
 import android.app.AlarmManager;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.KeyEvent;
@@ -43,7 +38,6 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -141,6 +135,8 @@ public class MainActivity extends FragmentActivity implements
 			public void onClick(View v) {
 				Intent intent = new Intent(MainActivity.this, Settings.class);
 				startActivity(intent);
+				overridePendingTransition(R.anim.open_window_start,
+						R.anim.open_window_end);
 			}
 		});
 
@@ -171,6 +167,8 @@ public class MainActivity extends FragmentActivity implements
 				sharedPref.saveID(sharedPref.s_id, id_name);
 				sharedPref.SavePreferences(sharedPref.s_state, false);
 				startActivity(intent);
+				overridePendingTransition(R.anim.open_window_start,
+						R.anim.open_window_end);
 			}
 		});
 		mAdView = (AdView) findViewById(R.id.adView);
@@ -216,6 +214,22 @@ public class MainActivity extends FragmentActivity implements
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle action bar item clicks here. The action bar will
+		// automatically handle clicks on the Home/Up button, so long
+		// as you specify a parent activity in AndroidManifest.xml.
+		int id = item.getItemId();
+		if (id == R.id.action_settings) {
+			Intent intent = new Intent(MainActivity.this, Settings.class);
+			startActivity(intent);
+			overridePendingTransition(R.anim.open_window_start,
+					R.anim.open_window_end);
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	public void setRepeatingAlarm(AlarmManager am, int id, String message,

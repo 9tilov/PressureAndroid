@@ -1,15 +1,12 @@
 package com.mobsoftmaster.bloodpressurediary;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
 import android.app.AlarmManager;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -34,9 +31,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.NumberPicker;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -256,6 +251,8 @@ public class Settings extends TrackedActivity implements
 			public void onClick(View v) {
 				Intent intent = new Intent(Settings.this, ProgrammInfo.class);
 				startActivity(intent);
+				overridePendingTransition(R.anim.open_window_start,
+						R.anim.open_window_end);
 			}
 		});
 
@@ -302,6 +299,8 @@ public class Settings extends TrackedActivity implements
 		sharedPref.SavePreferences(sharedPref.s_rotation, rotation);
 		sharedPref.SavePreferences(sharedPref.s_notification, notification);
 		super.onBackPressed();
+		overridePendingTransition(R.anim.close_window_start,
+				R.anim.close_window_end);
 	}
 
 	public void showLanguage() {

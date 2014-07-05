@@ -12,8 +12,6 @@ import android.os.IBinder;
 public class Receiver extends BroadcastReceiver {
 
 	final String LOG_TAG = "Pressure";
-	
-	
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
@@ -23,8 +21,8 @@ public class Receiver extends BroadcastReceiver {
 
 		NotificationManager nm = (NotificationManager) context
 				.getSystemService(Context.NOTIFICATION_SERVICE);
-		Notification notif = new Notification(R.drawable.ic_logo,
-				m_message, System.currentTimeMillis());
+		Notification notif = new Notification(R.drawable.ic_logo, m_message,
+				System.currentTimeMillis());
 
 		intent = new Intent(context, Settings.class);
 

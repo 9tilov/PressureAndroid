@@ -87,7 +87,7 @@ public class SharedPreference {
 		boolean state = sharedPreferences.getBoolean(s_state, true);
 		return state;
 	}
-	
+
 	public boolean LoadTutorial() {
 		SharedPreferences sharedPreferences = PreferenceManager
 				.getDefaultSharedPreferences(mCtx);
