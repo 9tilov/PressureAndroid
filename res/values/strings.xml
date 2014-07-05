@@ -73,7 +73,9 @@
     <string name="not_enough_records">Not enough records</string>
     <string name="receiver">Receiver</string>
     <string name="pressure_stat">Pressure statistics</string>
-
+    <string name="action_previous">Previous</string>
+    <string name="action_next">Next</string>
+    <string name="action_finish">Finish</string>
     <string name="service">Service</string>
     <string name="settings">Settings</string>
     <string name="date">Date</string>

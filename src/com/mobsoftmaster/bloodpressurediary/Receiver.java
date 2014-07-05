@@ -12,6 +12,8 @@ import android.os.IBinder;
 public class Receiver extends BroadcastReceiver {
 
 	final String LOG_TAG = "Pressure";
+	
+	
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
