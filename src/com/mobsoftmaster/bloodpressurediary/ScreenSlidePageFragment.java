@@ -87,8 +87,7 @@ public class ScreenSlidePageFragment extends Fragment {
 		// Inflate the layout containing a title and body text.
 		ViewGroup rootView = (ViewGroup) inflater.inflate(
 				R.layout.fragment_screen_slide_page, container, false);
-		Log.d(LOG_TAG, "LOCALE = " + locale_define);
-		
+
 		sharedPref = new SharedPreference(getActivity());
 
 		final ImageView screen = (ImageView) rootView
@@ -100,8 +99,6 @@ public class ScreenSlidePageFragment extends Fragment {
 			public void onOrientationChanged(int arg0) {
 				int resID;
 				if (locale_define.equals("ru")) {
-					Log.d(LOG_TAG, "RU1");
-					Log.d(LOG_TAG, "ARG0 = " + arg0);
 					if (arg0 == 270)
 						resID = getResources().getIdentifier(
 								viewName[mPageNumber] + "land_ru", "raw",
@@ -130,13 +127,11 @@ public class ScreenSlidePageFragment extends Fragment {
 		if (myOrientationEventListener.canDetectOrientation()) {
 			int resID;
 			if (locale_define.equals("ru")) {
-				Log.d(LOG_TAG, "RU2");
 				if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
 					resID = getResources().getIdentifier(
 							viewName[mPageNumber] + "land_ru", "raw",
 							getActivity().getPackageName());
 				} else {
-					Log.d(LOG_TAG, "11111111111");
 					resID = getResources().getIdentifier(
 							viewName[mPageNumber] + "ru", "raw",
 							getActivity().getPackageName());
@@ -147,7 +142,6 @@ public class ScreenSlidePageFragment extends Fragment {
 							viewName[mPageNumber] + "land_en", "raw",
 							getActivity().getPackageName());
 				} else {
-					Log.d(LOG_TAG, "222222222");
 					resID = getResources().getIdentifier(
 							viewName[mPageNumber] + "en", "raw",
 							getActivity().getPackageName());
