@@ -72,9 +72,6 @@ public class ScreenSlidePageFragment extends Fragment {
 		return fragment;
 	}
 
-	public ScreenSlidePageFragment() {
-	}
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -98,55 +95,33 @@ public class ScreenSlidePageFragment extends Fragment {
 			@Override
 			public void onOrientationChanged(int arg0) {
 				int resID;
-				if (locale_define.equals("ru")) {
-					if (arg0 == 270)
-						resID = getResources().getIdentifier(
-								viewName[mPageNumber] + "land_ru", "raw",
-								getActivity().getPackageName());
-					else {
-						resID = getResources().getIdentifier(
-								viewName[mPageNumber] + "ru", "raw",
-								getActivity().getPackageName());
-					}
-				} else {
-					if (arg0 == 270) {
-						resID = getResources().getIdentifier(
-								viewName[mPageNumber] + "land_en", "raw",
-								getActivity().getPackageName());
-					} else {
-						resID = getResources().getIdentifier(
-								viewName[mPageNumber] + "en", "raw",
-								getActivity().getPackageName());
-
-					}
-				}
+				String lang = "";
+				if (locale_define.equals("ru"))
+					lang = "ru";
+				else
+					lang = "en";
+				String land = "";
+				if (arg0 == 270)
+					land = "land_";
+				resID = getResources().getIdentifier(
+						viewName[mPageNumber] + land + lang, "raw",
+						getActivity().getPackageName());
 				screen.setImageResource(resID);
 			}
 		};
 
 		if (myOrientationEventListener.canDetectOrientation()) {
-			int resID;
-			if (locale_define.equals("ru")) {
-				if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-					resID = getResources().getIdentifier(
-							viewName[mPageNumber] + "land_ru", "raw",
-							getActivity().getPackageName());
-				} else {
-					resID = getResources().getIdentifier(
-							viewName[mPageNumber] + "ru", "raw",
-							getActivity().getPackageName());
-				}
-			} else {
-				if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-					resID = getResources().getIdentifier(
-							viewName[mPageNumber] + "land_en", "raw",
-							getActivity().getPackageName());
-				} else {
-					resID = getResources().getIdentifier(
-							viewName[mPageNumber] + "en", "raw",
-							getActivity().getPackageName());
-				}
-			}
+			String land = "";
+			String lang = "";
+			if (locale_define.equals("ru"))
+				lang = "ru";
+			else
+				lang = "en";
+			if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
+				land = "land_";
+			int resID = getResources().getIdentifier(
+					viewName[mPageNumber] + land + lang, "raw",
+					getActivity().getPackageName());
 			screen.setImageResource(resID);
 			myOrientationEventListener.enable();
 

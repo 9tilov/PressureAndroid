@@ -14,6 +14,7 @@ public class Tutorial extends FragmentActivity {
 	 * The number of pages (wizard steps) to show in this demo.
 	 */
 	private static final int NUM_PAGES = 9;
+	SharedPreference sharedPref;
 
 	/**
 	 * The pager widget, which handles animation and allows swiping horizontally
@@ -30,6 +31,8 @@ public class Tutorial extends FragmentActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_screen_slide);
+		
+		sharedPref = new SharedPreference(this);
 
 		// Instantiate a ViewPager and a PagerAdapter.
 		mPager = (ViewPager) findViewById(R.id.pager);
@@ -62,4 +65,11 @@ public class Tutorial extends FragmentActivity {
 			return NUM_PAGES;
 		}
 	}
+	
+	@Override
+	public void onBackPressed() {
+		sharedPref.SavePreferences(sharedPref.s_tutorial, false);
+		super.onBackPressed();
+	}
+
 }
