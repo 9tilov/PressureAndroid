@@ -131,7 +131,6 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="22dp"
-            android:background="@drawable/button"
             android:text="@string/add" />
     </RelativeLayout>
 

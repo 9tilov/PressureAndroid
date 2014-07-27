@@ -18,15 +18,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
 
-/**
- * A fragment representing a single step in a wizard. The fragment shows a dummy
- * title indicating the page number, along with some dummy text.
- * 
- * <p>
- * This class is used by the {@link CardFlipActivity} and
- * {@link ScreenSlideActivity} samples.
- * </p>
- */
 public class ScreenSlidePageFragment extends Fragment {
 	/**
 	 * The argument key for the page number this fragment represents.
@@ -34,6 +25,8 @@ public class ScreenSlidePageFragment extends Fragment {
 	public static final String ARG_PAGE = "page";
 
 	final String LOG_TAG = "myLogs";
+
+	Bitmap bitmap;
 
 	OrientationEventListener myOrientationEventListener;
 
@@ -104,50 +97,26 @@ public class ScreenSlidePageFragment extends Fragment {
 		ScreenResolution sr = GetResolution();
 		final int width = sr.width;
 		final int height = sr.height;
-		myOrientationEventListener = new OrientationEventListener(getActivity()) {
 
-			@Override
-			public void onOrientationChanged(int arg0) {
-				int resID;
-
-				String lang = "";
-				if (locale_define.equals("ru"))
-					lang = "ru";
-				else
-					lang = "en";
-				String land = "";
-				if (arg0 == 270)
-					land = "land_";
-				resID = getResources().getIdentifier(
-						viewName[mPageNumber] + land + lang, "raw",
-						getActivity().getPackageName());
-				screen.setImageResource(resID);
-				screen.setImageBitmap(decodeSampledBitmapFromResource(
-						getResources(), resID, width / 2, height / 2));
-			}
-		};
-
-		if (myOrientationEventListener.canDetectOrientation()) {
-			String land = "";
-			String lang = "";
-			if (locale_define.equals("ru"))
-				lang = "ru";
-			else
-				lang = "en";
-			if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
-				land = "land_";
-			int resID = getResources().getIdentifier(
-					viewName[mPageNumber] + land + lang, "raw",
-					getActivity().getPackageName());
-			screen.setImageResource(resID);
-			screen.setImageBitmap(decodeSampledBitmapFromResource(
-					getResources(), resID, width / 2, height / 2));
-			myOrientationEventListener.enable();
-
-			if (mPageNumber == 8) {
-				sharedPref.SavePreferences(sharedPref.s_tutorial, false);
-				getActivity().onBackPressed();
-			}
+		String land = "";
+		String lang = "";
+		if (locale_define.equals("ru"))
+			lang = "ru";
+		else
+			lang = "en";
+		if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
+			land = "land_";
+		int resID = getResources().getIdentifier(
+				viewName[mPageNumber] + land + lang, "raw",
+				getActivity().getPackageName());
+		if (bitmap != null)
+			bitmap.recycle();
+		bitmap = decodeSampledBitmapFromResource(getResources(), resID,
+				width / 4, height / 4);
+		screen.setImageBitmap(bitmap);
+		if (mPageNumber == 8) {
+			sharedPref.SavePreferences(sharedPref.s_tutorial, false);
+			getActivity().onBackPressed();
 		}
 		return rootView;
 	}
@@ -196,7 +165,6 @@ public class ScreenSlidePageFragment extends Fragment {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		myOrientationEventListener.disable();
 	}
 
 }

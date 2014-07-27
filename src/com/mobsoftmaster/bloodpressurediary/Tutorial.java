@@ -7,6 +7,7 @@ import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.widget.ImageView;
 
 public class Tutorial extends FragmentActivity {
 
