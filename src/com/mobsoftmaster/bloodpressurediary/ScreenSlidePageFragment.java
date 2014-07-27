@@ -92,7 +92,7 @@ public class ScreenSlidePageFragment extends Fragment {
 		int width;
 		int height;
 	}
-	
+
 	private ScreenResolution GetResolution() {
 		ScreenResolution sr = new ScreenResolution();
 		Display display = getActivity().getWindowManager().getDefaultDisplay();
@@ -107,7 +107,7 @@ public class ScreenSlidePageFragment extends Fragment {
 		}
 		return sr;
 	}
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -141,8 +141,8 @@ public class ScreenSlidePageFragment extends Fragment {
 						viewName[mPageNumber] + land + lang, "raw",
 						getActivity().getPackageName());
 				screen.setImageResource(resID);
-				screen.setImageBitmap(
-					    decodeSampledBitmapFromResource(getResources(), resID, width/2, height/2));
+				screen.setImageBitmap(decodeSampledBitmapFromResource(
+						getResources(), resID, width / 2, height / 2));
 			}
 		};
 
@@ -159,8 +159,8 @@ public class ScreenSlidePageFragment extends Fragment {
 					viewName[mPageNumber] + land + lang, "raw",
 					getActivity().getPackageName());
 			screen.setImageResource(resID);
-			screen.setImageBitmap(
-				    decodeSampledBitmapFromResource(getResources(), resID, width/2, height/2));
+			screen.setImageBitmap(decodeSampledBitmapFromResource(
+					getResources(), resID, width / 2, height / 2));
 			myOrientationEventListener.enable();
 
 			if (mPageNumber == 8) {
@@ -171,44 +171,47 @@ public class ScreenSlidePageFragment extends Fragment {
 		return rootView;
 	}
 
-	public static int calculateInSampleSize(
-            BitmapFactory.Options options, int reqWidth, int reqHeight) {
-    // Raw height and width of image
-    final int height = options.outHeight;
-    final int width = options.outWidth;
-    int inSampleSize = 1;
+	public static int calculateInSampleSize(BitmapFactory.Options options,
+			int reqWidth, int reqHeight) {
+		// Raw height and width of image
+		final int height = options.outHeight;
+		final int width = options.outWidth;
+		int inSampleSize = 1;
 
-    if (height > reqHeight || width > reqWidth) {
+		if (height > reqHeight || width > reqWidth) {
 
-        final int halfHeight = height / 2;
-        final int halfWidth = width / 2;
+			final int halfHeight = height / 2;
+			final int halfWidth = width / 2;
 
-        // Calculate the largest inSampleSize value that is a power of 2 and keeps both
-        // height and width larger than the requested height and width.
-        while ((halfHeight / inSampleSize) > reqHeight
-                && (halfWidth / inSampleSize) > reqWidth) {
-            inSampleSize *= 2;
-        }
-    }
+			// Calculate the largest inSampleSize value that is a power of 2 and
+			// keeps both
+			// height and width larger than the requested height and width.
+			while ((halfHeight / inSampleSize) > reqHeight
+					&& (halfWidth / inSampleSize) > reqWidth) {
+				inSampleSize *= 2;
+			}
+		}
 
-    return inSampleSize;
+		return inSampleSize;
 	}
-	
-	public static Bitmap decodeSampledBitmapFromResource(Resources res, int resId,
-	        int reqWidth, int reqHeight) {
 
-	    // First decode with inJustDecodeBounds=true to check dimensions
-	    final BitmapFactory.Options options = new BitmapFactory.Options();
-	    options.inJustDecodeBounds = true;
-	    BitmapFactory.decodeResource(res, resId, options);
+	public static Bitmap decodeSampledBitmapFromResource(Resources res,
+			int resId, int reqWidth, int reqHeight) {
 
-	    // Calculate inSampleSize
-	    options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+		// First decode with inJustDecodeBounds=true to check dimensions
+		final BitmapFactory.Options options = new BitmapFactory.Options();
+		options.inJustDecodeBounds = true;
+		BitmapFactory.decodeResource(res, resId, options);
 
-	    // Decode bitmap with inSampleSize set
-	    options.inJustDecodeBounds = false;
-	    return BitmapFactory.decodeResource(res, resId, options);
+		// Calculate inSampleSize
+		options.inSampleSize = calculateInSampleSize(options, reqWidth,
+				reqHeight);
+
+		// Decode bitmap with inSampleSize set
+		options.inJustDecodeBounds = false;
+		return BitmapFactory.decodeResource(res, resId, options);
 	}
+
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
