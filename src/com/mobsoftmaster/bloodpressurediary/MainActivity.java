@@ -56,6 +56,7 @@ public class MainActivity extends FragmentActivity implements
 	EditText editName, editMail, addName;
 	String possibleEmail = "";
 	String[] currentProfile = new String[] { "", "" };
+	String accountName = "";
 
 	final String LOG_TAG = "myLogs";
 	final int DIALOG_EDIT = 1, DIALOG_ADD = 2;
@@ -150,13 +151,10 @@ public class MainActivity extends FragmentActivity implements
 		// создаем лоадер для чтения данных
 		getSupportLoaderManager().initLoader(0, null, this);
 
-		if (db.emptyDataBase() == false) {
-
+		if (db.emptyDataBase() == false)
 			getUserEmailAuto();
-
-		} else {
+		else
 			lvData.setAdapter(scAdapter);
-		}
 
 		lvData.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,
@@ -183,21 +181,15 @@ public class MainActivity extends FragmentActivity implements
 		if ((0 == inputText_name.length())) {
 			inCorrectName();
 			showEditNameDialog(true, "", "");
-		} else if (!isValidEmail(inputText_email)) {
+		} else if (!isValidEmail(inputText_email))
 			inCorrectEmail();
-			// inputText_email = "";
-			// getUserEmail();
-			// if (inputText_email != "") {
-			// editMail.setText(inputText_email);
-			// }
-		} else {
-			if (is_adding) {
-				getUserEmail();
-				// getUserEmailAuto();
+		else {
+			if (is_adding)
 				db.addRec(inputText_name, inputText_email);
-			} else
-				db.editRec(inputText_name, inputText_email,
-						String.valueOf(idCurrentName));
+			else {
+				getUserEmailAuto();
+				accountName = inputText_name;
+			}
 			getSupportLoaderManager().getLoader(0).forceLoad();
 			addData();
 		}
@@ -442,22 +434,27 @@ public class MainActivity extends FragmentActivity implements
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == REQUEST_CODE_EMAIL && resultCode == RESULT_OK) {
-			String accountName = data
+			String accountEmail = data
 					.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
-			editMail.setText(accountName);
+			editMail.setText(accountEmail);
 		} else if (requestCode == REQUEST_CODE_EMAIL_AUTO
 				&& resultCode == RESULT_OK) {
-			String accountName = data
+			String accountEmail = data
 					.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
 			Resources res = getResources();
-			db.addRec(res.getString(R.string.guest), accountName);
+			if (db.emptyDataBase() == false)
+				db.addRec(res.getString(R.string.guest), accountEmail);
+			else {
+				db.addRec(accountName, accountEmail);
+			}
 			final ListView lvData = (ListView) findViewById(R.id.lvData);
 			lvData.setAdapter(scAdapter);
 			getSupportLoaderManager().getLoader(0).forceLoad();
 		} else if (requestCode == REQUEST_CODE_EMAIL_AUTO
 				&& resultCode == RESULT_CANCELED) {
 			Resources res = getResources();
-			db.addRec(res.getString(R.string.guest), "");
+			if (db.emptyDataBase() == false)
+				db.addRec(res.getString(R.string.guest), "");
 			final ListView lvData = (ListView) findViewById(R.id.lvData);
 			lvData.setAdapter(scAdapter);
 			getSupportLoaderManager().getLoader(0).forceLoad();
