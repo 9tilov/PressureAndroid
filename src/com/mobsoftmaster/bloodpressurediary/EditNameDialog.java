@@ -103,7 +103,7 @@ public class EditNameDialog extends DialogFragment implements
 		email.setOnFocusChangeListener(new OnFocusChangeListener() {
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
-				if (hasFocus) {
+				if ((hasFocus) && (email.getText().toString().equals(""))) {
 					dialogNotif();
 				}
 			}
