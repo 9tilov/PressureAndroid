@@ -80,9 +80,9 @@ public class MyDB {
 		Cursor cursor = mDB.query(DB_TABLE, columns, null, null, null, null,
 				null);
 		if (cursor.getCount() == 0)
-			return false;
-		else
 			return true;
+		else
+			return false;
 	}
 
 	// получить все данные из таблицы DB_TABLE

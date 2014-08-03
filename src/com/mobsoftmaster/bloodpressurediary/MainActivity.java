@@ -151,7 +151,7 @@ public class MainActivity extends FragmentActivity implements
 		// создаем лоадер для чтения данных
 		getSupportLoaderManager().initLoader(0, null, this);
 
-		if (db.emptyDataBase() == false)
+		if (db.emptyDataBase())
 			getUserEmailAuto();
 		else
 			lvData.setAdapter(scAdapter);
@@ -442,7 +442,7 @@ public class MainActivity extends FragmentActivity implements
 			String accountEmail = data
 					.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
 			Resources res = getResources();
-			if (db.emptyDataBase() == false)
+			if (db.emptyDataBase())
 				db.addRec(res.getString(R.string.guest), accountEmail);
 			else {
 				db.addRec(accountName, accountEmail);
@@ -453,7 +453,7 @@ public class MainActivity extends FragmentActivity implements
 		} else if (requestCode == REQUEST_CODE_EMAIL_AUTO
 				&& resultCode == RESULT_CANCELED) {
 			Resources res = getResources();
-			if (db.emptyDataBase() == false)
+			if (db.emptyDataBase())
 				db.addRec(res.getString(R.string.guest), "");
 			final ListView lvData = (ListView) findViewById(R.id.lvData);
 			lvData.setAdapter(scAdapter);

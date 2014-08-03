@@ -28,6 +28,7 @@ public class ProgrammInfo extends TrackedActivity {
 	@Override
 	public void onBackPressed() {
 		super.onBackPressed();
-		overridePendingTransition(R.anim.close_window_start, R.anim.close_window_end);
+		overridePendingTransition(R.anim.close_window_start,
+				R.anim.close_window_end);
 	}
 }
