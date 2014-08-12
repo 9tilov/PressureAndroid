@@ -26,6 +26,7 @@ import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.KeyEvent;
@@ -184,14 +185,14 @@ public class MainActivity extends FragmentActivity implements
 		} else if (!isValidEmail(inputText_email))
 			inCorrectEmail();
 		else {
-			if (is_adding)
+			if (is_adding) {
 				db.addRec(inputText_name, inputText_email);
-			else {
-				getUserEmailAuto();
+				addData();
+			} else {
 				accountName = inputText_name;
+				getUserEmailAuto();
 			}
 			getSupportLoaderManager().getLoader(0).forceLoad();
-			addData();
 		}
 	}
 
@@ -446,6 +447,7 @@ public class MainActivity extends FragmentActivity implements
 				db.addRec(res.getString(R.string.guest), accountEmail);
 			else {
 				db.addRec(accountName, accountEmail);
+				addData();
 			}
 			final ListView lvData = (ListView) findViewById(R.id.lvData);
 			lvData.setAdapter(scAdapter);

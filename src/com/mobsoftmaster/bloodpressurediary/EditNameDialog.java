@@ -11,7 +11,6 @@ import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
 import android.view.WindowManager.LayoutParams;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -36,7 +35,6 @@ public class EditNameDialog extends DialogFragment implements
 	static EditNameDialog newInstance(boolean is_adding, String name,
 			String email) {
 		EditNameDialog dialog = new EditNameDialog();
-
 		Bundle args = new Bundle();
 		args.putBoolean("isAdding", is_adding);
 		args.putString("name", name);
@@ -68,15 +66,15 @@ public class EditNameDialog extends DialogFragment implements
 				is_adding = false;
 				dialog.dismiss();
 				getDialog().dismiss();
+				EditNameDialogListener activity = (EditNameDialogListener) getActivity();
+				activity.onFinishEditDialog(false, name.getText().toString(),
+						email.getText().toString());
 			}
 		});
 		btnEmailTyping.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				dialog.dismiss();
-				
-				getActivity().getWindow().setSoftInputMode(
-						LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 			}
 		});
 		dialog.show();
@@ -107,7 +105,7 @@ public class EditNameDialog extends DialogFragment implements
 		email.setOnFocusChangeListener(new OnFocusChangeListener() {
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
-				if (hasFocus) {
+				if ((hasFocus) && (email.getText().toString().equals(""))) {
 					dialogNotif();
 				}
 			}

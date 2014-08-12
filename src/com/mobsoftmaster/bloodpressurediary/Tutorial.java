@@ -7,7 +7,6 @@ import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.widget.ImageView;
 
 public class Tutorial extends FragmentActivity {
 
@@ -32,7 +31,7 @@ public class Tutorial extends FragmentActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_screen_slide);
-		
+
 		sharedPref = new SharedPreference(this);
 
 		// Instantiate a ViewPager and a PagerAdapter.
@@ -66,7 +65,7 @@ public class Tutorial extends FragmentActivity {
 			return NUM_PAGES;
 		}
 	}
-	
+
 	@Override
 	public void onBackPressed() {
 		sharedPref.SavePreferences(sharedPref.s_tutorial, false);

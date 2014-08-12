@@ -94,7 +94,7 @@ public class MyStatistic extends TrackedActivity implements
 		ImageView btnGraph = (ImageView) findViewById(R.id.imageViewGraph);
 		ImageView btnMail = (ImageView) findViewById(R.id.imageViewMail);
 		ImageView btnSave = (ImageView) findViewById(R.id.imageViewSave);
-		
+
 		TextView btnProfile = (TextView) findViewById(R.id.btnProfile);
 		listStat = (ListView) findViewById(R.id.listStat);
 
@@ -121,7 +121,8 @@ public class MyStatistic extends TrackedActivity implements
 			public void onClick(View v) {
 				sharedPref.SavePreferences(sharedPref.s_state, true);
 				finish();
-				overridePendingTransition(R.anim.close_window_start, R.anim.close_window_end);
+				overridePendingTransition(R.anim.close_window_start,
+						R.anim.close_window_end);
 			}
 		});
 		// формируем столбцы сопоставления
@@ -176,12 +177,12 @@ public class MyStatistic extends TrackedActivity implements
 				show();
 			}
 		});
-		
+
 		if (!rotation)
 			btnGraph.setVisibility(View.VISIBLE);
 		else
 			btnGraph.setVisibility(View.INVISIBLE);
-		
+
 		btnGraph.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -195,7 +196,7 @@ public class MyStatistic extends TrackedActivity implements
 				}
 			}
 		});
-		
+
 		btnSave.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -277,7 +278,8 @@ public class MyStatistic extends TrackedActivity implements
 	public void onBackPressed() {
 		sharedPref.SavePreferences(sharedPref.s_state, true);
 		super.onBackPressed();
-		overridePendingTransition(R.anim.close_window_start, R.anim.close_window_end);
+		overridePendingTransition(R.anim.close_window_start,
+				R.anim.close_window_end);
 	}
 
 	public void show() {
@@ -443,7 +445,7 @@ public class MyStatistic extends TrackedActivity implements
 		}
 		return true;
 	}
-	
+
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_MENU) {
