@@ -110,8 +110,6 @@ public class EditNameDialog extends DialogFragment implements
 				}
 			}
 		});
-		getDialog().getWindow().setSoftInputMode(
-				LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 		name.setOnEditorActionListener(this);
 		email.setOnEditorActionListener(this);
 		return view;
