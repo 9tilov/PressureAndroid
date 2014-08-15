@@ -299,6 +299,12 @@ public class MyStatistic extends TrackedActivity implements
 		final NumberPicker npDiasPressure = initNumberPicker(40, 250,
 				R.id.npDiasPressure, dialog);
 
+		npPulse.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
+		npSysPressure
+				.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
+		npDiasPressure
+				.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
+
 		if (flag == EDIT_DATA_FLAG) {
 			npPulse.setValue(Integer.valueOf(currentStat[0]));
 			npSysPressure.setValue(Integer.valueOf(currentStat[1]));

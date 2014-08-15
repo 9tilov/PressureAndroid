@@ -415,6 +415,7 @@ public class Settings extends TrackedActivity implements
 
 		timeEditPicker = (TimePicker) dialog.getWindow().findViewById(
 				R.id.timeEditPicker);
+		timeEditPicker.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
 		timeEditPicker.setIs24HourView(true);
 
 		timeEditPicker.setCurrentHour(Integer.valueOf(currentNotif[1]));
