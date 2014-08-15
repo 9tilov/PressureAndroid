@@ -11,7 +11,8 @@
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:layout_marginTop="5dp"
-        android:text="@string/email_default" />
+        android:text="@string/email_default" 
+        android:background="@drawable/button"/>
 
     <Button
         android:id="@+id/btnEmailType"
@@ -21,6 +22,7 @@
         android:layout_marginRight="5dp"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
-        android:text="@string/email_typing" />
+        android:text="@string/email_typing" 
+        android:background="@drawable/button"/>
 
 </LinearLayout>

@@ -65,7 +65,7 @@
     <string name="chinese">中国的</string>
     <string name="guest">Guest</string>
     <string name="locale">Locales</string>
-    <string name="graphShow">Graph will be shown after 7 records</string>
+    <string name="graphShow">Graph will be shown at least 7 records</string>
     <string name="graphWeek">week</string>
     <string name="graphMonth">month</string>
     <string name="graph3Month">3 months</string>
@@ -111,7 +111,7 @@
 										-sending results of measuring to your attending doctor
 										-saving result of measuring in file
 										\n
-										According to the law of patien confidentiality
+										According to the law of patient confidentiality
 										data of your blood pressure and pulse are saved
 										only in the application database.\n
 										\n

@@ -16,7 +16,8 @@
             android:layout_marginRight="5dp"
             android:layout_marginTop="5dp"
             android:layout_weight="1"
-            android:text="@string/yes" />
+            android:text="@string/yes" 
+            android:background="@drawable/button"/>
 
         <Button
             android:id="@+id/btnNo"
@@ -27,7 +28,8 @@
             android:layout_marginRight="5dp"
             android:layout_marginTop="5dp"
             android:layout_weight="1"
-            android:text="@string/no" />
+            android:text="@string/no" 
+            android:background="@drawable/button"/>
     </LinearLayout>
 
 </RelativeLayout>
