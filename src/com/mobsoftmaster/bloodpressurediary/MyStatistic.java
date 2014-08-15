@@ -452,8 +452,8 @@ public class MyStatistic extends TrackedActivity implements
 				Cursor cur = (Cursor) listStat.getAdapter().getItem(i);
 				long temp = cur.getLong(cur.getColumnIndex("_id"));
 				name = db.getCurrentStat(temp);
-				bw.write(name[4] + ";" + name[3] + ";" + name[1] + ";"
-						+ name[2] + ";" + name[0] + "\n");
+				bw.write(name[3] + "  " + name[4] + " *** " + name[1] + " -"
+						+ name[2] + " -" + name[0] + "\n");
 			}
 			bw.close();
 			saveOnSD();
