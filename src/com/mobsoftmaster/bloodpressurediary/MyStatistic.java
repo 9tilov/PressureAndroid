@@ -50,7 +50,7 @@ public class MyStatistic extends TrackedActivity implements
 
 	int flag, idCurrentName;
 
-	String formattedDate, formattedTime;
+	String formattedDate, formattedDateShort, formattedTime;
 
 	MyDB db;
 	SharedPreference sharedPref;
@@ -310,14 +310,16 @@ public class MyStatistic extends TrackedActivity implements
 					// //Получаем текущее время
 					Calendar c = Calendar.getInstance();
 					SimpleDateFormat date = new SimpleDateFormat("dd.MM.yyyy");
+					SimpleDateFormat date_short = new SimpleDateFormat("dd.MM");
 					SimpleDateFormat time = new SimpleDateFormat("HH:mm");
 					formattedDate = date.format(c.getTime());
+					formattedDateShort = date_short.format(c.getTime());
 					formattedTime = time.format(c.getTime());
 
 					db.addStat(String.valueOf(npPulse.getValue()),
 							String.valueOf(npSysPressure.getValue()),
 							String.valueOf(npDiasPressure.getValue()),
-							profile_id, formattedDate, formattedTime);
+							profile_id, formattedDate, formattedTime, formattedDateShort);
 					getSupportLoaderManager().getLoader(0).forceLoad();
 					addRecord();
 					dialog.dismiss();

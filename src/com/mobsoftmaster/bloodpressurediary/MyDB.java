@@ -27,6 +27,7 @@ public class MyDB {
 	public static final String COLUMN_SYS_PRESSURE = "sys";
 	public static final String COLUMN_DIAS_PRESSURE = "dias";
 	public static final String COLUMN_DATE = "date";
+	public static final String COLUMN_DATE_SHORT = "date_short";
 	public static final String COLUMN_TIME = "time";
 	public static final String COLUMN_UID = "uid";
 
@@ -43,7 +44,7 @@ public class MyDB {
 			+ " integer primary key autoincrement, " + COLUMN_PULSE + " text, "
 			+ COLUMN_SYS_PRESSURE + " text, " + COLUMN_DIAS_PRESSURE
 			+ " text, " + COLUMN_DATE + " text, " + COLUMN_TIME + " text, "
-			+ COLUMN_UID + " text" + ");";
+			+ COLUMN_UID + " text, " + COLUMN_DATE_SHORT + " text" + ");";
 
 	private static final String DB_CREATE_NOTIF = "create table "
 			+ DB_TABLE_NOTIF + "(" + COLUMN_ID
@@ -141,9 +142,11 @@ public class MyDB {
 		String[] tempPulse = new String[count];
 		String[] tempSys = new String[count];
 		String[] tempDias = new String[count];
+		String[] tempDate = new String[count];
 		String[] pulse = new String[period];
 		String[] sys = new String[period];
 		String[] dias = new String[period];
+		String[] date = new String[period];
 
 		Log.d(LOG_TAG, "COUNT = " + count);
 		if (cursor != null) {
@@ -152,19 +155,22 @@ public class MyDB {
 				tempPulse[j] = cursor.getString(1);
 				tempSys[j] = cursor.getString(2);
 				tempDias[j] = cursor.getString(3);
+				tempDate[j] = cursor.getString(7);
 				cursor.moveToNext();
 			}
 		}
 
-		for (int i = 0; i < 3; ++i) {
+		for (int i = 0; i < 4; ++i) {
 			for (int j = count - period; j < count; ++j) {
 				pulse[j - (count - period)] = tempPulse[j];
 				sys[j - (count - period)] = tempSys[j];
 				dias[j - (count - period)] = tempDias[j];
+				date[j - (count - period)] = tempDate[j];
 			}
 			list.add(pulse);
 			list.add(sys);
 			list.add(dias);
+			list.add(date);
 		}
 		return list;
 	}
@@ -205,7 +211,7 @@ public class MyDB {
 	}
 
 	public void addStat(String pulse, String sys, String dias, int uid,
-			String date, String time) {
+			String date, String time, String date_short) {
 		ContentValues cv = new ContentValues();
 		cv.put(COLUMN_PULSE, pulse);
 		cv.put(COLUMN_SYS_PRESSURE, sys);
@@ -213,6 +219,7 @@ public class MyDB {
 		cv.put(COLUMN_UID, uid);
 		cv.put(COLUMN_DATE, date);
 		cv.put(COLUMN_TIME, time);
+		cv.put(COLUMN_DATE_SHORT, date_short);
 		long rowID = mDB.insert(DB_TABLE_STAT, null, cv);
 		Log.d(LOG_TAG, "row inserted, pulse = " + rowID);
 	}

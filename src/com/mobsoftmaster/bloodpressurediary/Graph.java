@@ -117,12 +117,12 @@ public class Graph extends TrackedActivity {
 		if (period <= all_stat_records) {
 			LinkedList<String[]> list = new LinkedList<String[]>();
 			list = db.getStat(id, period);
-			int count = Integer.valueOf(period);
-			GraphViewData[] dataPulse = new GraphViewData[count];
-			GraphViewData[] dataSys = new GraphViewData[count];
-			GraphViewData[] dataDias = new GraphViewData[count];
+			
+			GraphViewData[] dataPulse = new GraphViewData[period];
+			GraphViewData[] dataSys = new GraphViewData[period];
+			GraphViewData[] dataDias = new GraphViewData[period];
 
-			for (int i = 0; i < count; ++i) {
+			for (int i = 0; i < period; ++i) {
 				dataPulse[i] = new GraphViewData(i + 1, Double.valueOf(list
 						.get(0)[i]));
 				dataSys[i] = new GraphViewData(i + 1, Double.valueOf(list
@@ -149,6 +149,18 @@ public class Graph extends TrackedActivity {
 			graphView.addSeries(seriesSys);
 			graphView.addSeries(seriesDias);
 			graphView.addSeries(seriesPulse);
+			
+			String[] date = new String[period];
+			if (period < 8) {
+				for (int i = 0; i < period; ++i) 
+					date[i] = list.get(3)[i];
+					graphView.setHorizontalLabels(date);
+			}
+			else 
+				for (int i = 0; i < period; ++i) {
+					date[i] = String.valueOf(i);
+					graphView.setHorizontalLabels(date);
+				}
 
 			graphView.setShowLegend(true);
 
