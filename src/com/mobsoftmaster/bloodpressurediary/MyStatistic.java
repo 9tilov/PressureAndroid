@@ -334,7 +334,8 @@ public class MyStatistic extends TrackedActivity implements
 					db.addStat(String.valueOf(npPulse.getValue()),
 							String.valueOf(npSysPressure.getValue()),
 							String.valueOf(npDiasPressure.getValue()),
-							profile_id, formattedDate, formattedTime, formattedDateShort);
+							profile_id, formattedDate, formattedTime,
+							formattedDateShort);
 					getSupportLoaderManager().getLoader(0).forceLoad();
 					addRecord();
 					dialog.dismiss();
