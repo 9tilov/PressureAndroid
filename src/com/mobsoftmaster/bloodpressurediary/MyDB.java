@@ -85,6 +85,17 @@ public class MyDB {
 		else
 			return false;
 	}
+	
+	public boolean emptyDataBaseStat(int id) {
+		String[] columns = new String[] { COLUMN_PULSE };
+		Cursor cursor = mDB.query(DB_TABLE_STAT, columns, COLUMN_UID + "='" + id
+				+ "'", null, null, null,
+				null);
+		if (cursor.getCount() == 0)
+			return true;
+		else
+			return false;
+	}
 
 	// получить все данные из таблицы DB_TABLE
 	public Cursor getAllData() {

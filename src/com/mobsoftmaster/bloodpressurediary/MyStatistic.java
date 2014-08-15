@@ -200,45 +200,54 @@ public class MyStatistic extends TrackedActivity implements
 		btnSave.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				writeFileSD(profile_name[0]);
-				dialog.dismiss();
+				if (db.emptyDataBaseStat(profile_id))
+					noStatRecords();
+				else {
+					writeFileSD(profile_name[0]);
+					dialog.dismiss();
+				}
 			}
 		});
 
 		btnMail.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				final Intent emailIntent = new Intent(
-						android.content.Intent.ACTION_SEND);
-				if (!writeFileSD(profile_name[0])) {
+				if (db.emptyDataBaseStat(profile_id))
+					noStatRecords();
+				else {
+					final Intent emailIntent = new Intent(
+							android.content.Intent.ACTION_SEND);
+					if (!writeFileSD(profile_name[0])) {
+						dialog.dismiss();
+						return;
+					}
+					emailIntent.setType("plain/text");
+					// Кому
+					emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL,
+							new String[] { profile_name[1].toString() });
+					// Зачем
+					emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,
+							"Pressure diary");
+					// О чём
+					emailIntent.putExtra(android.content.Intent.EXTRA_TEXT,
+							"Hello, " + profile_name[0]
+									+ ", this is your statistic:");
+					emailIntent.putExtra(
+							android.content.Intent.EXTRA_STREAM,
+							Uri.parse("file://"
+									+ Environment.getExternalStorageDirectory()
+									+ "/" + DIR_SD + "/" + FILENAME_SD
+									+ "_for_" + profile_name[0] + ".txt"));
+					Log.d(LOG_TAG,
+							"genm: "
+									+ Environment.getExternalStorageDirectory()
+									+ "/" + DIR_SD + "/" + FILENAME_SD
+									+ "_for_" + profile_name[0] + ".txt");
+					Resources res = getResources();
+					MyStatistic.this.startActivity(Intent.createChooser(
+							emailIntent, res.getString(R.string.mail_sanding)));
 					dialog.dismiss();
-					return;
 				}
-				emailIntent.setType("plain/text");
-				// Кому
-				emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL,
-						new String[] { profile_name[1].toString() });
-				// Зачем
-				emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT,
-						"Pressure diary");
-				// О чём
-				emailIntent.putExtra(android.content.Intent.EXTRA_TEXT,
-						"Hello, " + profile_name[0]
-								+ ", this is your statistic:");
-				emailIntent.putExtra(
-						android.content.Intent.EXTRA_STREAM,
-						Uri.parse("file://"
-								+ Environment.getExternalStorageDirectory()
-								+ "/" + DIR_SD + "/" + FILENAME_SD + "_for_"
-								+ profile_name[0] + ".txt"));
-				Log.d(LOG_TAG,
-						"genm: " + Environment.getExternalStorageDirectory()
-								+ "/" + DIR_SD + "/" + FILENAME_SD + "_for_"
-								+ profile_name[0] + ".txt");
-				Resources res = getResources();
-				MyStatistic.this.startActivity(Intent.createChooser(
-						emailIntent, res.getString(R.string.mail_sanding)));
-				dialog.dismiss();
 			}
 		});
 
@@ -528,6 +537,11 @@ public class MyStatistic extends TrackedActivity implements
 
 	void deleteAllRecords() {
 		Toast.makeText(this, R.string.record_all_deleted, Toast.LENGTH_SHORT)
+				.show();
+	}
+
+	void noStatRecords() {
+		Toast.makeText(this, R.string.no_stat_records, Toast.LENGTH_SHORT)
 				.show();
 	}
 

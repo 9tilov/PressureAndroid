@@ -77,6 +77,7 @@
     <string name="bitpersec">у/мин</string>
     <string name="sys">Сис.</string>
     <string name="dias">Диас.</string>
+    <string name="no_stat_records">У вас нет ни одной записи</string>
     <string name="show_graph_after_rotation">Показать график после поворота экрана </string>
     <string name="show_notifications">Показать уведомления</string>
     <string name="your_notification">Ваше уведомление</string>

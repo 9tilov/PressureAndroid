@@ -84,6 +84,7 @@
     <string name="bitpersec">b/m</string>
     <string name="sys">Sys</string>
     <string name="dias">Dias</string>
+    <string name="no_stat_records">You have no records</string>
     <string name="show_graph_after_rotation">Show graph after rotation </string>
     <string name="show_notifications">Show notifications</string>
     <string name="your_notification">Your notification</string>

@@ -77,6 +77,7 @@
     <string name="bitpersec">次/分</string>
     <string name="sys">收缩压</string>
     <string name="dias">舒张期</string>
+    <string name="no_stat_records">你有沒有記錄</string>
     <string name="show_graph_after_rotation">屏幕旋转后显示进度</string>
     <string name="show_notifications">看到通知</string>
     <string name="your_notification">您的通知</string>
