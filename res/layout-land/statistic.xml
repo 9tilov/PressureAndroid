@@ -112,7 +112,8 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:clickable="true"
-            android:src="@drawable/stat_button" />
+            android:src="@drawable/stat_button" 
+            android:scaleType="fitCenter"/>
     </RelativeLayout>
 
 </LinearLayout>

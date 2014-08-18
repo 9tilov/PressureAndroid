@@ -11,7 +11,7 @@
     <string name="profile_data">Profile data</string>
     <string name="profile_list">Profile list</string>
     <string name="profile">Profile</string>
-    <string name="email_default">From account</string>
+    <string name="email_default">Print by youtself</string>
     <string name="email_typing">Print yourself</string>
     <string name="email_print">Enter email</string>
     <string name="action_settings">Settings</string>
@@ -65,7 +65,7 @@
     <string name="chinese">中国的</string>
     <string name="guest">Guest</string>
     <string name="locale">Locales</string>
-    <string name="graphShow">Graph will be shown at least 7 records</string>
+    <string name="graphShow">Graph can be displayed for at least 7 records</string>
     <string name="graphWeek">week</string>
     <string name="graphMonth">month</string>
     <string name="graph3Month">3 months</string>
@@ -116,7 +116,7 @@
 										data of your blood pressure and pulse are saved
 										only in the application database.\n
 										\n
-										Developers doesn\'t responsible for the loss of
+										Developers don\'t responsible for the loss of
 										user personal data.\n
 										\n</string>
     <string name="admob_publisher_id_main" translatable="false">ca-app-pub-4895351525471764/2445965539</string>
