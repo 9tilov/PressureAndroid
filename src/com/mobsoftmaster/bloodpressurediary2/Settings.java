@@ -1,7 +1,9 @@
-package com.mobsoftmaster.bloodpressurediary;
+package com.mobsoftmaster.bloodpressurediary2;
 
 import java.util.Calendar;
 import java.util.Locale;
+
+import com.mobsoftmaster.bloodpressurediary2.R;
 
 import android.app.AlarmManager;
 import android.app.Dialog;

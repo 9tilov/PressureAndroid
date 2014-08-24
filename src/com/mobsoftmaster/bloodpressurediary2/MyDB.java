@@ -1,4 +1,4 @@
-package com.mobsoftmaster.bloodpressurediary;
+package com.mobsoftmaster.bloodpressurediary2;
 
 import java.util.LinkedList;
 

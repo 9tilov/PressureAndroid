@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">Blood pressure diary</string>
-    <string name="app_email">bloodPressureDiaryApp@gmail.com</string>
+    <string name="app_email" translatable="false">mobsofmaster@gmail.com</string>
     <string name="delete_profile">Delete profile</string>
     <string name="edit_profile">Edit profile</string>
     <string name="add_profile">Add profile</string>

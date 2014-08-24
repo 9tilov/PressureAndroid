@@ -1,4 +1,4 @@
-package com.mobsoftmaster.bloodpressurediary;
+package com.mobsoftmaster.bloodpressurediary2;
 
 import java.util.LinkedList;
 
@@ -8,6 +8,7 @@ import com.jjoe64.graphview.LineGraphView;
 import com.jjoe64.graphview.GraphView.GraphViewData;
 import com.jjoe64.graphview.GraphView.LegendAlign;
 import com.jjoe64.graphview.GraphViewSeries.GraphViewSeriesStyle;
+import com.mobsoftmaster.bloodpressurediary2.R;
 
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
@@ -34,7 +35,6 @@ public class Graph extends TrackedActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.graph);
 
-		db = new MyDB(this);
 		sharedPref = new SharedPreference(this);
 
 		res = getResources();

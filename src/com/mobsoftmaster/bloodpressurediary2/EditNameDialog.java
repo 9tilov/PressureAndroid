@@ -1,5 +1,6 @@
-package com.mobsoftmaster.bloodpressurediary;
+package com.mobsoftmaster.bloodpressurediary2;
 
+import com.mobsoftmaster.bloodpressurediary2.R;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;

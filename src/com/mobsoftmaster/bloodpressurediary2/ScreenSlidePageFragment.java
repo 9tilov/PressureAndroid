@@ -1,5 +1,6 @@
-package com.mobsoftmaster.bloodpressurediary;
+package com.mobsoftmaster.bloodpressurediary2;
 
+import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.os.Build;
 import android.os.Bundle;
@@ -11,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import java.util.Locale;
+
+import com.mobsoftmaster.bloodpressurediary2.R;
 
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -67,6 +70,7 @@ public class ScreenSlidePageFragment extends Fragment {
 		int height;
 	}
 
+	@SuppressLint("NewApi")
 	private ScreenResolution GetResolution() {
 		ScreenResolution sr = new ScreenResolution();
 		Display display = getActivity().getWindowManager().getDefaultDisplay();

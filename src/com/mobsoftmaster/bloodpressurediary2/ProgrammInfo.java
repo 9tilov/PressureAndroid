@@ -1,4 +1,6 @@
-package com.mobsoftmaster.bloodpressurediary;
+package com.mobsoftmaster.bloodpressurediary2;
+
+import com.mobsoftmaster.bloodpressurediary2.R;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -18,7 +20,7 @@ public class ProgrammInfo extends TrackedActivity {
 		imageViewReview.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				Uri uri = Uri
-						.parse("https://play.google.com/store/apps/details?id=com.mobsoftmaster.bloodpressurediary");
+						.parse("https://play.google.com/store/apps/details?id=com.mobsoftmaster.bloodpressurediary2");
 				Intent intent = new Intent(Intent.ACTION_VIEW, uri);
 				startActivity(intent);
 			}

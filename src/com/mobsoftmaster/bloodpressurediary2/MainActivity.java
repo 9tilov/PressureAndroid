@@ -1,9 +1,10 @@
-package com.mobsoftmaster.bloodpressurediary;
+package com.mobsoftmaster.bloodpressurediary2;
 
 import java.util.Calendar;
 import java.util.Locale;
 
-import com.mobsoftmaster.bloodpressurediary.EditNameDialog.EditNameDialogListener;
+import com.mobsoftmaster.bloodpressurediary2.R;
+import com.mobsoftmaster.bloodpressurediary2.EditNameDialog.EditNameDialogListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.analytics.GoogleAnalytics;

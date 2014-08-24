@@ -1,4 +1,6 @@
-package com.mobsoftmaster.bloodpressurediary;
+package com.mobsoftmaster.bloodpressurediary2;
+
+import com.mobsoftmaster.bloodpressurediary2.R;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
