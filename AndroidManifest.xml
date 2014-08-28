@@ -9,7 +9,7 @@
         android:targetSdkVersion="19" />
 
     <application
-        android:name="com.mobsoftmaster.bloodpressurediary.Locales"
+        android:name="com.mobsoftmaster.bloodpressurediary2.Locales"
         android:allowBackup="true"
         android:icon="@drawable/ic_logo"
         android:label="@string/app_name" >
