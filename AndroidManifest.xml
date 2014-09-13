@@ -38,9 +38,9 @@
         </activity>
         <activity
             android:name="Tutorial"
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/title_tutorial"
-            android:windowSoftInputMode="stateHidden" 
-            android:configChanges="keyboardHidden|orientation|screenSize">
+            android:windowSoftInputMode="stateHidden" >
         </activity>
         <activity
             android:name=".Receiver"
@@ -52,9 +52,7 @@
             android:windowSoftInputMode="stateHidden" >
         </activity>
 
-        <receiver
-            android:name="Receiver"
-            android:process=":receive" >
+        <receiver android:name=".AlarmManagerBroadcastReceiver" >
         </receiver>
 
         <!-- Google Analytics Version v4 needs this value for easy tracking -->

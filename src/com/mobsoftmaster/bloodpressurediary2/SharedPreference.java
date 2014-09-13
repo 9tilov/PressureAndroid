@@ -21,10 +21,6 @@ public class SharedPreference {
 		mCtx = ctx;
 	}
 
-	public SharedPreference(Receiver receiver) {
-		// TODO Auto-generated constructor stub
-	}
-
 	public void SavePreferences(String key, Boolean value) {
 		SharedPreferences sharedPreferences = PreferenceManager
 				.getDefaultSharedPreferences(mCtx);

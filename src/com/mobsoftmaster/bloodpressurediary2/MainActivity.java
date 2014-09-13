@@ -245,7 +245,7 @@ public class MainActivity extends FragmentActivity implements
 
 		Resources res = getResources();
 
-		Intent intent = new Intent(this, Receiver.class);
+		Intent intent = new Intent(this, AlarmManagerBroadcastReceiver.class);
 		intent.putExtra("message", message);
 		intent.putExtra("appName", res.getString(R.string.app_name));
 
