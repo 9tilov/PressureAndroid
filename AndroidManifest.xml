@@ -52,7 +52,13 @@
             android:windowSoftInputMode="stateHidden" >
         </activity>
 
-        <receiver android:name=".AlarmManagerBroadcastReceiver" >
+        <receiver
+            android:name=".AlarmManagerBroadcastReceiver"
+            android:enabled="false" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" >
+                </action>
+            </intent-filter>
         </receiver>
 
         <!-- Google Analytics Version v4 needs this value for easy tracking -->

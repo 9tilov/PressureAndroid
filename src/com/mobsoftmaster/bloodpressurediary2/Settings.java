@@ -42,8 +42,6 @@ import android.widget.Toast;
 public class Settings extends TrackedActivity implements
 		LoaderCallbacks<Cursor> {
 
-	private AlarmManagerBroadcastReceiver alarm;
-
 	CheckBox checkBoxGraph, checkBoxNotif;
 
 	TimePicker timePicker, timeEditPicker;
@@ -92,8 +90,6 @@ public class Settings extends TrackedActivity implements
 
 		db = new MyDB(this);
 		db.open();
-
-		alarm = new AlarmManagerBroadcastReceiver();
 
 		sharedPref = new SharedPreference(this);
 		int language = sharedPref.LoadLanguage();
@@ -169,11 +165,6 @@ public class Settings extends TrackedActivity implements
 							if (cursor != null) {
 								cursor.moveToFirst();
 								for (int i = 0; i < cursor.getCount(); ++i) {
-									// setRepeatingAlarm(
-									// Integer.valueOf(cursor.getString(0)),
-									// cursor.getString(1),
-									// Integer.valueOf(cursor.getString(2)),
-									// Integer.valueOf(cursor.getString(3)));
 									SetAlarm(
 											Integer.valueOf(cursor.getString(0)),
 											cursor.getString(1),
@@ -193,8 +184,6 @@ public class Settings extends TrackedActivity implements
 							if (cursor != null) {
 								cursor.moveToFirst();
 								for (int i = 0; i < cursor.getCount(); ++i) {
-									// cancelRepeatingAlarm(Integer.valueOf(cursor
-									// .getString(0)));
 									CancelAlarm(Integer.valueOf(cursor
 											.getString(0)));
 									cursor.moveToNext();
@@ -247,10 +236,6 @@ public class Settings extends TrackedActivity implements
 					// берём из базы только что созданное уведомление
 					Cursor cursor = db.getAllDataNotif();
 					cursor.moveToLast();
-					// setRepeatingAlarm(Integer.valueOf(cursor.getString(0)),
-					// cursor.getString(1),
-					// Integer.valueOf(cursor.getString(2)),
-					// Integer.valueOf(cursor.getString(3)));
 					SetAlarm(Integer.valueOf(cursor.getString(0)),
 							cursor.getString(1),
 							Integer.valueOf(cursor.getString(2)),
@@ -386,36 +371,6 @@ public class Settings extends TrackedActivity implements
 		dialog.show();
 	}
 
-	// public void setRepeatingAlarm(int id, String message, int hour, int
-	// minute) {
-	// AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-	// Calendar now = Calendar.getInstance();
-	// Calendar cal_alarm = new GregorianCalendar();
-	// cal_alarm.setTimeZone(TimeZone.getDefault());
-	// cal_alarm.setTimeInMillis(System.currentTimeMillis());
-	// cal_alarm.set(Calendar.HOUR_OF_DAY, hour);
-	// cal_alarm.set(Calendar.MINUTE, minute);
-	// cal_alarm.set(Calendar.SECOND, 0);
-	// long alarm = 0;
-	//
-	// if (cal_alarm.getTimeInMillis() <= now.getTimeInMillis())
-	// alarm = cal_alarm.getTimeInMillis()
-	// + (AlarmManager.INTERVAL_DAY + 1);
-	// else
-	// alarm = cal_alarm.getTimeInMillis();
-	//
-	// Resources res = getResources();
-	//
-	// Intent intent = new Intent(this, Receiver.class);
-	// intent.putExtra("message", message);
-	// intent.putExtra("appName", res.getString(R.string.app_name));
-	//
-	// PendingIntent pendingIntent = PendingIntent.getBroadcast(this, id,
-	// intent, PendingIntent.FLAG_UPDATE_CURRENT);
-	// am.setRepeating(AlarmManager.RTC_WAKEUP, alarm,
-	// AlarmManager.INTERVAL_DAY, pendingIntent);
-	// }
-
 	public void SetAlarm(int id, String message, int hour, int minute) {
 		AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 		Intent intent = new Intent(this, AlarmManagerBroadcastReceiver.class);
@@ -428,15 +383,15 @@ public class Settings extends TrackedActivity implements
 		calendar.set(Calendar.HOUR_OF_DAY, hour);
 		calendar.set(Calendar.MINUTE, minute);
 		calendar.set(Calendar.SECOND, 0);
-//		long alarm = 0;
-//		if (calendar.getTimeInMillis() <= now.getTimeInMillis())
-//			alarm = calendar.getTimeInMillis()
-//					+ (AlarmManager.INTERVAL_DAY + 1);
-//		else
-//			alarm = calendar.getTimeInMillis();
+		long alarm = 0;
+		if (calendar.getTimeInMillis() <= now.getTimeInMillis())
+			alarm = calendar.getTimeInMillis()
+					+ (AlarmManager.INTERVAL_DAY + 1);
+		else
+			alarm = calendar.getTimeInMillis();
 		PendingIntent pi = PendingIntent.getBroadcast(this, id, intent, 0);
-		am.setInexactRepeating(AlarmManager.RTC_WAKEUP,
-				calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pi);
+		am.setInexactRepeating(AlarmManager.RTC_WAKEUP, alarm,
+				AlarmManager.INTERVAL_DAY, pi);
 	}
 
 	public void CancelAlarm(int id) {
@@ -445,16 +400,6 @@ public class Settings extends TrackedActivity implements
 		AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 		alarmManager.cancel(sender);
 	}
-
-	// public void cancelRepeatingAlarm(int id) {
-	// AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-	//
-	// Intent intent = new Intent(this, Receiver.class);
-	//
-	// PendingIntent pendingIntent = PendingIntent.getBroadcast(this, id,
-	// intent, PendingIntent.FLAG_UPDATE_CURRENT);
-	// am.cancel(pendingIntent);
-	// }
 
 	public void dialogNotif() {
 		Button btnSaveNotif = (Button) dialog.getWindow().findViewById(
@@ -495,8 +440,6 @@ public class Settings extends TrackedActivity implements
 					db.editNotif(String.valueOf(editCurrentNotif.getText()),
 							hour, minute, String.valueOf(idCurrentNotif));
 					String[] s = db.getCurrentNotif(idCurrentNotif);
-					// setRepeatingAlarm(idCurrentNotif, s[0],
-					// Integer.valueOf(s[1]), Integer.valueOf(s[2]));
 					SetAlarm(idCurrentNotif, s[0], Integer.valueOf(s[1]),
 							Integer.valueOf(s[2]));
 					Log.d(LOG_TAG, "hour = " + Integer.valueOf(s[1]));
@@ -538,7 +481,6 @@ public class Settings extends TrackedActivity implements
 		if (item.getItemId() == CM_DELETE_NOTIF) {
 			// извлекаем id записи и удаляем соответствующую запись в БД
 			db.delRecNotif(acmi.id);
-			// cancelRepeatingAlarm((int) acmi.id);
 			CancelAlarm((int) acmi.id);
 			// получаем новый курсор с данными
 			getSupportLoaderManager().getLoader(0).forceLoad();
@@ -573,8 +515,6 @@ public class Settings extends TrackedActivity implements
 				if (cursor != null) {
 					cursor.moveToFirst();
 					for (int i = 0; i < cursor.getCount(); ++i) {
-						// cancelRepeatingAlarm(Integer.valueOf(cursor
-						// .getString(0)));
 						CancelAlarm(Integer.valueOf(cursor.getString(0)));
 						cursor.moveToNext();
 					}
@@ -595,33 +535,6 @@ public class Settings extends TrackedActivity implements
 		});
 		dialog.show();
 	}
-
-	// public void startRepeatingTimer() {
-	// Context context = this.getApplicationContext();
-	// if (alarm != null) {
-	// alarm.SetAlarm(context);
-	// } else {
-	// Toast.makeText(context, "Alarm is null", Toast.LENGTH_SHORT).show();
-	// }
-	// }
-
-	// public void cancelRepeatingTimer() {
-	// Context context = this.getApplicationContext();
-	// if (alarm != null) {
-	// alarm.CancelAlarm(context);
-	// } else {
-	// Toast.makeText(context, "Alarm is null", Toast.LENGTH_SHORT).show();
-	// }
-	// }
-	//
-	// public void onetimeTimer() {
-	// Context context = this.getApplicationContext();
-	// if (alarm != null) {
-	// alarm.setOnetimeTimer(context);
-	// } else {
-	// Toast.makeText(context, "Alarm is null", Toast.LENGTH_SHORT).show();
-	// }
-	// }
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
