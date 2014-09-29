@@ -1,5 +1,7 @@
 package com.mobsoftmaster.bloodpressurediary2;
 
+import com.google.android.gms.wearable.NodeApi.GetConnectedNodesResult;
+
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -18,8 +20,9 @@ public class AlarmManagerBroadcastReceiver extends BroadcastReceiver {
 		Bundle extras = intent.getExtras();
 		String appName = extras.getString("appName");
 		String message = extras.getString("message");
-
-		Intent myIntent = new Intent(context, MyStatistic.class);
+		SharedPreference sharedPref = new SharedPreference(context);
+		sharedPref.SavePreferences(sharedPref.s_state, false);
+		Intent myIntent = new Intent(context, MainActivity.class);
 		PendingIntent pendingIntent = PendingIntent.getActivity(context, 0,
 				myIntent, Intent.FLAG_ACTIVITY_NEW_TASK);
 

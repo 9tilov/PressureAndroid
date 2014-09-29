@@ -113,7 +113,7 @@ public class MainActivity extends FragmentActivity implements
 			Intent intent = new Intent(MainActivity.this, Tutorial.class);
 			startActivity(intent);
 		}
-
+zz
 		if (!stateActivity) {
 			Intent intent = new Intent(MainActivity.this, MyStatistic.class);
 			startActivity(intent);
