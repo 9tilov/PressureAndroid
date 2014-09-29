@@ -53,8 +53,7 @@
         </activity>
 
         <receiver
-            android:name=".AlarmManagerBroadcastReceiver"
-            android:enabled="false" >
+            android:name=".AlarmManagerBroadcastReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" >
                 </action>
