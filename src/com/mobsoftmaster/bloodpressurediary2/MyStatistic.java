@@ -54,7 +54,6 @@ public class MyStatistic extends TrackedActivity implements
 	String formattedDate, formattedDateShort, formattedTime;
 
 	MyDB db;
-	SharedPreference sharedPref;
 
 	static int profile_id;
 	SimpleCursorAdapter scAdapter;
@@ -88,7 +87,6 @@ public class MyStatistic extends TrackedActivity implements
 		db = new MyDB(this);
 		db.open();
 
-		sharedPref = new SharedPreference(this);
 		setTitle(R.string.statictics);
 
 		ImageView btnAddStat = (ImageView) findViewById(R.id.btnAddStat);
@@ -99,8 +97,8 @@ public class MyStatistic extends TrackedActivity implements
 		TextView btnProfile = (TextView) findViewById(R.id.btnProfile);
 		listStat = (ListView) findViewById(R.id.listStat);
 
-		profile_id = sharedPref.LoadID();
-		rotation = sharedPref.LoadRotation();
+		profile_id = SharedPreference.LoadID(this);
+		rotation = SharedPreference.LoadRotation(this);
 
 		Animation animRotateIn_icon = AnimationUtils.loadAnimation(this,
 				R.anim.rotate);
@@ -120,7 +118,8 @@ public class MyStatistic extends TrackedActivity implements
 		btnProfile.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				sharedPref.SavePreferences(sharedPref.s_state, true);
+				SharedPreference.SavePreferences(getBaseContext(),
+						SharedPreference.s_state, true);
 				finish();
 				overridePendingTransition(R.anim.close_window_start,
 						R.anim.close_window_end);
@@ -286,7 +285,7 @@ public class MyStatistic extends TrackedActivity implements
 
 	@Override
 	public void onBackPressed() {
-		sharedPref.SavePreferences(sharedPref.s_state, true);
+		SharedPreference.SavePreferences(this, SharedPreference.s_state, true);
 		super.onBackPressed();
 		overridePendingTransition(R.anim.close_window_start,
 				R.anim.close_window_end);

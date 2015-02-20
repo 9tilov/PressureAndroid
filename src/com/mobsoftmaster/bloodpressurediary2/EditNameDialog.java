@@ -4,6 +4,7 @@ import com.mobsoftmaster.bloodpressurediary2.R;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,9 +21,10 @@ import android.widget.TextView.OnEditorActionListener;
 public class EditNameDialog extends DialogFragment implements
 		OnEditorActionListener {
 
-	boolean is_adding;
-	final String LOG_TAG = "myLogs";
+	boolean isProfileAdition, isGetEmailFromAccount;
+	final static String LOG_TAG = "myLogs";
 
+	int id;
 	String name_field, email_field;
 
 	Dialog dialog;
@@ -33,11 +35,15 @@ public class EditNameDialog extends DialogFragment implements
 	 * Create a new instance of MyDialogFragment, providing "num" as an
 	 * argument.
 	 */
-	static EditNameDialog newInstance(boolean is_adding, String name,
-			String email) {
+	static EditNameDialog newInstance(int id, boolean isProfileAdition,
+			boolean isGetEmailFromAccount, String name, String email) {
 		EditNameDialog dialog = new EditNameDialog();
+		Log.d(LOG_TAG, "EditNameDialog");
+		Log.d(LOG_TAG, "isProfileAdition = " + isProfileAdition);
 		Bundle args = new Bundle();
-		args.putBoolean("isAdding", is_adding);
+		args.putInt("ids", id);
+		args.putBoolean("isAdding", isProfileAdition);
+		args.putBoolean("isGetEmailFromAccount", isGetEmailFromAccount);
 		args.putString("name", name);
 		args.putString("email", email);
 		dialog.setArguments(args);
@@ -47,7 +53,12 @@ public class EditNameDialog extends DialogFragment implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		is_adding = getArguments().getBoolean("isAdding");
+		Log.d(LOG_TAG, "onCreate");
+		id = getArguments().getInt("ids");
+		isProfileAdition = getArguments().getBoolean("isAdding");
+		isGetEmailFromAccount = getArguments().getBoolean(
+				"isGetEmailFromAccount");
+		Log.d(LOG_TAG, "isProfileAdition = " + isProfileAdition);
 		name_field = getArguments().getString("name");
 		email_field = getArguments().getString("email");
 		dialog = new Dialog(super.getActivity());
@@ -60,21 +71,24 @@ public class EditNameDialog extends DialogFragment implements
 				R.id.btnEmailFromAccount);
 		Button btnEmailTyping = (Button) dialog.getWindow().findViewById(
 				R.id.btnEmailType);
-
+		Log.d(LOG_TAG, "dialogNotif");
+		Log.d(LOG_TAG, "isProfileAdition = " + isProfileAdition);
 		btnEmailFromAccount.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				is_adding = false;
 				dialog.dismiss();
 				getDialog().dismiss();
 				EditNameDialogListener activity = (EditNameDialogListener) getActivity();
-				activity.onFinishEditDialog(false, name.getText().toString(),
-						email.getText().toString());
+				activity.onFinishEditDialog(id, isProfileAdition,
+						isGetEmailFromAccount, name.getText().toString(), email
+								.getText().toString());
 			}
 		});
 		btnEmailTyping.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				isProfileAdition = true;
+				isGetEmailFromAccount = false;
 				dialog.dismiss();
 			}
 		});
@@ -82,7 +96,8 @@ public class EditNameDialog extends DialogFragment implements
 	}
 
 	public interface EditNameDialogListener {
-		void onFinishEditDialog(boolean is_adding, String inputText_name,
+		void onFinishEditDialog(int id, boolean isProfileAdition,
+				boolean isGetEmailFromAccount, String inputText_name,
 				String inputText_email);
 	}
 
@@ -113,6 +128,8 @@ public class EditNameDialog extends DialogFragment implements
 		});
 		name.setOnEditorActionListener(this);
 		email.setOnEditorActionListener(this);
+		Log.d(LOG_TAG, "onCreateView");
+		Log.d(LOG_TAG, "isProfileAdition = " + isProfileAdition);
 		return view;
 	}
 
@@ -121,12 +138,11 @@ public class EditNameDialog extends DialogFragment implements
 		if (EditorInfo.IME_ACTION_DONE == actionId) {
 			// Return input text to activity
 			EditNameDialogListener activity = (EditNameDialogListener) getActivity();
-			if (is_adding)
-				activity.onFinishEditDialog(true, name.getText().toString(),
-						email.getText().toString());
-			else
-				activity.onFinishEditDialog(false, name.getText().toString(),
-						email.getText().toString());
+			Log.d(LOG_TAG, "onEditorAction");
+			Log.d(LOG_TAG, "isProfileAdition = " + isProfileAdition);
+			activity.onFinishEditDialog(id, isProfileAdition,
+					isGetEmailFromAccount, name.getText().toString(), email
+							.getText().toString());
 			this.dismiss();
 			return true;
 		}

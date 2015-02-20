@@ -15,6 +15,7 @@ import java.util.Locale;
 
 import com.mobsoftmaster.bloodpressurediary2.R;
 
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -45,7 +46,6 @@ public class ScreenSlidePageFragment extends Fragment {
 	 * {@link #ARG_PAGE}.
 	 */
 	private int mPageNumber;
-	SharedPreference sharedPref;
 
 	/**
 	 * Factory method for this fragment class. Constructs a new fragment for the
@@ -93,8 +93,6 @@ public class ScreenSlidePageFragment extends Fragment {
 		ViewGroup rootView = (ViewGroup) inflater.inflate(
 				R.layout.fragment_screen_slide_page, container, false);
 
-		sharedPref = new SharedPreference(getActivity());
-
 		final ImageView screen = (ImageView) rootView
 				.findViewById(R.id.imageViewScreenProfile);
 
@@ -119,7 +117,8 @@ public class ScreenSlidePageFragment extends Fragment {
 				width / 4, height / 4);
 		screen.setImageBitmap(bitmap);
 		if (mPageNumber == 8) {
-			sharedPref.SavePreferences(sharedPref.s_tutorial, false);
+			SharedPreference.SavePreferences(getActivity(),
+					SharedPreference.s_tutorial, false);
 			getActivity().onBackPressed();
 		}
 		return rootView;

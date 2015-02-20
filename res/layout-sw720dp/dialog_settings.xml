@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:text="@string/edit_notification" >
+    </TextView>
+
+    <EditText
+        android:id="@+id/editCurrentNotif"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10" >
+    </EditText>
+
+    <TimePicker
+        android:id="@+id/timeEditPicker"
+        android:layout_width="192dp"
+        android:layout_height="116dp"
+        android:layout_gravity="center"
+        android:scaleX="0.8"
+        android:scaleY="0.8" />
+
+    <Button
+        android:id="@+id/btnSaveNotif"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/button"
+        android:text="@string/save" />
+
+</LinearLayout>

@@ -24,8 +24,6 @@ public class Graph extends TrackedActivity {
 
 	MyDB db;
 
-	SharedPreference sharedPref;
-
 	final String LOG_TAG = "myLogs";
 
 	boolean rotation;
@@ -34,8 +32,6 @@ public class Graph extends TrackedActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.graph);
-
-		sharedPref = new SharedPreference(this);
 
 		res = getResources();
 		TabHost tabs = (TabHost) findViewById(R.id.tabhost);
@@ -46,8 +42,8 @@ public class Graph extends TrackedActivity {
 		LinearLayout layout3Month = (LinearLayout) findViewById(R.id.graph3Month);
 		LinearLayout layoutAllPeriod = (LinearLayout) findViewById(R.id.graphAllPeriod);
 
-		int stat_id = sharedPref.LoadID();
-		rotation = sharedPref.LoadRotation();
+		int stat_id = SharedPreference.LoadID(this);
+		rotation = SharedPreference.LoadRotation(this);
 
 		if (!rotation) {
 			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);

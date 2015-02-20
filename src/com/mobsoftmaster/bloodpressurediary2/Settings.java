@@ -15,6 +15,7 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -34,12 +35,13 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.NumberPicker;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-public class Settings extends TrackedActivity implements
+public class Settings extends FragmentActivity implements
 		LoaderCallbacks<Cursor> {
 
 	CheckBox checkBoxGraph, checkBoxNotif;
@@ -60,8 +62,6 @@ public class Settings extends TrackedActivity implements
 	String[] currentNotif = new String[] { "", "", "" };
 
 	MyDB db;
-
-	SharedPreference sharedPref;
 
 	ListView listNotif;
 
@@ -91,8 +91,7 @@ public class Settings extends TrackedActivity implements
 		db = new MyDB(this);
 		db.open();
 
-		sharedPref = new SharedPreference(this);
-		int language = sharedPref.LoadLanguage();
+		int language = SharedPreference.LoadLanguage(this);
 
 		Log.d(LOG_TAG, "language_Start = " + language);
 		setTitle(R.string.settings);
@@ -101,9 +100,9 @@ public class Settings extends TrackedActivity implements
 		checkBoxNotif = (CheckBox) findViewById(R.id.checkBoxTimePicker);
 
 		btnAddNotif = (Button) findViewById(R.id.btnAddNotif);
-		ImageButton infoButton = (ImageButton) findViewById(R.id.imageButtonInfo);
-		ImageButton emailUs = (ImageButton) findViewById(R.id.imageButtonEmail);
-		ImageButton btnLanguage = (ImageButton) findViewById(R.id.imageButtonLanguage);
+		ImageView infoButton = (ImageView) findViewById(R.id.imageButtonInfo);
+		ImageView emailUs = (ImageView) findViewById(R.id.imageButtonEmail);
+		ImageView btnLanguage = (ImageView) findViewById(R.id.imageButtonLanguage);
 
 		editNotif = (EditText) findViewById(R.id.editNotif);
 
@@ -116,8 +115,8 @@ public class Settings extends TrackedActivity implements
 		timePicker.setCurrentHour(cal_alarm.get(Calendar.HOUR_OF_DAY));
 		timePicker.setCurrentMinute(cal_alarm.get(Calendar.MINUTE));
 
-		rotation = sharedPref.LoadRotation();
-		notification = sharedPref.LoadNotification();
+		rotation = SharedPreference.LoadRotation(this);
+		notification = SharedPreference.LoadNotification(this);
 
 		if (rotation) {
 			checkBoxGraph.setChecked(true);
@@ -134,7 +133,8 @@ public class Settings extends TrackedActivity implements
 			getWindow().setSoftInputMode(LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 			listNotif.setEnabled(true);
 		} else {
-			sharedPref.SavePreferences(sharedPref.s_notification, notification);
+			SharedPreference.SavePreferences(this,
+					SharedPreference.s_notification, notification);
 			checkBoxNotif.setChecked(false);
 			timePicker.setEnabled(false);
 			btnAddNotif.setEnabled(false);
@@ -149,8 +149,7 @@ public class Settings extends TrackedActivity implements
 					public void onCheckedChanged(CompoundButton checkView,
 							boolean isChecked) {
 						InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-						sharedPref.SavePreferences(sharedPref.s_notification,
-								checkView.isChecked());
+
 						if (checkView.isChecked()) {
 							imm.showSoftInput(editNotif,
 									InputMethodManager.SHOW_IMPLICIT);
@@ -190,6 +189,9 @@ public class Settings extends TrackedActivity implements
 								}
 							}
 						}
+						SharedPreference.SavePreferences(getBaseContext(),
+								SharedPreference.s_notification,
+								checkView.isChecked());
 					}
 				});
 
@@ -240,10 +242,6 @@ public class Settings extends TrackedActivity implements
 							cursor.getString(1),
 							Integer.valueOf(cursor.getString(2)),
 							Integer.valueOf(cursor.getString(3)));
-					Log.d(LOG_TAG,
-							"hour = " + Integer.valueOf(cursor.getString(2)));
-					Log.d(LOG_TAG,
-							"minute = " + Integer.valueOf(cursor.getString(3)));
 					editNotif.setText("");
 					getSupportLoaderManager().getLoader(0).forceLoad();
 					scrollMyListViewToBottom();
@@ -304,8 +302,10 @@ public class Settings extends TrackedActivity implements
 				&& (checkCheckBox(checkBoxNotif)))
 			checkBoxNotif.setChecked(false);
 		notification = checkBoxNotif.isChecked();
-		sharedPref.SavePreferences(sharedPref.s_rotation, rotation);
-		sharedPref.SavePreferences(sharedPref.s_notification, notification);
+		SharedPreference.SavePreferences(this, SharedPreference.s_rotation,
+				rotation);
+		SharedPreference.SavePreferences(this, SharedPreference.s_notification,
+				notification);
 		super.onBackPressed();
 		overridePendingTransition(R.anim.close_window_start,
 				R.anim.close_window_end);
@@ -333,7 +333,8 @@ public class Settings extends TrackedActivity implements
 				c.locale = Locale.ENGLISH;
 				getResources().updateConfiguration(c,
 						getResources().getDisplayMetrics());
-				sharedPref.saveLanguage(sharedPref.s_language, language);
+				SharedPreference.saveLanguage(getBaseContext(),
+						SharedPreference.s_language, language);
 				dialog.dismiss();
 			}
 		});
@@ -349,7 +350,8 @@ public class Settings extends TrackedActivity implements
 				c.locale = myLocale;
 				getResources().updateConfiguration(c,
 						getResources().getDisplayMetrics());
-				sharedPref.saveLanguage(sharedPref.s_language, language);
+				SharedPreference.saveLanguage(getBaseContext(),
+						SharedPreference.s_language, language);
 				dialog.dismiss();
 			}
 		});
@@ -364,7 +366,8 @@ public class Settings extends TrackedActivity implements
 				c.locale = Locale.CHINESE;
 				getResources().updateConfiguration(c,
 						getResources().getDisplayMetrics());
-				sharedPref.saveLanguage(sharedPref.s_language, language);
+				SharedPreference.saveLanguage(getBaseContext(),
+						SharedPreference.s_language, language);
 				dialog.dismiss();
 			}
 		});
@@ -372,7 +375,8 @@ public class Settings extends TrackedActivity implements
 	}
 
 	public void SetAlarm(int id, String message, int hour, int minute) {
-		AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+		AlarmManager am = (AlarmManager) this
+				.getSystemService(Context.ALARM_SERVICE);
 		Intent intent = new Intent(this, AlarmManagerBroadcastReceiver.class);
 		Resources res = this.getResources();
 		intent.putExtra("message", message);
@@ -390,8 +394,8 @@ public class Settings extends TrackedActivity implements
 		else
 			alarm = calendar.getTimeInMillis();
 		PendingIntent pi = PendingIntent.getBroadcast(this, id, intent, 0);
-		am.setInexactRepeating(AlarmManager.RTC_WAKEUP, alarm,
-				AlarmManager.INTERVAL_DAY, pi);
+		am.set(AlarmManager.RTC_WAKEUP, alarm, pi);
+		;
 	}
 
 	public void CancelAlarm(int id) {

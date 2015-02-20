@@ -1,101 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:weightSum="100" >
 
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:gravity="top"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="8"
         android:orientation="horizontal" >
 
-        <ImageButton
+        <ImageView
             android:id="@+id/imageButtonInfo"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
-            android:layout_marginRight="30dp"
             android:src="@drawable/ic_info" />
 
-        <ImageButton
+        <ImageView
             android:id="@+id/imageButtonEmail"
-            android:layout_width="30dp"
-            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
             android:layout_alignParentTop="true"
-            android:layout_marginRight="14dp"
             android:layout_toLeftOf="@+id/imageButtonInfo"
             android:src="@drawable/ic_email_us" />
 
-        <ImageButton
+        <ImageView
             android:id="@+id/imageButtonLanguage"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
             android:layout_alignParentTop="true"
-            android:layout_marginRight="16dp"
             android:layout_toLeftOf="@+id/imageButtonEmail"
             android:src="@drawable/ic_language" />
     </RelativeLayout>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:gravity="left"
-        android:orientation="horizontal" >
+    <LinearLayout
+        android:id="@+id/LinearLayoutCheckBoxes"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="15"
+        android:orientation="vertical"
+        android:weightSum="2" >
 
-        <CheckBox
-            android:id="@+id/checkBoxRotation"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="17dp"
-            android:checked="true" />
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal" >
 
-        <TextView
-            android:id="@+id/profileGraph1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/checkBoxRotation"
-            android:layout_alignBottom="@+id/checkBoxRotation"
-            android:layout_marginLeft="14dp"
-            android:layout_toRightOf="@+id/checkBoxRotation"
-            android:text="@string/show_graph_after_rotation" />
+            <CheckBox
+                android:id="@+id/checkBoxRotation"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:checked="true"
+                android:text="@string/show_graph_after_rotation" />
+        </RelativeLayout>
 
-        <CheckBox
-            android:id="@+id/checkBoxTimePicker"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/checkBoxRotation"
-            android:layout_toLeftOf="@+id/profileGraph1"
-            android:checked="false" />
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal" >
 
-        <TextView
-            android:id="@+id/showCheckBox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/checkBoxTimePicker"
-            android:layout_alignBottom="@+id/checkBoxTimePicker"
-            android:layout_alignLeft="@+id/profileGraph1"
-            android:text="@string/show_notifications" />
+            <CheckBox
+                android:id="@+id/checkBoxTimePicker"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:checked="true"
+                android:text="@string/show_notifications" />
+        </RelativeLayout>
+    </LinearLayout>
 
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:orientation="horizontal" >
-
-        <ListView
-            android:id="@+id/listNotif"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/editNotif"
-            android:padding="1dp"
-            android:textSize="12sp" >
-        </ListView>
+    <LinearLayout
+        android:id="@+id/LinearLayoutEditText"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="10"
+        android:orientation="vertical" >
 
         <EditText
             android:id="@+id/editNotif"
@@ -105,32 +92,51 @@
             android:focusableInTouchMode="true"
             android:hint="@string/your_notification" >
         </EditText>
+    </LinearLayout>
 
-    </RelativeLayout>
+    <LinearLayout
+        android:id="@+id/LinearLayoutNotifications"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="25"
+        android:orientation="vertical" >
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="horizontal" >
+        <ListView
+            android:id="@+id/listNotif"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" >
+        </ListView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/LinearLayoutTimerPicker"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="30"
+        android:orientation="vertical" >
 
         <TimePicker
             android:id="@+id/timePicker"
-            android:layout_width="192dp"
-            android:layout_height="116dp"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
             android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/btnAddNotif"
-            android:scaleX="1.2"
-            android:scaleY="1.2" />
+            android:layout_gravity="center" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/LinearLayoutAddNotif"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:layout_weight="12"
+        android:gravity="center"
+        android:orientation="vertical" >
 
         <Button
             android:id="@+id/btnAddNotif"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="22dp"
+            android:layout_height="fill_parent"
+            android:layout_marginBottom="5dp"
             android:background="@drawable/button"
             android:text="@string/add" />
     </RelativeLayout>

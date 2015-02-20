@@ -1,0 +1,77 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/npSysPressure"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/sys"
+        android:textColor="#00BFFF"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/npSysPressure"
+        android:layout_centerHorizontal="true"
+        android:text="@string/dias"
+        android:textColor="#00BFFF"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/npSysPressure"
+        android:layout_alignRight="@+id/npPulse"
+        android:layout_marginRight="14dp"
+        android:text="@string/pulse"
+        android:textColor="#00BFFF"
+        android:textSize="18sp" />
+
+    <NumberPicker
+        android:id="@+id/npDiasPressure"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/npSysPressure"
+        android:layout_centerHorizontal="true"
+        android:width="100dip" />
+
+    <Button
+        android:id="@+id/btnSaveState"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/npDiasPressure"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/button"
+        android:text="@string/save" />
+
+    <NumberPicker
+        android:id="@+id/npSysPressure"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/btnSaveState"
+        android:layout_below="@+id/textView3"
+        android:layout_marginTop="24dp"
+        android:width="100dip" />
+
+    <NumberPicker
+        android:id="@+id/npPulse"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btnSaveState"
+        android:layout_alignRight="@+id/btnSaveState"
+        android:width="100dip" />
+
+</RelativeLayout>

@@ -11,12 +11,14 @@ import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.common.AccountPicker;
 
+import android.R.bool;
 import android.accounts.AccountManager;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.database.Cursor;
@@ -47,10 +49,11 @@ public class MainActivity extends FragmentActivity implements
 		LoaderCallbacks<Cursor>, EditNameDialogListener {
 
 	private static final int CM_EDIT_ID = 0, CM_DELETE_ID = 1;
-	private static final int REQUEST_CODE_EMAIL = 1;
 	private static final int REQUEST_CODE_EMAIL_AUTO = 2;
+	private static final int REQUEST_CODE_SCREEN_ADD_NEW_USER = 3;
+	private static final int REQUEST_CODE_SCREEN_STATISTIC = 4;
+
 	MyDB db;
-	SharedPreference sharedPref;
 
 	SimpleCursorAdapter scAdapter;
 
@@ -60,8 +63,9 @@ public class MainActivity extends FragmentActivity implements
 	String[] currentProfile = new String[] { "", "" };
 	String accountName = "";
 
+	boolean tutorial;
+
 	final String LOG_TAG = "myLogs";
-	final int DIALOG_EDIT = 1, DIALOG_ADD = 2;
 	private AdView mAdView;
 
 	/** Called when the activity is first created. */
@@ -78,9 +82,8 @@ public class MainActivity extends FragmentActivity implements
 
 		Configuration c = new Configuration(getResources().getConfiguration());
 
-		sharedPref = new SharedPreference(this);
 		setTitle(R.string.app_name);
-		int language = sharedPref.LoadLanguage();
+		int language = SharedPreference.LoadLanguage(this);
 
 		switch (language) {
 		case 0:
@@ -103,20 +106,20 @@ public class MainActivity extends FragmentActivity implements
 
 		setTitle(R.string.app_name);
 
-		boolean stateActivity = sharedPref.LoadState();
+		boolean stateActivity = SharedPreference.LoadState(this);
 
 		setContentView(R.layout.activity_main);
 
-		boolean tutorial = sharedPref.LoadTutorial();
+		tutorial = SharedPreference.LoadTutorial(this);
 
 		if (tutorial) {
 			Intent intent = new Intent(MainActivity.this, Tutorial.class);
-			startActivity(intent);
+			startActivityForResult(intent, REQUEST_CODE_EMAIL_AUTO);
 		}
-zz
+
 		if (!stateActivity) {
 			Intent intent = new Intent(MainActivity.this, MyStatistic.class);
-			startActivity(intent);
+			startActivityForResult(intent, REQUEST_CODE_SCREEN_STATISTIC);
 		}
 
 		// формируем столбцы сопоставления
@@ -129,7 +132,7 @@ zz
 		addProfile.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				showEditNameDialog(true, "", "");
+				showEditNameDialog(0, true, true, "", "");
 			}
 		});
 
@@ -154,7 +157,7 @@ zz
 		getSupportLoaderManager().initLoader(0, null, this);
 
 		if (db.emptyDataBase())
-			getUserEmailAuto();
+			getUserEmailAuto(0);
 		else
 			lvData.setAdapter(scAdapter);
 
@@ -164,8 +167,10 @@ zz
 				Intent intent = new Intent(MainActivity.this, MyStatistic.class);
 				Cursor cur = (Cursor) lvData.getAdapter().getItem(position);
 				int id_name = cur.getInt(cur.getColumnIndex("_id"));
-				sharedPref.saveID(sharedPref.s_id, id_name);
-				sharedPref.SavePreferences(sharedPref.s_state, false);
+				SharedPreference.saveID(getBaseContext(),
+						SharedPreference.s_id, id_name);
+				SharedPreference.SavePreferences(getBaseContext(),
+						SharedPreference.s_state, false);
 				startActivity(intent);
 				overridePendingTransition(R.anim.open_window_start,
 						R.anim.open_window_end);
@@ -178,31 +183,36 @@ zz
 	}
 
 	@Override
-	public void onFinishEditDialog(boolean is_adding, String inputText_name,
+	public void onFinishEditDialog(int id, boolean isProfileAdition,
+			boolean isGetEmailFromAccount, String inputText_name,
 			String inputText_email) {
 		if ((0 == inputText_name.length())) {
 			inCorrectName();
-			showEditNameDialog(true, "", "");
+			showEditNameDialog(id, true, true, "", "");
 		} else if (!isValidEmail(inputText_email))
 			inCorrectEmail();
 		else {
-			if (is_adding) {
-				db.addRec(inputText_name, inputText_email);
-				addData();
-			} else {
-				accountName = inputText_name;
-				getUserEmailAuto();
-			}
+			accountName = inputText_name;
+			if (isProfileAdition) {
+				if (isGetEmailFromAccount)
+					getUserEmailAuto(id);
+				else
+					db.addRec(accountName, inputText_email);
+
+			} else
+				db.editRec(accountName, inputText_email, String.valueOf(id));
 			getSupportLoaderManager().getLoader(0).forceLoad();
 		}
+		startActivityForResult(getIntent(), REQUEST_CODE_SCREEN_ADD_NEW_USER);
 	}
 
-	void showEditNameDialog(boolean is_adding, String name, String email) {
+	void showEditNameDialog(int id, boolean isProfileAdition,
+			boolean isGetEmailFromAccount, String name, String email) {
 		final FragmentManager fm = getSupportFragmentManager();
-		EditNameDialog dFragment = EditNameDialog.newInstance(is_adding, name,
-				email);
-		// Show DialogFragment
+		EditNameDialog dFragment = EditNameDialog.newInstance(id,
+				isProfileAdition, isGetEmailFromAccount, name, email);
 		dFragment.show(fm, "Dialog Fragment");
+		Log.d(LOG_TAG, "showEditNameDialog");
 	}
 
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -287,7 +297,10 @@ zz
 		} else if (item.getItemId() == CM_EDIT_ID) {
 			currentProfile = db.getCurrentName((int) acmi.id);
 			idCurrentName = acmi.id;
-			showEditNameDialog(false, currentProfile[0], currentProfile[1]);
+
+			showEditNameDialog((int) acmi.id, false, true, currentProfile[0],
+					currentProfile[1]);
+
 			return true;
 		}
 		return super.onContextItemSelected(item);
@@ -391,37 +404,7 @@ zz
 		}
 	}
 
-	private void getUserEmail() {
-		// String possibleEmail = "";
-		// Pattern emailPattern = Patterns.EMAIL_ADDRESS; // API level 8+
-		// Account[] accounts = AccountManager.get(this).getAccounts();
-		// for (Account account : accounts) {
-		// if (emailPattern.matcher(account.name).matches()) {
-		// possibleEmail = account.name;
-		// break;
-		// }
-		// }
-		try {
-			Intent intent = AccountPicker.newChooseAccountIntent(null, null,
-					new String[] { GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE }, false,
-					null, null, null, null);
-			startActivityForResult(intent, REQUEST_CODE_EMAIL);
-		} catch (ActivityNotFoundException e) {
-			// TODO
-		}
-		// return possibleEmail;
-	}
-
-	private void getUserEmailAuto() {
-		// String possibleEmail = "";
-		// Pattern emailPattern = Patterns.EMAIL_ADDRESS; // API level 8+
-		// Account[] accounts = AccountManager.get(this).getAccounts();
-		// for (Account account : accounts) {
-		// if (emailPattern.matcher(account.name).matches()) {
-		// possibleEmail = account.name;
-		// break;
-		// }
-		// }
+	private void getUserEmailAuto(int id) {
 		try {
 			Intent intent = AccountPicker.newChooseAccountIntent(null, null,
 					new String[] { GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE }, false,
@@ -430,37 +413,22 @@ zz
 		} catch (ActivityNotFoundException e) {
 			// TODO
 		}
-		// return possibleEmail;
 	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == REQUEST_CODE_EMAIL && resultCode == RESULT_OK) {
-			String accountEmail = data
-					.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
-			editMail.setText(accountEmail);
-		} else if (requestCode == REQUEST_CODE_EMAIL_AUTO
-				&& resultCode == RESULT_OK) {
+		if (requestCode == REQUEST_CODE_EMAIL_AUTO && resultCode == RESULT_OK) {
 			String accountEmail = data
 					.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
 			Resources res = getResources();
 			if (db.emptyDataBase())
 				db.addRec(res.getString(R.string.guest), accountEmail);
-			else {
+			else
 				db.addRec(accountName, accountEmail);
-				addData();
-			}
 			final ListView lvData = (ListView) findViewById(R.id.lvData);
 			lvData.setAdapter(scAdapter);
 			getSupportLoaderManager().getLoader(0).forceLoad();
-		} else if (requestCode == REQUEST_CODE_EMAIL_AUTO
-				&& resultCode == RESULT_CANCELED) {
-			Resources res = getResources();
-			if (db.emptyDataBase())
-				db.addRec(res.getString(R.string.guest), "");
-			final ListView lvData = (ListView) findViewById(R.id.lvData);
-			lvData.setAdapter(scAdapter);
-			getSupportLoaderManager().getLoader(0).forceLoad();
+
 		}
 	}
 }

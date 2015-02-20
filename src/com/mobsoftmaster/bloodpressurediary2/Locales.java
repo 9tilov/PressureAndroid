@@ -8,14 +8,13 @@ import com.google.android.gms.analytics.Tracker;
 import com.mobsoftmaster.bloodpressurediary2.R;
 
 import android.app.Application;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 
 public class Locales extends Application {
 
 	// The following line should be changed to include the correct property id.
 	private static final String PROPERTY_ID = "UA-44823311-5";
-
-	SharedPreference sharedPref;
 
 	final String LOG_TAG = "myLogs";
 	public static int GENERAL_TRACKER = 0;
@@ -39,9 +38,7 @@ public class Locales extends Application {
 	private void setLocale() {
 		Configuration c = new Configuration(getResources().getConfiguration());
 
-		sharedPref = new SharedPreference(this);
-
-		int language = sharedPref.LoadLanguage();
+		int language = SharedPreference.LoadLanguage(this);
 
 		switch (language) {
 		case 0:

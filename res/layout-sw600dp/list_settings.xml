@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="25dp"
+        android:layout_alignParentLeft="true"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/notifSettings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="notif" 
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/hourSettings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/minuteSettings"
+            android:layout_alignBottom="@+id/minuteSettings"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="14dp"
+            android:text="hour"
+            android:textSize="20sp"  />
+
+        <TextView
+            android:id="@+id/textViewSeparator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/minuteSettings"
+            android:layout_alignBottom="@+id/minuteSettings"
+            android:layout_toRightOf="@+id/hourSettings"
+            android:text=":" 
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/minuteSettings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/notifSettings"
+            android:layout_alignBottom="@+id/notifSettings"
+            android:layout_toRightOf="@+id/textViewSeparator"
+            android:text="minute"
+            android:textSize="20sp"  />
+
+    </RelativeLayout>
+
+</LinearLayout>

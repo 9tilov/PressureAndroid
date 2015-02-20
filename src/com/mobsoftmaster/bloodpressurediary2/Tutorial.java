@@ -9,6 +9,7 @@ import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 
 public class Tutorial extends FragmentActivity {
 
@@ -16,8 +17,6 @@ public class Tutorial extends FragmentActivity {
 	 * The number of pages (wizard steps) to show in this demo.
 	 */
 	private static final int NUM_PAGES = 9;
-	SharedPreference sharedPref;
-
 	/**
 	 * The pager widget, which handles animation and allows swiping horizontally
 	 * to access previous and next wizard steps.
@@ -28,13 +27,13 @@ public class Tutorial extends FragmentActivity {
 	 * The pager adapter, which provides the pages to the view pager widget.
 	 */
 	private PagerAdapter mPagerAdapter;
+	final String LOG_TAG = "myLogs";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_screen_slide);
-
-		sharedPref = new SharedPreference(this);
+		Log.d(LOG_TAG, "tutor = ");
 
 		// Instantiate a ViewPager and a PagerAdapter.
 		mPager = (ViewPager) findViewById(R.id.pager);
@@ -70,7 +69,8 @@ public class Tutorial extends FragmentActivity {
 
 	@Override
 	public void onBackPressed() {
-		sharedPref.SavePreferences(sharedPref.s_tutorial, false);
+		SharedPreference.SavePreferences(this, SharedPreference.s_tutorial,
+				false);
 		super.onBackPressed();
 	}
 
