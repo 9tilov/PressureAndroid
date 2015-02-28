@@ -1,9 +1,9 @@
 package com.mobsoftmaster.bloodpressurediary2;
 
+import com.mobsoftmaster.bloodpressurediary2.R;
 import java.util.Calendar;
 import java.util.Locale;
 
-import com.mobsoftmaster.bloodpressurediary2.R;
 import com.mobsoftmaster.bloodpressurediary2.EditNameDialog.EditNameDialogListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -11,14 +11,12 @@ import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.common.AccountPicker;
 
-import android.R.bool;
 import android.accounts.AccountManager;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.database.Cursor;
@@ -201,6 +199,9 @@ public class MainActivity extends FragmentActivity implements
 
 			} else
 				db.editRec(accountName, inputText_email, String.valueOf(id));
+			
+			final ListView lvData = (ListView) findViewById(R.id.lvData);
+			lvData.setAdapter(scAdapter);
 			getSupportLoaderManager().getLoader(0).forceLoad();
 		}
 		startActivityForResult(getIntent(), REQUEST_CODE_SCREEN_ADD_NEW_USER);

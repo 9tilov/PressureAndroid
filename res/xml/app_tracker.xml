@@ -20,8 +20,8 @@
 substitute for the full length canonical Activity name in screen view hit. In order to
 specify an alternate screen name use an <screenName> element, with the name attribute
 specifying the canonical name, and the value the alias to use instead. -->
-<screenName name="com.mobsoftmaster.bloodpressurediary.MainActivity">MainActivity</screenName>
-<screenName name="com.mobsoftmaster.bloodpressurediary.MyStatistic">MyStatistic</screenName>
-<screenName name="com.mobsoftmaster.bloodpressurediary.Settings">Settings</screenName>
+<screenName name="com.mobsoftmaster.bloodpressurediary2.MainActivity">MainActivity</screenName>
+<screenName name="com.mobsoftmaster.bloodpressurediary2.MyStatistic">MyStatistic</screenName>
+<screenName name="com.mobsoftmaster.bloodpressurediary2.Settings">Settings</screenName>
  
 </resources>

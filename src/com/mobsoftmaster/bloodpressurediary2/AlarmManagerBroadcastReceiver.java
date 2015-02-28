@@ -1,5 +1,7 @@
 package com.mobsoftmaster.bloodpressurediary2;
 
+import com.mobsoftmaster.bloodpressurediary2.R;
+
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;

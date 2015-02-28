@@ -1,16 +1,14 @@
 package com.mobsoftmaster.bloodpressurediary2;
 
+import com.mobsoftmaster.bloodpressurediary2.R;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-import com.mobsoftmaster.bloodpressurediary2.R;
-
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;

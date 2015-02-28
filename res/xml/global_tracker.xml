@@ -12,8 +12,8 @@
  
 <!-- The screen names that will appear in reports -->
 
-<string name="com.mobsoftmaster.bloodpressurediary.MainActivity">MainActivity</string>
-<string name="com.mobsoftmaster.bloodpressurediary.MyStatistic">MyStatistic</string>
-<string name="com.mobsoftmaster.bloodpressurediary.Settings">Settings</string>
+<string name="com.mobsoftmaster.bloodpressurediary2.MainActivity">MainActivity</string>
+<string name="com.mobsoftmaster.bloodpressurediary2.MyStatistic">MyStatistic</string>
+<string name="com.mobsoftmaster.bloodpressurediary2.Settings">Settings</string>
 
 </resources>

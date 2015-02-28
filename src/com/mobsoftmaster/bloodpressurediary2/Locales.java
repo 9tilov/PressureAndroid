@@ -1,14 +1,13 @@
 package com.mobsoftmaster.bloodpressurediary2;
 
+import com.mobsoftmaster.bloodpressurediary2.R;
 import java.util.HashMap;
 import java.util.Locale;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
-import com.mobsoftmaster.bloodpressurediary2.R;
 
 import android.app.Application;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 
 public class Locales extends Application {
