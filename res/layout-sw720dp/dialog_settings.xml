@@ -36,6 +36,7 @@
         android:layout_marginRight="5dp"
         android:layout_marginTop="5dp"
         android:background="@drawable/button"
-        android:text="@string/save" />
+        android:text="@string/save"
+        android:textColor="#5b3709" />
 
 </LinearLayout>

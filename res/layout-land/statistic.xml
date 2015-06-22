@@ -4,116 +4,185 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:weightSum="100" >
 
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_gravity="right"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="10"
+        android:gravity="center"
         android:orientation="horizontal" >
 
         <TextView
-            android:id="@+id/btnProfile"
+            android:id="@+id/tvStatisticsTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableEnd="@drawable/pointer"
-            android:drawableStart="@drawable/user_icon"
-            android:textSize="25dp" />
-
-        <ImageView
-            android:id="@+id/imageViewSave"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:src="@drawable/ic_save_button" />
-
-        <ImageView
-            android:id="@+id/imageViewMail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_toLeftOf="@+id/imageViewSave"
-            android:src="@drawable/ic_mail_button" />
-
-        <ImageView
-            android:id="@+id/imageViewGraph"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_toLeftOf="@+id/imageViewMail"
-            android:src="@drawable/ic_graph_button" />
+            android:text="@string/statistics"
+            android:textColor="#f39c12"
+            android:textSize="@dimen/text_size_title" />
     </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="10"
+        android:orientation="horizontal"
+        android:weightSum="10" >
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="7"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/btnProfile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_back_user"
+                android:drawableRight="@drawable/ic_back_arrow"
+                android:textColor="#ecf0f1"
+                android:textSize="@dimen/text_size_title_bar" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:id="@+id/imageViewSave"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:src="@drawable/ic_save_button" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:id="@+id/imageViewMail"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_alignParentTop="true"
+                android:src="@drawable/ic_mail_button" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:id="@+id/imageViewGraph"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_alignParentTop="true"
+                android:src="@drawable/ic_graph_button" />
+        </RelativeLayout>
+    </LinearLayout>
 
     <com.google.android.gms.ads.AdView
         xmlns:ads="http://schemas.android.com/apk/res-auto"
         android:id="@+id/adView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="10"
         app:adSize="SMART_BANNER"
         app:adUnitId="@string/admob_publisher_id_statistic" >
     </com.google.android.gms.ads.AdView>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="41dp"
-        android:background="#8B0000"
-        android:orientation="horizontal" >
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="5"
+        android:background="#5b3709"
+        android:orientation="horizontal"
+        android:weightSum="3" >
 
-        <TextView
-            android:id="@+id/textView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="22dp"
-            android:text="@string/date" />
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:weightSum="3" >
 
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/textView1"
-            android:layout_alignBottom="@+id/textView1"
-            android:layout_centerHorizontal="true"
-            android:text="@string/pressure" />
+            <TextView
+                android:id="@+id/textViewDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/date"
+                android:textColor="#f39c12"
+                android:textSize="@dimen/text_size_title_bar" />
+        </RelativeLayout>
 
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/textView2"
-            android:layout_alignBottom="@+id/textView2"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="33dp"
-            android:text="@string/pulse" />
-    </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:gravity="center" >
+
+            <TextView
+                android:id="@+id/textViewPressure"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/pressure"
+                android:textColor="#f39c12"
+                android:textSize="@dimen/text_size_title_bar" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:gravity="center" >
+
+            <TextView
+                android:id="@+id/textViewPulse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/pulse"
+                android:textColor="#f39c12"
+                android:textSize="@dimen/text_size_title_bar" />
+        </RelativeLayout>
+    </LinearLayout>
 
     <ListView
         android:id="@+id/listStat"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
         android:layout_marginTop="10dp"
-        android:layout_weight="0.53"
-        android:divider="#8B0000"
+        android:layout_weight="45"
+        android:divider="#5b3709"
         android:dividerHeight="@dimen/twodp" />
 
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.01"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="20"
         android:gravity="bottom"
         android:orientation="horizontal" >
 
         <ImageView
             android:id="@+id/btnAddStat"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:clickable="true"
-            android:src="@drawable/stat_button" 
-            android:scaleType="fitCenter"/>
+            android:scaleType="fitCenter"
+            android:src="@drawable/stat_button" />
     </RelativeLayout>
 
 </LinearLayout>

@@ -1,98 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal" >
+    android:orientation="vertical"
+    android:weightSum="10" >
 
-    <RelativeLayout
-        android:id="@+id/date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="15dp"
-        android:orientation="horizontal" >
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:weightSum="3" >
 
-        <TextView
-            android:id="@+id/tvTextDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="date"
-            android:textSize="20sp" />
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:weightSum="2" >
 
-        <TextView
-            android:id="@+id/tvTextTime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tvTextDate"
-            android:text="time"
-            android:textSize="20sp" />
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center" >
 
-    </RelativeLayout>
+                <TextView
+                    android:id="@+id/tvTextDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="date"
+                    android:textColor="#FF0000" />
+            </RelativeLayout>
 
-    <RelativeLayout
-        android:id="@+id/dias"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:orientation="horizontal" >
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center" >
 
-        <TextView
-            android:id="@+id/tvTextDias"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/textView1"
-            android:text="dias"
-            android:textSize="20sp" />
+                <TextView
+                    android:id="@+id/tvTextTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="time" 
+                    android:textColor="#FF0000"/>
+            </RelativeLayout>
+        </LinearLayout>
 
-        <TextView
-            android:id="@+id/tvTextSys"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="40dp"
-            android:text="sys"
-            android:textSize="20sp" />
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal" >
 
-        <TextView
-            android:id="@+id/textView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/tvTextSys"
-            android:text=" / "
-            android:textSize="20sp" />
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:gravity="center" >
 
+                <TextView
+                    android:id="@+id/tvTextSys"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="sys" />
 
+                <TextView
+                    android:id="@+id/textView1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/tvTextSys"
+                    android:text=" / " />
 
-        <!-- <ImageView
-            android:id="@+id/imageView1"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/tvTextSys"
-            android:src="@drawable/tonomer" /> -->
-    </RelativeLayout>
+                <TextView
+                    android:id="@+id/tvTextDias"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/textView1"
+                    android:text="dias" />
+            </RelativeLayout>
+        </LinearLayout>
 
-    <RelativeLayout
-        android:id="@+id/pulse"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_marginRight="16dp"
-        android:gravity="right"
-        android:orientation="horizontal" >
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal" >
 
-        <TextView
-            android:id="@+id/tvTextPulse"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:text="pulse"
-            android:layout_marginRight="30dp"
-            android:textSize="20sp" />
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:gravity="center" >
 
-    </RelativeLayout>
+                <TextView
+                    android:id="@+id/tvTextPulse"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="pulse" />
+            </RelativeLayout>
+        </LinearLayout>
+    </LinearLayout>
 
-</RelativeLayout>
-
+</LinearLayout>

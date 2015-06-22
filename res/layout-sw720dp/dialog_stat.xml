@@ -2,76 +2,122 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/npSysPressure"
-        android:layout_alignParentTop="true"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="16dp"
-        android:text="@string/sys"
-        android:textColor="#00BFFF"
-        android:textSize="18sp" />
+    <LinearLayout
+        android:id="@+id/lltv"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        android:weightSum="3" >
 
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/npSysPressure"
-        android:layout_centerHorizontal="true"
-        android:text="@string/dias"
-        android:textColor="#00BFFF"
-        android:textSize="18sp" />
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal" >
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/npSysPressure"
-        android:layout_alignRight="@+id/npPulse"
-        android:layout_marginRight="14dp"
-        android:text="@string/pulse"
-        android:textColor="#00BFFF"
-        android:textSize="18sp" />
+            <TextView
+                android:id="@+id/textViewSys"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sys"
+                android:textColor="#f39c12"
+                android:textSize="@dimen/text_size_title_bar" />
+        </RelativeLayout>
 
-    <NumberPicker
-        android:id="@+id/npDiasPressure"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/npSysPressure"
-        android:layout_centerHorizontal="true"
-        android:width="100dip" />
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal" >
 
-    <Button
-        android:id="@+id/btnSaveState"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/npDiasPressure"
-        android:layout_marginBottom="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginTop="5dp"
-        android:background="@drawable/button"
-        android:text="@string/save" />
+            <TextView
+                android:id="@+id/textViewDias"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/dias"
+                android:textColor="#f39c12"
+                android:textSize="@dimen/text_size_title_bar" />
+        </RelativeLayout>
 
-    <NumberPicker
-        android:id="@+id/npSysPressure"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/btnSaveState"
-        android:layout_below="@+id/textView3"
-        android:layout_marginTop="24dp"
-        android:width="100dip" />
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal" >
 
-    <NumberPicker
-        android:id="@+id/npPulse"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/btnSaveState"
-        android:layout_alignRight="@+id/btnSaveState"
-        android:width="100dip" />
+            <TextView
+                android:id="@+id/textViewPulse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/pulse"
+                android:textColor="#f39c12"
+                android:textSize="@dimen/text_size_title_bar" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/lltp"
+        android:layout_width="fill_parent"
+        android:layout_height="150dp"
+        android:layout_below="@id/lltv"
+        android:orientation="horizontal"
+        android:weightSum="3" >
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal" >
+
+            <NumberPicker
+                android:id="@+id/npSysPressure"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal" >
+
+            <NumberPicker
+                android:id="@+id/npDiasPressure"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal" >
+
+            <NumberPicker
+                android:id="@+id/npPulse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="100dp"
+        android:layout_below="@id/lltp"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:id="@+id/btnSaveState"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:src="@drawable/ic_ok_btn" />
+    </RelativeLayout>
 
 </RelativeLayout>

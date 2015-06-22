@@ -18,7 +18,8 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="@string/your_name"
-        android:inputType="textPersonName" >
+        android:inputType="textPersonName"
+        android:textColor="#FFFFE0" >
 
         <requestFocus />
     </EditText>
@@ -35,7 +36,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="@string/doctor_e_mail" 
-        android:inputType="textEmailAddress"/>
+        android:hint="@string/doctor_e_mail"
+        android:inputType="textEmailAddress"
+        android:textColor="#FFFFE0" />
 
 </LinearLayout>
