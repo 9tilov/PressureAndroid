@@ -78,14 +78,13 @@
     <string name="sys">Сис.</string>
     <string name="dias">Диас.</string>
     <string name="no_stat_records">У вас нет ни одной записи</string>
-    <string name="show_graph_after_rotation">Показать график после поворота экрана </string>
-    <string name="show_notifications">Показать уведомления</string>
+    <string name="show_graph_after_rotation">График после поворота экрана </string>
+    <string name="show_notifications">Уведомления</string>
     <string name="your_notification">Ваше уведомление</string>
     <string name="edit_notification">Редактирвоать уведомление</string>
     <string name="your_name">Ваше имя</string>
     <string name="are_you_sure">Вы уверены?</string>
     <string name="mail_sanding">Отправка сообщения...</string>
-    <string name="statictics">Статистика</string>
     <string name="cannt_save">Извините, но статистика не будет сохранена или отправлена, так как недоступна SD-карта</string>
     <string name="e_mail">e-mail</string>
     <string name="doctor_e_mail">Почта лечащего врача</string>

@@ -86,13 +86,12 @@
     <string name="dias">Dias</string>
     <string name="no_stat_records">You have no records</string>
     <string name="show_graph_after_rotation">Show graph after rotation </string>
-    <string name="show_notifications">Show notifications</string>
+    <string name="show_notifications">Notifications</string>
     <string name="your_notification">Your notification</string>
     <string name="edit_notification">Edit notification</string>
     <string name="your_name">Your name</string>
     <string name="are_you_sure">Are you sure?</string>
     <string name="mail_sanding">mail sanding...</string>
-    <string name="statictics">Statictics</string>
     <string name="cannt_save">Sorry, but I can\'t save or sand statistics, because SD-card is no available</string>
     <string name="e_mail">e-mail</string>
     <string name="doctor_e_mail">Doctor\'s e-mail</string>
