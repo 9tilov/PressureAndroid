@@ -1,0 +1,14 @@
+<resources>
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="twodp">2dp</dimen>
+    <dimen name="text_size_checkbox">15sp</dimen>
+    <dimen name="text_size_title_bar">20sp</dimen>
+    <dimen name="text_size_title">30sp</dimen>
+    <dimen name="text_info">20sp</dimen>
+    <dimen name="text_size">10sp</dimen>
+    <dimen name="text_size_email">5sp</dimen>
+
+</resources>
