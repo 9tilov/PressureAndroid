@@ -1,6 +1,5 @@
 package com.mobsoftmaster.bloodpressurediary2;
 
-import com.mobsoftmaster.bloodpressurediary2.R;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -38,8 +37,6 @@ public class EditNameDialog extends DialogFragment implements
 	static EditNameDialog newInstance(int id, boolean isProfileAdition,
 			boolean isGetEmailFromAccount, String name, String email) {
 		EditNameDialog dialog = new EditNameDialog();
-		Log.d(LOG_TAG, "EditNameDialog");
-		Log.d(LOG_TAG, "isProfileAdition = " + isProfileAdition);
 		Bundle args = new Bundle();
 		args.putInt("ids", id);
 		args.putBoolean("isAdding", isProfileAdition);
@@ -53,17 +50,16 @@ public class EditNameDialog extends DialogFragment implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Log.d(LOG_TAG, "onCreate");
+		setStyle(DialogFragment.STYLE_NORMAL, R.style.Dialogeasydealtheme);
 		id = getArguments().getInt("ids");
 		isProfileAdition = getArguments().getBoolean("isAdding");
 		isGetEmailFromAccount = getArguments().getBoolean(
 				"isGetEmailFromAccount");
-		Log.d(LOG_TAG, "isProfileAdition = " + isProfileAdition);
 		name_field = getArguments().getString("name");
 		email_field = getArguments().getString("email");
-		dialog = new Dialog(super.getActivity());
+		dialog = new Dialog(super.getActivity(), R.style.Dialogeasydealtheme);
 		dialog.setContentView(R.layout.dialog_chose_email);
-		dialog.setTitle(R.string.email_print);
+		dialog.setTitle(R.string.e_mail);
 	}
 
 	public void dialogNotif() {
@@ -71,8 +67,6 @@ public class EditNameDialog extends DialogFragment implements
 				R.id.btnEmailFromAccount);
 		Button btnEmailTyping = (Button) dialog.getWindow().findViewById(
 				R.id.btnEmailType);
-		Log.d(LOG_TAG, "dialogNotif");
-		Log.d(LOG_TAG, "isProfileAdition = " + isProfileAdition);
 		btnEmailFromAccount.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -112,6 +106,7 @@ public class EditNameDialog extends DialogFragment implements
 		name = (EditText) view.findViewById(R.id.addNewName);
 		email = (EditText) view.findViewById(R.id.addMail);
 		getDialog().setTitle(R.string.profile_data);
+		
 		// Show soft keyboard automatically
 		name.requestFocus();
 		name.setText(name_field);
@@ -128,8 +123,6 @@ public class EditNameDialog extends DialogFragment implements
 		});
 		name.setOnEditorActionListener(this);
 		email.setOnEditorActionListener(this);
-		Log.d(LOG_TAG, "onCreateView");
-		Log.d(LOG_TAG, "isProfileAdition = " + isProfileAdition);
 		return view;
 	}
 
@@ -138,8 +131,6 @@ public class EditNameDialog extends DialogFragment implements
 		if (EditorInfo.IME_ACTION_DONE == actionId) {
 			// Return input text to activity
 			EditNameDialogListener activity = (EditNameDialogListener) getActivity();
-			Log.d(LOG_TAG, "onEditorAction");
-			Log.d(LOG_TAG, "isProfileAdition = " + isProfileAdition);
 			activity.onFinishEditDialog(id, isProfileAdition,
 					isGetEmailFromAccount, name.getText().toString(), email
 							.getText().toString());

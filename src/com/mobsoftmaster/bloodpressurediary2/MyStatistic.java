@@ -1,14 +1,17 @@
 package com.mobsoftmaster.bloodpressurediary2;
 
 import com.mobsoftmaster.bloodpressurediary2.R;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -16,6 +19,7 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -85,7 +89,18 @@ public class MyStatistic extends TrackedActivity implements
 		db = new MyDB(this);
 		db.open();
 
-		setTitle(R.string.statictics);
+		setTitle(R.string.statistics);
+
+		Typeface font = Typeface.createFromAsset(getAssets(), "Dashley.ttf");
+
+		TextView textViewDate = (TextView) findViewById(R.id.textViewDate);
+		textViewDate.setTypeface(font);
+
+		TextView textViewPressure = (TextView) findViewById(R.id.textViewPressure);
+		textViewPressure.setTypeface(font);
+
+		TextView textViewPulse = (TextView) findViewById(R.id.textViewPulse);
+		textViewPulse.setTypeface(font);
 
 		ImageView btnAddStat = (ImageView) findViewById(R.id.btnAddStat);
 		ImageView btnGraph = (ImageView) findViewById(R.id.imageViewGraph);
@@ -95,6 +110,9 @@ public class MyStatistic extends TrackedActivity implements
 		TextView btnProfile = (TextView) findViewById(R.id.btnProfile);
 		listStat = (ListView) findViewById(R.id.listStat);
 
+		TextView tvStatisticsTitle = (TextView) findViewById(R.id.tvStatisticsTitle);
+		tvStatisticsTitle.setTypeface(font);
+		
 		profile_id = SharedPreference.LoadID(this);
 		rotation = SharedPreference.LoadRotation(this);
 
@@ -118,9 +136,10 @@ public class MyStatistic extends TrackedActivity implements
 			public void onClick(View v) {
 				SharedPreference.SavePreferences(getBaseContext(),
 						SharedPreference.s_state, true);
-				finish();
-				overridePendingTransition(R.anim.close_window_start,
-						R.anim.close_window_end);
+//				finish();
+				MyStatistic.this.onBackPressed();
+//				overridePendingTransition(R.anim.close_window_start,
+//						R.anim.close_window_end);
 			}
 		});
 		// формируем столбцы сопоставления
@@ -249,9 +268,9 @@ public class MyStatistic extends TrackedActivity implements
 			}
 		});
 
-		dialog = new Dialog(MyStatistic.this);
+		dialog = new Dialog(MyStatistic.this, R.style.Dialogeasydealtheme);
 		dialog.setContentView(R.layout.dialog_stat);
-		dialog.setTitle(R.string.statictics);
+		dialog.setTitle(R.string.statistics);
 	}
 
 	public void setColor(int redLower, int fromYellowLower, int toYellowLower,
@@ -313,7 +332,7 @@ public class MyStatistic extends TrackedActivity implements
 			npDiasPressure.setValue(80);
 		}
 
-		Button btnSaveStat = (Button) dialog.getWindow().findViewById(
+		ImageView btnSaveStat = (ImageView) dialog.getWindow().findViewById(
 				R.id.btnSaveState);
 
 		btnSaveStat.setOnClickListener(new OnClickListener() {
@@ -394,7 +413,7 @@ public class MyStatistic extends TrackedActivity implements
 	}
 
 	public void showChoice() {
-		final Dialog dialog = new Dialog(MyStatistic.this);
+		final Dialog dialog = new Dialog(MyStatistic.this, R.style.Dialogeasydealtheme);
 		dialog.setContentView(R.layout.dialog_choice);
 		dialog.setTitle(R.string.are_you_sure);
 

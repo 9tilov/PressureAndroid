@@ -1,8 +1,10 @@
 package com.mobsoftmaster.bloodpressurediary2;
 
 import com.mobsoftmaster.bloodpressurediary2.R;
+
 import java.util.Calendar;
 import java.util.Locale;
+
 import android.app.AlarmManager;
 import android.app.Dialog;
 import android.app.PendingIntent;
@@ -11,6 +13,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
@@ -34,6 +37,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.NumberPicker;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -61,7 +65,7 @@ public class Settings extends FragmentActivity implements
 
 	ListView listNotif;
 
-	Button btnAddNotif;
+	ImageView btnAddNotif;
 
 	int count_element_notif;
 
@@ -69,8 +73,6 @@ public class Settings extends FragmentActivity implements
 
 	boolean rotation;
 	boolean notification;
-
-	Dialog dialog;
 
 	static class time {
 		public static int hour = 0;
@@ -92,10 +94,16 @@ public class Settings extends FragmentActivity implements
 		Log.d(LOG_TAG, "language_Start = " + language);
 		setTitle(R.string.settings);
 
+		Typeface font = Typeface.createFromAsset(getAssets(), "Dashley.ttf");
+
+		TextView tvSettingsTitle = (TextView) findViewById(R.id.tvSettingsTitle);
 		checkBoxGraph = (CheckBox) findViewById(R.id.checkBoxRotation);
 		checkBoxNotif = (CheckBox) findViewById(R.id.checkBoxTimePicker);
+		checkBoxGraph.setTypeface(font);
+		checkBoxNotif.setTypeface(font);
+		tvSettingsTitle.setTypeface(font);
 
-		btnAddNotif = (Button) findViewById(R.id.btnAddNotif);
+		btnAddNotif = (ImageView) findViewById(R.id.btnAddNotif);
 		ImageView infoButton = (ImageView) findViewById(R.id.imageButtonInfo);
 		ImageView emailUs = (ImageView) findViewById(R.id.imageButtonEmail);
 		ImageView btnLanguage = (ImageView) findViewById(R.id.imageButtonLanguage);
@@ -122,18 +130,22 @@ public class Settings extends FragmentActivity implements
 
 		if (notification) {
 			checkBoxNotif.setChecked(true);
-			timePicker.setEnabled(true);
-			btnAddNotif.setEnabled(true);
 			editNotif.setEnabled(true);
+			btnAddNotif.setVisibility(View.VISIBLE);
+			timePicker.setVisibility(View.VISIBLE);
 			editNotif.requestFocus();
-			getWindow().setSoftInputMode(LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+			if (editNotif.requestFocus()) {
+				getWindow().setSoftInputMode(
+						LayoutParams.SOFT_INPUT_ADJUST_NOTHING
+								| LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+			}
 			listNotif.setEnabled(true);
 		} else {
 			SharedPreference.SavePreferences(this,
 					SharedPreference.s_notification, notification);
+			btnAddNotif.setVisibility(View.GONE);
+			timePicker.setVisibility(View.GONE);
 			checkBoxNotif.setChecked(false);
-			timePicker.setEnabled(false);
-			btnAddNotif.setEnabled(false);
 			editNotif.setEnabled(false);
 			listNotif.setEnabled(false);
 		}
@@ -147,14 +159,16 @@ public class Settings extends FragmentActivity implements
 						InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
 						if (checkView.isChecked()) {
-							imm.showSoftInput(editNotif,
-									InputMethodManager.SHOW_IMPLICIT);
-							timePicker.setEnabled(true);
-							btnAddNotif.setEnabled(true);
+							btnAddNotif.setVisibility(View.VISIBLE);
+							timePicker.setVisibility(View.VISIBLE);
 							editNotif.setEnabled(true);
 							editNotif.requestFocus();
-							getWindow().setSoftInputMode(
-									LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+							if (editNotif.requestFocus()) {
+								imm.showSoftInput(editNotif,
+										InputMethodManager.SHOW_IMPLICIT);
+							}
+							timePicker.setEnabled(true);
+							btnAddNotif.setEnabled(true);
 							listNotif.setEnabled(true);
 							Cursor cursor = db.getAllDataNotif();
 							if (cursor != null) {
@@ -167,8 +181,11 @@ public class Settings extends FragmentActivity implements
 											Integer.valueOf(cursor.getString(3)));
 									cursor.moveToNext();
 								}
+
 							}
 						} else {
+							btnAddNotif.setVisibility(View.GONE);
+							timePicker.setVisibility(View.GONE);
 							imm.hideSoftInputFromWindow(
 									editNotif.getWindowToken(), 0);
 							timePicker.setEnabled(false);
@@ -285,9 +302,6 @@ public class Settings extends FragmentActivity implements
 		});
 		scrollMyListViewToBottom();
 
-		dialog = new Dialog(Settings.this);
-		dialog.setContentView(R.layout.dialog_settings);
-		dialog.setTitle(R.string.settings);
 	}
 
 	@Override
@@ -308,7 +322,8 @@ public class Settings extends FragmentActivity implements
 	}
 
 	public void showLanguage() {
-		final Dialog dialog = new Dialog(Settings.this);
+		final Dialog dialog = new Dialog(Settings.this,
+				R.style.Dialogeasydealtheme);
 		dialog.setContentView(R.layout.dialog_language);
 		Resources res = getResources();
 		dialog.setTitle(res.getString(R.string.language));
@@ -390,8 +405,8 @@ public class Settings extends FragmentActivity implements
 		else
 			alarm = calendar.getTimeInMillis();
 		PendingIntent pi = PendingIntent.getBroadcast(this, id, intent, 0);
-		am.set(AlarmManager.RTC_WAKEUP, alarm, pi);
-		;
+		am.setRepeating(AlarmManager.RTC_WAKEUP, alarm,
+				AlarmManager.INTERVAL_DAY, pi);
 	}
 
 	public void CancelAlarm(int id) {
@@ -402,6 +417,9 @@ public class Settings extends FragmentActivity implements
 	}
 
 	public void dialogNotif() {
+		final Dialog dialog = new Dialog(Settings.this,
+				R.style.Dialogeasydealtheme);
+		dialog.setContentView(R.layout.dialog_settings);
 		Button btnSaveNotif = (Button) dialog.getWindow().findViewById(
 				R.id.btnSaveNotif);
 		editCurrentNotif = (EditText) dialog.getWindow().findViewById(
@@ -501,7 +519,8 @@ public class Settings extends FragmentActivity implements
 	}
 
 	public void showChoice() {
-		final Dialog dialog = new Dialog(Settings.this);
+		final Dialog dialog = new Dialog(Settings.this,
+				R.style.Dialogeasydealtheme);
 		dialog.setContentView(R.layout.dialog_choice);
 		dialog.setTitle(R.string.are_you_sure);
 

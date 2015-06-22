@@ -1,6 +1,7 @@
 package com.mobsoftmaster.bloodpressurediary2;
 
 import com.mobsoftmaster.bloodpressurediary2.R;
+
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -20,6 +21,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -39,8 +41,9 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
-import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends FragmentActivity implements
@@ -61,6 +64,8 @@ public class MainActivity extends FragmentActivity implements
 	String[] currentProfile = new String[] { "", "" };
 	String accountName = "";
 
+	TextView tvProfileTitle;
+
 	boolean tutorial;
 
 	final String LOG_TAG = "myLogs";
@@ -71,6 +76,8 @@ public class MainActivity extends FragmentActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		// Get a Tracker (should auto-report)
+		// Intent intent1 = new Intent(MainActivity.this, ProgrammInfo.class);
+		// startActivity(intent1);
 		((Locales) getApplication())
 				.getTracker(Locales.TrackerName.APP_TRACKER);
 
@@ -81,51 +88,55 @@ public class MainActivity extends FragmentActivity implements
 		Configuration c = new Configuration(getResources().getConfiguration());
 
 		setTitle(R.string.app_name);
-		int language = SharedPreference.LoadLanguage(this);
+		Typeface font = Typeface.createFromAsset(getAssets(), "Dashley.ttf");
+		tvProfileTitle = (TextView) findViewById(R.id.tvProfileTitle);
+		tvProfileTitle.setTypeface(font);
 
+		int language = SharedPreference.LoadLanguage(this);
+		Log.d(LOG_TAG, "lang = " + language);
 		switch (language) {
+
 		case 0:
 			c.locale = Locale.getDefault();
 			break;
 		case 1:
-			c.locale = Locale.ENGLISH;
+			Locale myLocale_en = new Locale("en", "US");
+			c.locale = myLocale_en;
 			break;
 		case 2:
-			Locale myLocale = new Locale("ru", "RU");
-			c.locale = myLocale;
+			Locale myLocale_ru = new Locale("ru", "RU");
+			c.locale = myLocale_ru;
 			break;
 		case 3:
-			c.locale = Locale.CHINESE;
+			Locale myLocale_cn = new Locale("zh", "CN");
+			c.locale = myLocale_cn;
 			break;
 		}
 
+		Log.d(LOG_TAG, "lang1 = " + R.string.profile_list);
 		getResources().updateConfiguration(c,
 				getResources().getDisplayMetrics());
 
-		setTitle(R.string.app_name);
-
 		boolean stateActivity = SharedPreference.LoadState(this);
-
-		setContentView(R.layout.activity_main);
 
 		tutorial = SharedPreference.LoadTutorial(this);
 
 		if (tutorial) {
-			Intent intent = new Intent(MainActivity.this, Tutorial.class);
-			startActivityForResult(intent, REQUEST_CODE_EMAIL_AUTO);
+			Intent intent_tutor = new Intent(MainActivity.this, Tutorial.class);
+			startActivityForResult(intent_tutor, REQUEST_CODE_EMAIL_AUTO);
 		}
 
 		if (!stateActivity) {
-			Intent intent = new Intent(MainActivity.this, MyStatistic.class);
-			startActivityForResult(intent, REQUEST_CODE_SCREEN_STATISTIC);
+			Intent intent_stat = new Intent(MainActivity.this,
+					MyStatistic.class);
+			startActivityForResult(intent_stat, REQUEST_CODE_SCREEN_STATISTIC);
 		}
 
 		// формируем столбцы сопоставления
 		String[] from = new String[] { MyDB.COLUMN_NAME, MyDB.COLUMN_EMAIL };
 		int[] to = new int[] { R.id.tvName, R.id.tvMail };
-
-		ImageButton addProfile = (ImageButton) findViewById(R.id.addProfile);
-		ImageButton btnSettings = (ImageButton) findViewById(R.id.imageButtonSettings);
+		ImageView addProfile = (ImageView) findViewById(R.id.addProfile);
+		ImageView btnSettings = (ImageView) findViewById(R.id.imageButtonSettings);
 
 		addProfile.setOnClickListener(new OnClickListener() {
 			@Override
@@ -199,7 +210,7 @@ public class MainActivity extends FragmentActivity implements
 
 			} else
 				db.editRec(accountName, inputText_email, String.valueOf(id));
-			
+
 			final ListView lvData = (ListView) findViewById(R.id.lvData);
 			lvData.setAdapter(scAdapter);
 			getSupportLoaderManager().getLoader(0).forceLoad();
@@ -213,7 +224,6 @@ public class MainActivity extends FragmentActivity implements
 		EditNameDialog dFragment = EditNameDialog.newInstance(id,
 				isProfileAdition, isGetEmailFromAccount, name, email);
 		dFragment.show(fm, "Dialog Fragment");
-		Log.d(LOG_TAG, "showEditNameDialog");
 	}
 
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -343,6 +353,7 @@ public class MainActivity extends FragmentActivity implements
 	public void onResume() {
 		super.onResume();
 		setTitle(R.string.app_name);
+		tvProfileTitle.setText(R.string.profile_list);
 		mAdView.resume();
 	}
 
@@ -418,6 +429,7 @@ public class MainActivity extends FragmentActivity implements
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		Log.d(LOG_TAG, "back");
 		if (requestCode == REQUEST_CODE_EMAIL_AUTO && resultCode == RESULT_OK) {
 			String accountEmail = data
 					.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);

@@ -37,6 +37,7 @@ public class AlarmManagerBroadcastReceiver extends BroadcastReceiver {
 
 		Notification n = mBuilder.getNotification();
 		n.flags |= Notification.FLAG_AUTO_CANCEL;
+		n.defaults = Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE;
 		mNotificationManager.notify(1, n);
 
 	}
