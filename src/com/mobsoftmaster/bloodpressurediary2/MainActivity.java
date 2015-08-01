@@ -1,6 +1,7 @@
 package com.mobsoftmaster.bloodpressurediary2;
 
 import com.mobsoftmaster.bloodpressurediary2.R;
+import com.mobsoftmaster.bloodpressurediary2.R.menu;
 
 import java.util.Calendar;
 import java.util.Locale;
@@ -226,11 +227,6 @@ public class MainActivity extends FragmentActivity implements
 		dFragment.show(fm, "Dialog Fragment");
 	}
 
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
-	}
-
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle action bar item clicks here. The action bar will
@@ -238,6 +234,7 @@ public class MainActivity extends FragmentActivity implements
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 		if (id == R.id.action_settings) {
+
 			Intent intent = new Intent(MainActivity.this, Settings.class);
 			startActivity(intent);
 			overridePendingTransition(R.anim.open_window_start,
